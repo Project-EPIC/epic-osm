@@ -22,7 +22,7 @@ class Bucket # => work on this?
 end
 
 class OSMObjects < Bucket
-
+	# => Does this need to be aware of DomainObjects?
 	attr_reader :items
 
 	def initialize(args)
@@ -35,19 +35,19 @@ class Nodes < OSMObjects
 
 end
 
-class Ways < OSMBObjects
+class Ways < OSMObjects
 
 end
 
-class Relations < OSMBObjects
+class Relations < OSMObjects
 
 end
 
-class Changesets < OSMBObjects
+class Changesets < OSMObjects
 
 end
 
-class Users < OSMBObjects
+class Users < OSMObjects
 
 
 	def latest(num)
@@ -55,6 +55,6 @@ class Users < OSMBObjects
 	end
 end
 
-class Notes < OSMBObjects
+class Notes < OSMObjects
 
 end

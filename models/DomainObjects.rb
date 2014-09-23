@@ -1,7 +1,7 @@
-#
-#
-#
-#
+# 
+# 
+# 
+# 
 #
 
 class OSMObject
@@ -40,5 +40,41 @@ class Way < OSMObject
 
 	def initialize(args)
 		@nodes = args[:nodes]
+	end
+end
+
+class Relation < OSMObject
+	def initialize(args)
+		@nodes = args[:nodes]
+		@ways  = args[:ways]
+	end
+end
+
+class Changeset < OSMObject
+
+	def initialize(args)
+		@comment   = args[:comment]
+		@closed_at = args[:closed_at]
+		@open      = args[:open]
+	end
+
+end
+
+class User # => Do we inherit anything here? No... ?
+	attr_reader :user_name, :user_id, :join_date
+
+	def initialize(args)
+		@user_id   = args[:user_id]
+		@user_name = args[:user_name]
+		@join_date = args[:join_date]
+	end
+
+end
+
+class Note # => Lots to learn here
+	attr_reader :user_id, :user_name, :created_at
+
+	def initialize(args)
+		nil
 	end
 end

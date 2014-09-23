@@ -5,20 +5,24 @@
 #
 
 class AnalysisWindow
+	require_relative 'Buckets'
 
 	#TODO:
 	# => Datastore? Will we spin up a new Mongo collection? PostGreSQL?
 
 	attr_reader :start_date, :end_date, :bounding_box
 
-	def initialize()
+	def initialize(args)
+		nil
+	end
 
-
+	def full_data_set
+		# => Sets the boundaries to nil, or something... probably too coupled
 	end
 end
 
 
-class BoundingBox < RGeo::Geometry::Polygon #Or something...
+class BoundingBox #< RGeo::Geometry::Polygon #Or something...
 
 	attr_reader :bottom_left, :top_right
 
