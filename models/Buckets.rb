@@ -26,7 +26,7 @@ class OSMObjects < Bucket
 	attr_reader :items
 
 	def initialize(args)
-		@items = args[:items].sort{|object| object.created_at}
+		@items = args[:items] #.sort{|object| object.created_at}
 	end
 end
 
@@ -53,6 +53,7 @@ class Users < OSMObjects
 	def latest(num)
 
 	end
+
 end
 
 class Notes < OSMObjects

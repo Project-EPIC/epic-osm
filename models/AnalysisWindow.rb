@@ -5,18 +5,19 @@
 #
 
 class AnalysisWindow
-	require_relative 'Buckets'
 
 	#TODO:
 	# => Datastore? Will we spin up a new Mongo collection? PostGreSQL?
 
-	attr_reader :start_date, :end_date, :bounding_box
+	attr_reader :time_frame, :bounding_box
 
 	def initialize(args)
-		nil
+		@bounding_box = args[:bounding_box]
+		@time_frame   = args[:time_frame]
 	end
 
 	def full_data_set
+		nil
 		# => Sets the boundaries to nil, or something... probably too coupled
 	end
 end

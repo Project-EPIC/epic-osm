@@ -56,6 +56,7 @@ class Changeset < OSMObject
 		@comment   = args[:comment]
 		@closed_at = args[:closed_at]
 		@open      = args[:open]
+		super(args)
 	end
 
 end
