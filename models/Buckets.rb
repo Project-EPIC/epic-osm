@@ -5,6 +5,7 @@
 #
 
 class Bucket # => work on this?
+	require_relative 'DomainObjects'
 
 	def initialize(args)
 		# => Do things
@@ -47,8 +48,7 @@ class Changesets < OSMObjects
 
 end
 
-class Users < OSMObjects
-
+class Users < Bucket
 
 	def latest(num)
 
@@ -56,6 +56,6 @@ class Users < OSMObjects
 
 end
 
-class Notes < OSMObjects
+class Notes < Bucket
 
 end

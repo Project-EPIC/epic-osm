@@ -6,30 +6,60 @@
 #
 
 class Query
+	require_relative 'DatabaseConnection'
 	require_relative 'AnalysisWindow'
 	require_relative 'Buckets'
 
-	attr_reader :analysis_window, :type
+	attr_reader :analysis_window, :types, :constraints, :database
+
+	attr_accessor :selector
 
 	def initialize(args)
 		@analysis_window = args[:analysis_window]
-		@type            = args[:type] # => More to this....
+		@constraints     = args[:constraints] || {}
+
+		@selector = {}
+
+		post_initialize
 	end
 
-	def run(args)
-		db = args[:db] #This is stubbed for testing
+	def post_initialize
+		@database = DatabaseConnection.new(country: "haiti").database
 
-		objs = db[type].select{|object| object.created_at < analysis_window.time_frame.end and object.created_at > analysis_window.time_frame.start}
-		
-		#print objs
-		#Return a bucket of the objects
+		if analysis_window.bounding_box.active
+			selector[:geometry] = {'$within' => analysis_window.bounding_box.mongo_format }
+		end
 
-		results = Changesets.new(items: objs)
+		if analysis_window.time_frame.active
+			selector[:date] = 		{'$gt' => analysis_window.time_frame.start,
+									 '$lt' => analysis_window.time_frame.end}
+		end
+	end
 
-		return results
+end
 
-		# => Connect to Mongo, run the Query based on the bounds of the Analysis Window, etc....
-		# => Is it possible to have a nil analysis window?
-		# => Return the analysis window composed of the right buckets
+class Node_Query < Query
+
+	def initialize(args)
+		super(args)
+	end
+
+	def run
+
+		results = database["nodes"].find( selector, {:limit=> 10000000} )
+
+		nodes = []
+
+		results.each do |node|
+			nodes << Node.new(node) #When should it become a node object?
+		end
+
+		Nodes.new(items: nodes)
 	end
 end
+
+
+
+
+
+
