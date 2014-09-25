@@ -1,5 +1,5 @@
 # 
-# 
+# Base Domain Object Class.
 # 
 # 
 #
@@ -72,7 +72,7 @@ class User # => Do we inherit anything here? No... ?
 
 end
 
-class Note # => Lots to learn here
+class Note # => Lots to learn here: Not sure what it will look like
 	attr_reader :user_id, :user_name, :created_at
 
 	def initialize(args)

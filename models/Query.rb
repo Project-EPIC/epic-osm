@@ -1,8 +1,8 @@
 #
+# Query Class: 
 #
-#
-#
-#
+# 1. Handles DB Connection ?
+# 2. 
 #
 
 class Query
