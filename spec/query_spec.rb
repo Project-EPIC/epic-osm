@@ -5,6 +5,10 @@ require_relative '../models/Query'
 
 describe Query do
 
+	before :each do
+		nil #Should we set a databse connection here -- either :nil or :not
+	end
+
   	it "Can Query the Nodes collection for a specific analyis window" do 
   		time_frame = TimeFrame.new( start: Time.new(2008 ,1,1), end: Time.new(2010,1,1) )
 		bounding_box = BoundingBox.new nil

@@ -10,7 +10,7 @@ class Query
 	require_relative 'AnalysisWindow'
 	require_relative 'Buckets'
 
-	attr_reader :analysis_window, :types, :constraints, :database
+	attr_reader :analysis_window, :constraints, :database
 
 	attr_accessor :selector
 

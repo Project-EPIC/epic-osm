@@ -27,7 +27,7 @@ class Node < OSMObject
 
 	attr_reader :lat, :lon
 
-	def initialize(args)  # Should this be post_initialize? What's the 
+	def post_initialize(args)  # Should this be post_initialize? What's the 
 
 		@lon = args[:lon] #  benefits/cons of super vs. post_initialize?
 		@lat = args[:lat]
@@ -42,7 +42,6 @@ class Node < OSMObject
 
 		@lon 		= args["properties"]["lon"] #  benefits/cons of super vs. post_initialize?
 		@lat 		= args["properties"]["lat"]
-		super(args)
 	end
 end
 
