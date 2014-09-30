@@ -70,6 +70,15 @@ class Changeset < OSMObject
 		super(args)
 	end
 
+	def post_initialize(args)
+		#overriding for silly osm-history v1 database (testing purposes)
+		@id         = args["id"]
+		@user_id    = args["uid"]
+		@user_name  = args["user"]
+		@created_at = args["created_at"]
+		@tags       = args["tags"]
+	end
+
 end
 
 class User # => Do we inherit anything here? No... ?

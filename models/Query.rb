@@ -31,7 +31,7 @@ class Query
 		end
 
 		if analysis_window.time_frame.active
-			selector[:date] = 		{'$gt' => analysis_window.time_frame.start,
+			selector[:created_at] = {'$gt' => analysis_window.time_frame.start,
 									 '$lt' => analysis_window.time_frame.end}
 		end
 	end
@@ -58,6 +58,26 @@ class Node_Query < Query
 	end
 end
 
+
+class Changeset_Query < Query
+
+	def initialize(args)
+		super(args)
+	end
+
+	def run
+
+		results = database["changesets"].find( selector, {:limit=> 10000000} )
+
+		changesets = []
+
+		results.each do |changeset|
+			changesets << Changeset.new(changeset) #When should it become a node object?
+		end
+
+		Changesets.new(items: changesets)
+	end
+end
 
 
 

@@ -10,7 +10,7 @@ describe Query do
 	end
 
   	it "Can Query the Nodes collection for a specific analyis window" do 
-  		time_frame = TimeFrame.new( start: Time.new(2008 ,1,1), end: Time.new(2010,1,1) )
+  		time_frame = TimeFrame.new( start: Time.new(2011,1,1), end: Time.new(2011,10,1) )
 		bounding_box = BoundingBox.new nil
 
 		this_analysis_window = AnalysisWindow.new(time_frame: time_frame, bounding_box: bounding_box)

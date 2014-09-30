@@ -11,6 +11,8 @@ class AnalysisWindow
 
 	attr_reader :time_frame, :bounding_box
 
+	#These will get refactoredout of this class, but we're not sure how or when yet
+
 	def initialize(args)
 		@bounding_box = args[:bounding_box]
 		@time_frame   = args[:time_frame]
@@ -19,6 +21,18 @@ class AnalysisWindow
 	def full_data_set
 		nil
 		# => Sets the boundaries to nil, or something... probably too coupled
+	end
+
+	def changesets
+		@changesets ||= Changeset_Query.new(analysis_window: self).run
+	end
+
+	def changeset_count
+		changesets.count
+	end
+
+	def distinct_users_in_changesets
+		changesets.items.collect{|changeset| changeset.user_id}.uniq
 	end
 end
 
