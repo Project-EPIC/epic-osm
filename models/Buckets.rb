@@ -7,9 +7,16 @@
 class Bucket # => work on this?
 	require_relative 'DomainObjects'
 
+	attr_reader :items
+
 	def initialize(args)
 		# => Do things
+		@items = args[:items]
 		post_initialize(args)
+	end
+
+	def post_initialize(args)
+		nil
 	end
 
 	def count
@@ -24,11 +31,6 @@ end
 
 class OSMObjects < Bucket
 	# => Does this need to be aware of DomainObjects?
-	attr_reader :items
-
-	def initialize(args)
-		@items = args[:items] #.sort{|object| object.created_at}
-	end
 end
 
 
@@ -49,10 +51,6 @@ class Changesets < OSMObjects
 end
 
 class Users < Bucket
-
-	def latest(num)
-
-	end
 
 end
 

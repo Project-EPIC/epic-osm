@@ -25,7 +25,7 @@ end
 
 class Node < OSMObject
 
-	attr_reader :lat, :lon
+	attr_reader :lat, :lon, :version
 
 	def post_initialize(args)  # Should this be post_initialize? What's the 
 
@@ -39,6 +39,7 @@ class Node < OSMObject
 		@user_name  = args["properties"]["user"]
 		@created_at = args["date"]
 		@tags       = args["properties"]["tags"]
+		@version    = args["properties"]["version"]
 
 		@lon 		= args["properties"]["lon"] #  benefits/cons of super vs. post_initialize?
 		@lat 		= args["properties"]["lat"]
@@ -85,9 +86,10 @@ class User # => Do we inherit anything here? No... ?
 	attr_reader :user_name, :user_id, :join_date
 
 	def initialize(args)
-		@user_id   = args[:user_id]
-		@user_name = args[:user_name]
-		@join_date = args[:join_date]
+		@user_id   = args["uid"]
+		@user_name = args["display_name"]
+		#Note that this is again just for silly v1 database
+		@join_date = args["account_created"]
 	end
 
 end

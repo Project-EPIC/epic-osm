@@ -34,6 +34,37 @@ class AnalysisWindow
 	def distinct_users_in_changesets
 		changesets.items.collect{|changeset| changeset.user_id}.uniq
 	end
+
+	def changesets_per_day
+		changesets.items.group_by{|changeset| changeset.created_at.yday}
+	end
+
+	def users_per_day
+		users_per_day = {}
+		changesets.items.group_by{|changeset| changeset.created_at.yday}.each do |k,v|
+			users_per_day[k] = v.collect{|changeset| changeset.user_id}.uniq
+		end
+		users_per_day
+	end
+
+	def nodes
+		@nodes ||= Node_Query.new(analysis_window: self).run
+	end
+
+	def node_edit_count
+		nodes.items.count
+	end
+
+	def node_added_count
+		nodes.items.select{|node| node.version == 1}.count
+	end
+
+	def new_contributors
+		users = User_Query.new(user_ids: distinct_users_in_changesets).run
+
+		users.items.select{|user| user.join_date > time_frame.start and user.join_date < time_frame.end}.collect{|user| user.user_name}
+	end
+
 end
 
 

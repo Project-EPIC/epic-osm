@@ -19,7 +19,7 @@ class DatabaseConnection
 	#This will eventually call from a config.yml file.
 	def connect_to_mongo
 		begin
-	    	conn = Mongo::MongoClient.new('epic-analytics.cs.colorado.edu',27018)
+	    	conn = Mongo::MongoClient.new#('epic-analytics.cs.colorado.edu',27018)
 			@database = conn[country]
 		rescue
 			puts "Error connecting to Database: #{country}"
