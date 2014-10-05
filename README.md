@@ -17,3 +17,33 @@ A running tally of questions that we have as we develop
 		
 2. How should we handle Geo Objects?  Should the domain object itself inherit from RGeo?  Should we use RGeo? yes.
 3. What is best practice: super(args) vs. post_initialize?
+
+
+
+##Development Questions: October 5, 2014
+
+1. Finalize version 1 questions and then refactor the code.
+
+2. Running new import script on server (and to create local offline copies)
+
+
+###V1 Questions:
+1. Top contributors (per analysis window)
+	a. 	What's the metric here?  nodes, changesets, what makes an active user?
+
+2. Recent edits
+	a. Again, what's the metric? Nodes, changesets, etc?
+	b. Returns geometries for visualization
+
+3. POI count
+	a. What defines a point of interest.
+	b. Weekly/Monthly buckets
+
+4. Length of Ways
+	a. Rivers, roads, etc.
+	b. Weekly/Monthly buckets
+
+5. Building Count
+	a. Especially tasks which
+	b. Weekly/Monthly buckets
+
