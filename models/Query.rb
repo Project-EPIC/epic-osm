@@ -41,12 +41,9 @@ end
 class Node_Query < Query
 
 	def post_initialize(args)
-		#Again, over-riding because of the structure of the database
-		@database = DatabaseConnection.new(country: "haiti").database
+		super(args)
 
-		if analysis_window.bounding_box.active
-			selector[:geometry] = {'$within' => analysis_window.bounding_box.mongo_format }
-		end
+		delete selector[:created_at]
 
 		if analysis_window.time_frame.active
 			selector[:date] = {'$gt' => analysis_window.time_frame.start,
@@ -96,8 +93,11 @@ class User_Query < Query
 	end
 
 	def post_initialize(args)
-		@database = DatabaseConnection.new(country: "haiti").database
-
+		super(args)
+		
+		delete selector[:created_at]
+		delete selector[:geometry]
+		
 		selector = {}
 		if args[:user_ids]
 			selector[:uid] = {'$in' => args[:user_ids]}

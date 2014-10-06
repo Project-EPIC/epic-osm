@@ -47,3 +47,8 @@ A running tally of questions that we have as we develop
 	a. Especially tasks which
 	b. Weekly/Monthly buckets
 
+
+###Refactor Process
+1. Implement MongoMapper
+2. Run clean, fresh imports of OSM data in decided "best practice" DB format
+3. Pull appropriate pieces out of Analysis Window
