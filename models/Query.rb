@@ -43,7 +43,7 @@ class Node_Query < Query
 	def post_initialize(args)
 		super(args)
 
-		delete selector[:created_at]
+		selector.delete :created_at
 
 		if analysis_window.time_frame.active
 			selector[:date] = {'$gt' => analysis_window.time_frame.start,
@@ -95,8 +95,8 @@ class User_Query < Query
 	def post_initialize(args)
 		super(args)
 		
-		delete selector[:created_at]
-		delete selector[:geometry]
+		selector.delete :created_at
+		selector.delete :geometry
 		
 		selector = {}
 		if args[:user_ids]
