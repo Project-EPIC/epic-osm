@@ -1,11 +1,11 @@
 require 'spec_helper'
 
+require_relative '../../import_scripts/pbf_to_mongo'
 
 describe OSMPBF do
 
 	#Open the PBF file
 	before :all do
-		MongoMapper.database = 'osm_test'
 		@conn = OSMPBF.new
 		@conn.open_parser("./spec/import/test_files/terre-haute.osm.pbf")
 

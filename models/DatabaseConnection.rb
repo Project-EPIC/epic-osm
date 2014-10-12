@@ -21,6 +21,7 @@ class DatabaseConnection
 		begin
 	    	conn = Mongo::MongoClient.new#('epic-analytics.cs.colorado.edu',27018)
 			@database = conn[country]
+
 		rescue
 			puts "Error connecting to Database: #{country}"
 			puts $!

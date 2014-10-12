@@ -5,9 +5,13 @@
 #
 require 'mongo'
 
-def build_database
+require_relative '../models/DomainObjects'
+require_relative '../models/DatabaseConnection'
 
-	require_relative '../models/DomainObjects'
+conn = Mongo::MongoClient.new#('epic-analytics.cs.colorado.edu',27018)
+DB = conn["osm_test"]
+
+def build_database
 
 	conn = Mongo::MongoClient.new('epic-analytics.cs.colorado.edu',27018)
 	db = conn['haiti']

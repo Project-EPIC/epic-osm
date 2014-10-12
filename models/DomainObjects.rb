@@ -4,16 +4,22 @@
 # 
 #
 
+require_relative '../modules/osm_to_mongo'
+
 class OSMObject
 
-	attr_reader :id, :user_id, :user_name, :created_at
+	include OSMongoable::OSMObject
+
+	attr_reader :id, :user_id, :user_name, :created_at, :tags, :version, :changeset
 
 	def initialize(args)
-		@id         ||= args["id"]
-		@user_id    ||= args["user_id"]
-		@user_name  ||= args["user_name"]
-		@created_at ||= args["created_at"]
-		@tags       ||= args["tags"]
+		@id         ||= args[:id]
+		@user_id    ||= args[:uid]
+		@user_name  ||= args[:user]
+		@created_at ||= args[:created_at]
+		@tags       ||= args[:tags]
+		@version    ||= args[:version]
+		@changeset  ||= args[:changeset]
 
 		post_initialize(args)
 	end
@@ -21,30 +27,20 @@ class OSMObject
 	def post_initialize(args)
 		nil
 	end
+
 end
 
 class Node < OSMObject
 
 	include OSMongoable::Node
 
-	attr_reader :lat, :lon, :version
+	attr_reader :lat, :lon
 
-	def post_initialize(args)  # Should this be post_initialize? What's the 
-
+	def intialize(args)  # Should this be post_initialize? What's the 
 		@lon = args[:lon] #  benefits/cons of super vs. post_initialize?
 		@lat = args[:lat]
-		
 
-		#overriding for silly osm-history v1 database (testing purposes)
-		@id         = args["id"]
-		@user_id    = args["properties"]["uid"]
-		@user_name  = args["properties"]["user"]
-		@created_at = args["date"]
-		@tags       = args["properties"]["tags"]
-		@version    = args["properties"]["version"]
-
-		@lon 		= args["properties"]["lon"] #  benefits/cons of super vs. post_initialize?
-		@lat 		= args["properties"]["lat"]
+		super(args)
 	end
 end
 
@@ -56,16 +52,20 @@ class Way < OSMObject
 
 	def initialize(args)
 		@nodes = args[:nodes]
+		super(args)
 	end
 end
 
 class Relation < OSMObject
 
 	include OSMongoable::Relation
+
+	attr_reader :nodes, :ways
 	
 	def initialize(args)
 		@nodes = args[:nodes]
 		@ways  = args[:ways]
+		super(args)
 	end
 end
 

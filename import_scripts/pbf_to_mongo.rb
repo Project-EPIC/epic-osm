@@ -14,7 +14,6 @@ gem install pbf_parser
 
 require 'pp'
 require 'date'
-require 'mongo_mapper'
 
 
 class OSMPBF
@@ -72,9 +71,7 @@ class OSMPBF
 		node[:created_at] = timestamp_to_date(node[:timestamp])
 		this_node = Node.new(node)
 
-		puts this_node.inspect
-
-		this_node.save
+		this_node.save!
 	end
 
 	
@@ -82,14 +79,22 @@ class OSMPBF
 	def add_way(way)
 		way[:created_at] = timestamp_to_date(way[:timestamp])
 		way[:nodes] = way[:refs]
-		Way.create!(way)
+		way.delete :refs 
+		
+		this_way = Way.new(way)
+		this_way.save!
 	end
 
 
 
 	def add_relation(relation)
 		relation[:created_at] = timestamp_to_date(relation[:timestamp])
-		Relation.create!(relation)
+		relation[:nodes] = relation[:members][:nodes]
+		relation[:ways]  = relation[:members][:ways]
+		relation.delete :members
+
+		this_rel = Relation.new(relation)
+		this_rel.save!
 	end
 
 

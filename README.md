@@ -52,3 +52,7 @@ A running tally of questions that we have as we develop
 1. Implement MongoMapper
 2. Run clean, fresh imports of OSM data in decided "best practice" DB format
 3. Pull appropriate pieces out of Analysis Window
+
+
+###Database Structure Questions
+1. Should we define a unique compound key on id + version ? <-- this could be a post processing piece
