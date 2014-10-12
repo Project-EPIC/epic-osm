@@ -25,6 +25,8 @@ end
 
 class Node < OSMObject
 
+	include OSMongoable::Node
+
 	attr_reader :lat, :lon, :version
 
 	def post_initialize(args)  # Should this be post_initialize? What's the 
@@ -48,6 +50,8 @@ end
 
 class Way < OSMObject
 
+	include OSMongoable::Way
+
 	attr_reader :nodes
 
 	def initialize(args)
@@ -56,6 +60,9 @@ class Way < OSMObject
 end
 
 class Relation < OSMObject
+
+	include OSMongoable::Relation
+	
 	def initialize(args)
 		@nodes = args[:nodes]
 		@ways  = args[:ways]
@@ -63,6 +70,8 @@ class Relation < OSMObject
 end
 
 class Changeset < OSMObject
+
+	include OSMongoable::Changeset
 
 	def initialize(args)
 		@comment   = args[:comment]
@@ -83,6 +92,9 @@ class Changeset < OSMObject
 end
 
 class User # => Do we inherit anything here? No... ?
+	
+	include OSMongoable::User
+
 	attr_reader :user_name, :user_id, :join_date
 
 	def initialize(args)
@@ -95,6 +107,7 @@ class User # => Do we inherit anything here? No... ?
 end
 
 class Note # => Lots to learn here: Not sure what it will look like
+
 	attr_reader :user_id, :user_name, :created_at
 
 	def initialize(args)
