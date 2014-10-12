@@ -7,10 +7,12 @@ PBF Parser from: https://github.com/planas/pbf_parser
 brew install protobuf-c
 gem install pbf_parser
 '''
+require 'rubygems'
+require 'bundler/setup'
+
+require 'pbf_parser'
 
 class OSMPBF
-
-	require 'pbf_parser'
 	require 'date'
 
 	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file
