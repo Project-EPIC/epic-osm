@@ -3,18 +3,10 @@ The OSMGeoJSONMongo reads a PBF file and wll create the appropriate collections 
 
 PBF Parser from: https://github.com/planas/pbf_parser
 
-//These two are for MongoDB:
-gem install mongo
-gem install bson_ext
-
 //These two are for parsing PBF: (mac oriented)
 brew install protobuf-c
 gem install pbf_parser
 '''
-
-require 'pp'
-require 'date'
-
 
 class OSMPBF
 
@@ -146,10 +138,10 @@ class OSMPBF
 
 		# puts "Adding the appropriate indexes"
 		# begin
-		# 	eval %Q{#{object_type}.ensure_index(:id => 1)}
-		# 	eval %Q{#{object_type}.ensure_index("properties.changeset" => 1)}
-		# 	eval %Q{#{object_type}.ensure_index("properties.uid" => 1)}
-		# 	eval %Q{#{object_type}.ensure_index(:geometry =>"2dsphere")}
+		# 	eval %Q{#{object_type}.ensure_index( id: 1 ) }
+		# 	eval %Q{#{object_type}.ensure_index( changeset: 1 ) }
+		# 	eval %Q{#{object_type}.ensure_index( user_id: 1 ) }
+		# 	eval %Q{#{object_type}.ensure_index( geometry: "2dsphere") }
 		# rescue
 		# 	puts "Error creating index"
 		# 	p $!

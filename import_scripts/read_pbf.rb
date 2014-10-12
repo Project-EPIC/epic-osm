@@ -1,19 +1,15 @@
 '''
 PBF Parser from: https://github.com/planas/pbf_parser
 
-//These two are for MongoDB:
-gem install mongo
-gem install bson_ext
-
 //These two are for parsing PBF:
 brew install protobuf-c (Mac)
 gem install pbf_parser
 '''
 
-require 'mongo_mapper'
+require_relative './pbf_to_mongo'
 
 if __FILE__==$0
-	#This isn't the most robust command line parser, but it works.
+	#This isn't the most robust command line parser, but it works (for now -- will use OptParser eventually.
 	if ARGV[0].nil?
 		puts "Call this in the following manner: "
 		puts "\truby read_pbf.rb [database name] [pbf file]"
@@ -56,11 +52,8 @@ if __FILE__==$0
 		puts "Host: #{host}"
 		puts "port: #{port}"
 
-		#Create connection to Mongo
-		MongoMapper.connection = Mongo::Connection.new# (Local)
-		MongoMapper.database = 'haiti'
 		
-		conn = OSMGeoJSONMongoMapper.new
+		conn = OSMPBF.new
 		conn.open_parser(file)
 
 		puts "Information about your file"
