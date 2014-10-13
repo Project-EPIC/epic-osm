@@ -1,3 +1,6 @@
-host: 'localhost'
-port: '4000'
-database: 'osm'
+# Config
+
+test:
+ - host: 'localhost'
+ - port: '27017'
+ - database: 'osm-test'

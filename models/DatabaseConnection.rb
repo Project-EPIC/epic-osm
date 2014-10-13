@@ -10,15 +10,17 @@ require 'yaml'
 
 class DatabaseConnection
 
-	def initialize
-		connect_to_mongo
+	attr_reader :db
+
+	def initialize(args)
+		connect_to_mongo(args[:env])
 	end
 
-	def connect_to_mongo
+	def connect_to_mongo(env)
 		begin
-      		config = YAML.load_file('config.yml')
+      		config = YAML.load_file('config.yml')[env]
       
-	    	conn = Mongo::MongoClient.new#{config['host'],config['port']}
+	    	conn = Mongo::MongoClient.new config['host'], config['port']
 			@database = conn[config['database']]
 			
 		rescue
@@ -27,10 +29,3 @@ class DatabaseConnection
 		end
 	end
 end
-
-
-
-
-
-
-
