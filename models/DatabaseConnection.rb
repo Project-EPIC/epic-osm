@@ -5,25 +5,24 @@
 # 
 
 require 'mongo'
+require 'yaml'
+
 
 class DatabaseConnection
 
-	attr_reader :country, :database
-
-	def initialize(args)
-		@country = args[:country]
-
+	def initialize
 		connect_to_mongo
 	end
 
-	#This will eventually call from a config.yml file.
 	def connect_to_mongo
 		begin
-	    	conn = Mongo::MongoClient.new#('epic-analytics.cs.colorado.edu',27018)
+      		config = YAML.load_file('../config.yml')
+      
+	    	conn = Mongo::MongoClient.new#{config['host'],config['port']}
 			@database = conn[country]
 
 		rescue
-			puts "Error connecting to Database: #{country}"
+			puts "Error connecting to Database: #{config['database']}"
 			puts $!
 		end
 	end
