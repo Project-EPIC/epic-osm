@@ -24,7 +24,7 @@ class Query
 	end
 
 	def post_initialize(args)
-		@database = DatabaseConnection.new(country: "haiti").database
+		@database = DatabaseConnection.new
 
 		if analysis_window.bounding_box.active
 			selector[:geometry] = {'$within' => analysis_window.bounding_box.mongo_format }
@@ -79,7 +79,7 @@ class Changeset_Query < Query
 		changesets = []
 
 		results.each do |changeset|
-			changesets << Changeset.new(changeset) #When should it become a node object?
+			changesets << Changeset.new(changeset) 
 		end
 
 		Changesets.new(items: changesets)

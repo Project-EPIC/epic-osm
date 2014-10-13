@@ -16,11 +16,11 @@ class DatabaseConnection
 
 	def connect_to_mongo
 		begin
-      		config = YAML.load_file('../config.yml')
+      		config = YAML.load_file('config.yml')
       
 	    	conn = Mongo::MongoClient.new#{config['host'],config['port']}
-			@database = conn[country]
-
+			@database = conn[config['database']]
+			
 		rescue
 			puts "Error connecting to Database: #{config['database']}"
 			puts $!
