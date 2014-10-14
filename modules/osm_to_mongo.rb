@@ -4,6 +4,8 @@
 #
 #
 
+require 'mongo'
+
 class BSON::OrderedHash
 	def from_mongo
 		self.keys.each do |key|

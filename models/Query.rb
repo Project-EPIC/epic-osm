@@ -32,7 +32,7 @@ class Query
 	end
 
 	def run(args)
-		results = DatabaseConnection.database[collection].find( selector )
+		results = DatabaseConnection.database[args[:collection]].find( selector )
 		objs = []
 		results.each do |obj|
 			objs << args[:type].new(obj.from_mongo)
@@ -71,7 +71,7 @@ end
 class User_Query < Query
 	def initialize(args)
 
-		selector = args[:constraints}] || {} #Empty selector
+		selector = args[:constraints] || {} #Empty selector
 		
 		if args[:user_ids]
 			selector[:uid] = {'$in' => args[:user_ids]}
