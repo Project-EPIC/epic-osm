@@ -1,10 +1,3 @@
-#
-# Query Class: 
-#
-# 1. Handles DB Connection ?
-# 2. 
-#
-
 class Query
 	require_relative 'AnalysisWindow'
 
@@ -24,87 +17,70 @@ class Query
 	def post_initialize(args)
 
 		if analysis_window.bounding_box.active
-			selector[:geometry] = {'$within' => analysis_window.bounding_box.mongo_format }
+			selector[:geometry] = { '$within' => analysis_window.bounding_box.mongo_format }
 		end
 
 		if analysis_window.time_frame.active
-			selector[:created_at] = {'$gt' => analysis_window.time_frame.start,
-									 '$lt' => analysis_window.time_frame.end}
+			selector[:created_at] = { '$gt' => analysis_window.time_frame.start,
+									  '$lt' => analysis_window.time_frame.end    }
 		end
+	end
+
+	def get_edit_time_bounds
+		nil
+		#This should set a time_frame for this analysis window based on the first and last changesets
+	end
+
+	def run(args)
+		results = DatabaseConnection.database[args[:collection]].find( selector )
+		objs = []
+		results.each do |obj|
+			objs << args[:type].new(obj.from_mongo)
+		end
+		return objs
 	end
 
 end
 
 class Node_Query < Query
-
-	def post_initialize(args)
-		super(args)
-
-		selector.delete :created_at
-
-		if analysis_window.time_frame.active
-			selector[:date] = {'$gt' => analysis_window.time_frame.start,
-									 '$lt' => analysis_window.time_frame.end}
-		end
-	end
-
 	def run
+		super collection: 'nodes', type: Node
+	end
+end
 
-		results = DatabaseConnection.database["nodes"].find( selector, {:limit=> 10000000} )
+class Way_Query < Query
+	def run
+		super collection: 'ways', type: Way
+	end
+end
 
-		nodes = []
-
-		results.each do |node|
-			nodes << Node.new(node.from_mongo) #When should it become a node object?
-		end
-
-		nodes
+class Relation_Query < Query
+	def run
+		super collection: 'relations', type: Relation
 	end
 end
 
 
 class Changeset_Query < Query
-
 	def run
-
-		results = DatabaseConnection.database["changesets"].find( selector, {:limit=> 10000000} )
-
-		changesets = []
-
-		results.each do |changeset|
-			changesets << Changeset.new(changeset.from_mongo) 
-		end
-
-		changesets
+		super collection: 'changesets', type: Changeset
 	end
 end
 
-class User_Query < Query
 
+class User_Query < Query
 	def initialize(args)
 
-		super(args)
+		selector = args[:constraints] || {} #Empty selector
 		
-		selector.delete :created_at
-		selector.delete :geometry
-		
-		selector = {}
-		if args[:user_ids]
+		if args[:uids]
 			selector[:uid] = {'$in' => args[:user_ids]}
 		end
 
 	end
 
 	def run
-		results = DatabaseConnection.database["users"].find( selector )
-
-		users = []
-
-		results.each do |user|
-			users << User.new(user.from_mongo) #When should it become a node object?
-		end
-
-		users
+		super collection: 'users', type: User
 	end
 end
 

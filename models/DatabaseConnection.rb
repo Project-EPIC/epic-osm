@@ -7,7 +7,7 @@
 require 'mongo'
 require 'yaml'
 
-#Singleton
+#Using a Singleton Design Pattern to have point of access to the database
 class DatabaseConnection
 
 	def initialize(env='production')
