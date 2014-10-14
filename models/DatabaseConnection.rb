@@ -7,13 +7,15 @@
 require 'mongo'
 require 'yaml'
 
-
+#Singleton
 class DatabaseConnection
 
-	attr_reader :db
+	def initialize(env='production')
+		connect_to_mongo(env)
+	end
 
-	def initialize(args)
-		connect_to_mongo(args[:env])
+	def self.database
+		@@database
 	end
 
 	def connect_to_mongo(env)
@@ -21,11 +23,12 @@ class DatabaseConnection
       		config = YAML.load_file('config.yml')[env]
       
 	    	conn = Mongo::MongoClient.new config['host'], config['port']
-			@database = conn[config['database']]
+			@@database = conn[config['database']]
 			
 		rescue
 			puts "Error connecting to Database: #{config['database']}"
 			puts $!
+			exit(1)
 		end
 	end
 end

@@ -12,3 +12,5 @@ gem 'pbf_parser',	'0.0.6'
 
 #Testing
 gem 'rspec',		'3.1.0'
+
+gem 'nori' # => should find a version that's stable

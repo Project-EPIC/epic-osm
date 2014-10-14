@@ -10,35 +10,28 @@ class OSMObject
 
 	include OSMongoable::OSMObject
 
-	attr_reader :id, :user_id, :user_name, :created_at, :tags, :version, :changeset
+	attr_reader :id, :uid, :user, :created_at, :tags
 
 	def initialize(args)
 		@id         ||= args[:id]
-		@user_id    ||= args[:uid]
-		@user_name  ||= args[:user]
+		@uid    	||= args[:uid]
+		@user  		||= args[:user]
 		@created_at ||= args[:created_at]
 		@tags       ||= args[:tags]
-		@version    ||= args[:version]
-		@changeset  ||= args[:changeset]
-
-		post_initialize(args)
 	end
-
-	def post_initialize(args)
-		nil
-	end
-
 end
 
 class Node < OSMObject
 
 	include OSMongoable::Node
 
-	attr_reader :lat, :lon
+	attr_reader :lat, :lon, :version, :changeset
 
-	def intialize(args)  # Should this be post_initialize? What's the 
+	def initialize(args)  # Should this be post_initialize? What's the 
 		@lon = args[:lon] #  benefits/cons of super vs. post_initialize?
 		@lat = args[:lat]
+		@version	||= args[:version]
+		@changeset  ||= args[:changeset]
 
 		super(args)
 	end
@@ -48,10 +41,12 @@ class Way < OSMObject
 
 	include OSMongoable::Way
 
-	attr_reader :nodes
+	attr_reader :nodes, :version, :changeset
 
 	def initialize(args)
 		@nodes = args[:nodes]
+		@version    ||= args[:version]
+		@changeset  ||= args[:changeset]
 		super(args)
 	end
 end
@@ -60,11 +55,13 @@ class Relation < OSMObject
 
 	include OSMongoable::Relation
 
-	attr_reader :nodes, :ways
+	attr_reader :nodes, :ways, :version, :changeset
 	
 	def initialize(args)
 		@nodes = args[:nodes]
 		@ways  = args[:ways]
+		@version    ||= args[:version]
+		@changeset  ||= args[:changeset]
 		super(args)
 	end
 end
@@ -73,20 +70,17 @@ class Changeset < OSMObject
 
 	include OSMongoable::Changeset
 
+	attr_reader :comment, :closed_at, :open, :min_lat, :max_lat, :min_lon, :max_lon
+
 	def initialize(args)
 		@comment   = args[:comment]
 		@closed_at = args[:closed_at]
 		@open      = args[:open]
+		@min_lat   = args[:min_lat]
+		@max_lat   = args[:max_lat]
+		@min_lon   = args[:min_lon]
+		@max_lon   = args[:max_lon]
 		super(args)
-	end
-
-	def post_initialize(args)
-		#overriding for silly osm-history v1 database (testing purposes)
-		@id         = args["id"]
-		@user_id    = args["uid"]
-		@user_name  = args["user"]
-		@created_at = args["created_at"]
-		@tags       = args["tags"]
 	end
 
 end
@@ -95,20 +89,21 @@ class User # => Do we inherit anything here? No... ?
 	
 	include OSMongoable::User
 
-	attr_reader :user_name, :user_id, :join_date
+	attr_reader :user, :uid, :account_created
 
 	def initialize(args)
-		@user_id   = args["uid"]
-		@user_name = args["display_name"]
+		@uid   = args[:uid]
+		@user  = args[:user]
+		
 		#Note that this is again just for silly v1 database
-		@join_date = args["account_created"]
+		@account_created = args[:account_created]
 	end
 
 end
 
 class Note # => Lots to learn here: Not sure what it will look like
 
-	attr_reader :user_id, :user_name, :created_at
+	attr_reader :uid, :user, :created_at
 
 	def initialize(args)
 		nil

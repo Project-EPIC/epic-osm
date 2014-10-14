@@ -6,11 +6,9 @@
 #
 
 class Query
-	require_relative 'DatabaseConnection'
 	require_relative 'AnalysisWindow'
-	require_relative 'Buckets'
 
-	attr_reader :analysis_window, :constraints, :database
+	attr_reader :analysis_window, :constraints
 
 	attr_accessor :selector
 
@@ -24,7 +22,6 @@ class Query
 	end
 
 	def post_initialize(args)
-		@database = DatabaseConnection.new
 
 		if analysis_window.bounding_box.active
 			selector[:geometry] = {'$within' => analysis_window.bounding_box.mongo_format }
@@ -53,46 +50,39 @@ class Node_Query < Query
 
 	def run
 
-		results = database["nodes"].find( selector, {:limit=> 10000000} )
+		results = DatabaseConnection.database["nodes"].find( selector, {:limit=> 10000000} )
 
 		nodes = []
 
 		results.each do |node|
-			nodes << Node.new(node) #When should it become a node object?
+			nodes << Node.new(node.from_mongo) #When should it become a node object?
 		end
 
-		Nodes.new(items: nodes)
+		nodes
 	end
 end
 
 
 class Changeset_Query < Query
 
-	def initialize(args)
-		super(args)
-	end
-
 	def run
 
-		results = database["changesets"].find( selector, {:limit=> 10000000} )
+		results = DatabaseConnection.database["changesets"].find( selector, {:limit=> 10000000} )
 
 		changesets = []
 
 		results.each do |changeset|
-			changesets << Changeset.new(changeset) 
+			changesets << Changeset.new(changeset.from_mongo) 
 		end
 
-		Changesets.new(items: changesets)
+		changesets
 	end
 end
 
 class User_Query < Query
 
 	def initialize(args)
-		super(args)
-	end
 
-	def post_initialize(args)
 		super(args)
 		
 		selector.delete :created_at
@@ -102,18 +92,19 @@ class User_Query < Query
 		if args[:user_ids]
 			selector[:uid] = {'$in' => args[:user_ids]}
 		end
+
 	end
 
 	def run
-		results = database["users"].find( selector )
+		results = DatabaseConnection.database["users"].find( selector )
 
 		users = []
 
 		results.each do |user|
-			users << User.new(user) #When should it become a node object?
+			users << User.new(user.from_mongo) #When should it become a node object?
 		end
 
-		Users.new(items: users)
+		users
 	end
 end
 

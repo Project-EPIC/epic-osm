@@ -13,14 +13,9 @@ class AnalysisWindow
 
 	#These will get refactoredout of this class, but we're not sure how or when yet
 
-	def initialize(args)
-		@bounding_box = args[:bounding_box]
-		@time_frame   = args[:time_frame]
-	end
-
-	def full_data_set
-		nil
-		# => Sets the boundaries to nil, or something... probably too coupled
+	def initialize(args={})
+		@bounding_box = args[:bounding_box] || BoundingBox.new(nil)
+		@time_frame   = args[:time_frame]   || TimeFrame.new(nil)
 	end
 
 	def changesets
@@ -32,17 +27,17 @@ class AnalysisWindow
 	end
 
 	def distinct_users_in_changesets
-		changesets.items.collect{|changeset| changeset.user_id}.uniq
+		changesets.collect{|changeset| changeset.uid}.uniq
 	end
 
 	def changesets_per_day
-		changesets.items.group_by{|changeset| changeset.created_at.yday}
+		changesets.group_by{|changeset| changeset.created_at.yday}
 	end
 
 	def users_per_day
 		users_per_day = {}
-		changesets.items.group_by{|changeset| changeset.created_at.yday}.each do |k,v|
-			users_per_day[k] = v.collect{|changeset| changeset.user_id}.uniq
+		changesets.group_by{|changeset| changeset.created_at.yday}.each do |k,v|
+			users_per_day[k] = v.collect{|changeset| changeset.uid}.uniq
 		end
 		users_per_day
 	end
@@ -52,17 +47,17 @@ class AnalysisWindow
 	end
 
 	def node_edit_count
-		nodes.items.count
+		nodes.count
 	end
 
 	def node_added_count
-		nodes.items.select{|node| node.version == 1}.count
+		nodes.select{|node| node.version == 1}.count
 	end
 
 	def new_contributors
-		users = User_Query.new(user_ids: distinct_users_in_changesets).run
+		users = User_Query.new(analysis_window: self, uids: distinct_users_in_changesets).run
 
-		users.items.select{|user| user.join_date > time_frame.start and user.join_date < time_frame.end}.collect{|user| user.user_name}
+		users.select{|user| user.account_created > time_frame.start and user.account_created < time_frame.end}.collect{|user| user.user}
 	end
 
 end
@@ -111,22 +106,18 @@ class TimeFrame
 	attr_reader :start, :end, :active
 
 	def initialize(args)
-		@start = args[:start]
-		@end   = args[:end]
-
-		post_initialize(args)
+		if args.nil?
+			@active = false
+		else
+			@start = args[:start]
+			@end   = args[:end]
+			@active = true
+		end
 	end
 
-	def post_initialize(args)
-		@active = true
-
-		#be sure to handle dates in a consistent manner
-	end
 
 	def duration
 		nil
 	end
-
-	#Silly management functions
 
 end

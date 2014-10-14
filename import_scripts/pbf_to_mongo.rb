@@ -61,7 +61,6 @@ class OSMPBF
 	def add_node(node)
 		node[:created_at] = timestamp_to_date(node[:timestamp])
 		this_node = Node.new(node)
-
 		this_node.save!
 	end
 
@@ -82,6 +81,7 @@ class OSMPBF
 		relation[:created_at] = timestamp_to_date(relation[:timestamp])
 		relation[:nodes] = relation[:members][:nodes]
 		relation[:ways]  = relation[:members][:ways]
+		
 		relation.delete :members
 
 		this_rel = Relation.new(relation)
