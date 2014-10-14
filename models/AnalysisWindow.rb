@@ -8,6 +8,8 @@ class AnalysisWindow
 
 	attr_reader :time_frame, :bounding_box
 
+	attr_writer :time_frame #So it can be overridden for some queries
+
 	#These will get refactoredout of this class, but we're not sure how or when yet
 
 	def initialize(args={})
