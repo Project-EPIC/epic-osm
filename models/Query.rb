@@ -73,7 +73,7 @@ class User_Query < Query
 
 		selector = args[:constraints] || {} #Empty selector
 		
-		if args[:user_ids]
+		if args[:uids]
 			selector[:uid] = {'$in' => args[:user_ids]}
 		end
 
