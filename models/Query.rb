@@ -17,12 +17,12 @@ class Query
 	def post_initialize(args)
 
 		if analysis_window.bounding_box.active
-			selector[:geometry] = {'$within' => analysis_window.bounding_box.mongo_format }
+			selector[:geometry] = { '$within' => analysis_window.bounding_box.mongo_format }
 		end
 
 		if analysis_window.time_frame.active
-			selector[:created_at] = {'$gt' => analysis_window.time_frame.start,
-									 '$lt' => analysis_window.time_frame.end}
+			selector[:created_at] = { '$gt' => analysis_window.time_frame.start,
+									  '$lt' => analysis_window.time_frame.end    }
 		end
 	end
 
@@ -43,7 +43,7 @@ class Node_Query < Query
 
 	def run
 
-		results = DatabaseConnection.database["nodes"].find( selector, {:limit=> 10000000} )
+		results = DatabaseConnection.database["nodes"].find( selector )
 
 		nodes = []
 		results.each do |node|
@@ -59,7 +59,7 @@ class Changeset_Query < Query
 
 	def run
 
-		results = DatabaseConnection.database["changesets"].find( selector, {:limit=> 10000000} )
+		results = DatabaseConnection.database["changesets"].find( selector )
 
 		changesets = []
 		results.each do |changeset|
@@ -74,11 +74,7 @@ class User_Query < Query
 
 	def initialize(args)
 
-		selector = {} #Empty selector
-
-		if args[:constraints]
-			selector[:constraints] = args[:constraints]
-		end
+		selector = args[:constraints}] || {} #Empty selector
 		
 		if args[:user_ids]
 			selector[:uid] = {'$in' => args[:user_ids]}
