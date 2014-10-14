@@ -1,3 +1,9 @@
+#
+# The Query Class
+#
+#
+#
+
 class Query
 	require_relative 'AnalysisWindow'
 
