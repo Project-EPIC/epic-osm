@@ -6,16 +6,13 @@
 
 class AnalysisWindow
 
-	#TODO:
-	# => Datastore? Will we spin up a new Mongo collection? PostGreSQL?
-
 	attr_reader :time_frame, :bounding_box
 
 	#These will get refactoredout of this class, but we're not sure how or when yet
 
 	def initialize(args={})
-		@bounding_box = args[:bounding_box] || BoundingBox.new(nil)
-		@time_frame   = args[:time_frame]   || TimeFrame.new(nil)
+		@bounding_box = args[:bounding_box] || BoundingBox.new
+		@time_frame   = args[:time_frame]   || TimeFrame.new
 	end
 
 	def changesets
@@ -63,11 +60,11 @@ class AnalysisWindow
 end
 
 
-class BoundingBox #< RGeo::Geometry::Polygon #Or something...?
+class BoundingBox
 
 	attr_reader :bottom_left, :top_right, :active
 
-	def initialize(args)
+	def initialize(args=nil)
 		if args.nil?
 			@active = false
 		else
@@ -105,7 +102,7 @@ class TimeFrame
 
 	attr_reader :start, :end, :active
 
-	def initialize(args)
+	def initialize(args=nil)
 		if args.nil?
 			@active = false
 		else
@@ -115,9 +112,5 @@ class TimeFrame
 		end
 	end
 
-
-	def duration
-		nil
-	end
 
 end
