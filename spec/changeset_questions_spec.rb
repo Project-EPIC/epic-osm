@@ -5,10 +5,6 @@ require_relative '../models/Query'
 
 describe Query do
 
-	before :each do
-		nil #Should we set a databse connection here -- either :nil or :not
-	end
-
   	it "Can count the distinct number of changesets for a given analysis window" do 
 
 		this_analysis_window = AnalysisWindow.new

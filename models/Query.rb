@@ -70,13 +70,11 @@ end
 
 class User_Query < Query
 	def initialize(args)
-
 		selector = args[:constraints] || {} #Empty selector
 		
 		if args[:uids]
 			selector[:uid] = {'$in' => args[:user_ids]}
 		end
-
 	end
 
 	def run
