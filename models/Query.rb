@@ -1,10 +1,3 @@
-#
-# Query Class: 
-#
-# 1. Handles DB Connection ?
-# 2. 
-#
-
 class Query
 	require_relative 'AnalysisWindow'
 
@@ -53,7 +46,6 @@ class Node_Query < Query
 		results = DatabaseConnection.database["nodes"].find( selector, {:limit=> 10000000} )
 
 		nodes = []
-
 		results.each do |node|
 			nodes << Node.new(node.from_mongo) #When should it become a node object?
 		end
@@ -70,7 +62,6 @@ class Changeset_Query < Query
 		results = DatabaseConnection.database["changesets"].find( selector, {:limit=> 10000000} )
 
 		changesets = []
-
 		results.each do |changeset|
 			changesets << Changeset.new(changeset.from_mongo) 
 		end
@@ -83,12 +74,12 @@ class User_Query < Query
 
 	def initialize(args)
 
-		super(args)
+		selector = {} #Empty selector
+
+		if args[:constraints]
+			selector[:constraints] = args[:constraints]
+		end
 		
-		selector.delete :created_at
-		selector.delete :geometry
-		
-		selector = {}
 		if args[:user_ids]
 			selector[:uid] = {'$in' => args[:user_ids]}
 		end
@@ -99,7 +90,6 @@ class User_Query < Query
 		results = DatabaseConnection.database["users"].find( selector )
 
 		users = []
-
 		results.each do |user|
 			users << User.new(user.from_mongo) #When should it become a node object?
 		end
