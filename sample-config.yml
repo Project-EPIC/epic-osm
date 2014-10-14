@@ -1,11 +1,11 @@
 # Config
 
 production:
-  database: ''
-  port: ''
-  host: ''
+  database: 'osm'
+  port: '28017'
+  host: 'some-host.com'
 
 test:
-  database: ''
-  port: ''
-  host: ''
+  database: 'osm-test'
+  port: '27017'
+  host: 'localhost'
