@@ -8,13 +8,20 @@ class AnalysisWindow
 
 	attr_reader :time_frame, :bounding_box
 
-	attr_writer :time_frame #So it can be overridden for some queries
-
 	#These will get refactoredout of this class, but we're not sure how or when yet
 
 	def initialize(args={})
 		@bounding_box = args[:bounding_box] || BoundingBox.new
 		@time_frame   = args[:time_frame]   || TimeFrame.new
+
+		post_initialize
+	end
+
+	def post_initialize
+		unless time_frame.active?
+			@time_frame = TimeFrame.new( start: Changeset_Query.earliest_changeset_date,
+										 end:   Changeset_Query.latest_changeset_date )
+		end
 	end
 
 	def changesets
@@ -103,6 +110,10 @@ class TimeFrame
 	# => transform these dates to the proper format.
 
 	attr_reader :start, :end, :active
+
+	def active?
+		active
+	end
 
 	def initialize(args=nil)
 		if args.nil?

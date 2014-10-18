@@ -71,6 +71,18 @@ class Changeset_Query < Query
 	def run
 		super collection: 'changesets', type: Changeset
 	end
+
+	def self.earliest_changeset_date
+		DatabaseConnection.database['changesets'].find(
+			selector={}, 
+			opts= {:sort => {'created_at' => :asc} } ).limit(1).first['created_at']
+	end
+
+	def self.latest_changeset_date
+		DatabaseConnection.database['changesets'].find(
+			selector={}, 
+			opts= {:sort => {'closed_at' => :desc} } ).limit(1).first['closed_at']
+	end
 end
 
 
