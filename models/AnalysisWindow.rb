@@ -87,13 +87,14 @@ class AnalysisWindow
 
 	def method_missing(m, *args, &block)
 		begin
+			#Check for nodes_x_all or changesets_x_monthly
 			pieces = m.to_s.split(/\_/)
-
-			if pieces[1]=='x'#If asked for 'all' 'objects'
+			if pieces[1]=='x'
+				#Asked for all, so send all
 				if pieces[2] == "all"
 					instance_eval "@all_#{pieces[0]} ||= #{pieces[0]}.run(unit: :all).first[:objects]"
 			
-				#Format: nodes_daily, nodes_weekly, etc.
+				#Format: nodes_x_daily, nodes_x_weekly, etc.
 				else
 					instance_eval "#{pieces[0]}.run(unit: #{pieces[2].to_sym})"
 				end
