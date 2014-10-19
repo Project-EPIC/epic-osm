@@ -33,4 +33,12 @@ describe AnalysisWindow do
   		puts this_window.build_buckets(:yearly)
   	end
 
+    it "Can handle a missing method call to simplify our life" do 
+
+      this_window = AnalysisWindow.new
+      
+      puts this_window.all_changesets
+
+    end
+
 end

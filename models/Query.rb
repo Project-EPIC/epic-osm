@@ -52,65 +52,32 @@ class Query
 		end
 		buckets
 	end
-
-	def all
-		unless buckets
-			@unit= :all
-			run
-		end
-		return buckets.collect{|b| b[:objects]}.flatten
-	end
-
-	def yearly
-		@unit= :yearly
-		run
-	end
-
-	def monthly
-		@unit= :monthly
-		run
-	end
-
-	def weekly
-		nil
-	end
-
-	def daily
-		@unit= :daily
-		run
-	end
-
-	def hourly
-		@unit= :hourly
-		run
-	end
-
 end
 
 
 #Queries (but they kiiiiind of act like buckets... )
 class Node_Query < Query
-	def run
-		super collection: 'nodes', type: Node
+	def run(args)
+		super collection: 'nodes', type: Node, unit: args[:unit]
 	end
 end
 
 class Way_Query < Query
-	def run
-		super collection: 'ways', type: Way
+	def run(args)
+		super collection: 'ways', type: Way, unit: args[:unit]
 	end
 end
 
 class Relation_Query < Query
-	def run
-		super collection: 'relations', type: Relation
+	def run(args)
+		super collection: 'relations', type: Relation, unit: args[:unit]
 	end
 end
 
 
 class Changeset_Query < Query
-	def run
-		super collection: 'changesets', type: Changeset
+	def run(args)
+		super collection: 'changesets', type: Changeset, unit: args[:unit]
 	end
 
 	def self.earliest_changeset_date

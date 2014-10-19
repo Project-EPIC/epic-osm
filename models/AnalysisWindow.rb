@@ -70,8 +70,6 @@ class AnalysisWindow
 			#fuck us, this is going to be ugly.  How should we do this? just start from the first week of the analysis window?
 			#We could just add 7 days.
 
-
-
 		when :hourly
 			bucket_start = Time.mktime(time_frame.start.year, time_frame.start.mon, time_frame.start.day, time_frame.start.hour)
 			while bucket_start < time_frame.end
@@ -87,59 +85,49 @@ class AnalysisWindow
 		return buckets
 	end
 
+	def method_missing(m, *args, &block)
+		begin
+			pieces = m.to_s.split(/\_/)
+
+			if pieces[1]=='x'#If asked for 'all' 'objects'
+				if pieces[2] == "all"
+					instance_eval "@all_#{pieces[0]} ||= #{pieces[0]}.run(unit: :all).first[:objects]"
+			
+				#Format: nodes_daily, nodes_weekly, etc.
+				else
+					instance_eval "#{pieces[0]}.run(unit: #{pieces[2].to_sym})"
+				end
+			end
+		rescue => e
+			puts $!
+			super
+		end
+	end
 
 # Changesets
 	def changesets
 		@changesets ||= Changeset_Query.new(analysis_window: self)
 	end
 
-	def all_changesets
-		@all_changesets ||= changesets.all
-	end
-
-	def changesets_per_year
-		@yearly_changesets ||= changesets.yearly
-	end
-
-	def changesets_per_month
-		@monthly_changesets ||= changesets.monthly
-	end
-
-	def changesets_per_day
-		@daily_changesets ||= changesets.daily
-	end
-
 	def changeset_count
-		all_changesets.count
+		changesets_x_all.count
 	end
 
 	def distinct_users_in_changesets
-		all_changesets.collect{|changeset| changeset.uid}.uniq
+		changesets_x_all.collect{|changeset| changeset.uid}.uniq
 	end
 
 #Nodes
 	def nodes
-		@nodes ||= Node_Query.new(analysis_window: self)
-	end
-
-	def all_nodes
-		@all_nodes ||= nodes.all
-	end
-
-	def monthly_nodes
-		@monthly_nodes ||= nodes.monthly
-	end
-
-	def daily_nodes
-		@daily_nodes ||= nodes.daily
+		@nodes ||= Node_Query.new( analysis_window: self )
 	end
 
 	def node_edit_count
-		all_nodes.count
+		nodes_x_all.count
 	end
 
 	def node_added_count
-		all_nodes.select{|node| node.version == 1}.count
+		nodes_x_all.select{|node| node.version == 1}.count
 	end
 
 #Users
@@ -149,7 +137,7 @@ class AnalysisWindow
 
 	def users_editing_per_year
 		years = {}
-		changesets_per_year.each do |bucket|
+		changesets_x_yearly.each do |bucket|
 			years[ bucket[:start_date] ] = bucket[:objects].collect{|changeset| changeset.user}.uniq
 		end
 		years
@@ -157,7 +145,7 @@ class AnalysisWindow
 
 	def users_editing_per_month
 		months = {}
-		changesets_per_month.each do |bucket|
+		changesets_x_monthly.each do |bucket|
 			months[ bucket[:start_date] ] = bucket[:objects].collect{|changeset| changeset.user}.uniq
 		end
 		months
@@ -171,9 +159,9 @@ class AnalysisWindow
 
 		case args[:unit]
 		when :all_time
-			changesets_per_unit = all_changesets.group_by{|changeset| changeset.user}.sort_by{|k,v| v.length}.reverse
+			changesets_per_unit = changesets_x_all.group_by{|changeset| changeset.user}.sort_by{|k,v| v.length}.reverse
 		when :month
-			changesets_per_unit = changesets_per_month.group_by{|changeset| changeset.created_at.to_i / 100000}
+			changesets_per_unit = changesets_x_monthly.group_by{|changeset| changeset.created_at.to_i / 100000}
 		end
 		changesets_per_unit.first(args[:limit])
 	end
@@ -211,7 +199,6 @@ class BoundingBox
 		h["$box"] = [bottom_left, top_right]
 		puts h
 	end
-
 end
 
 class TimeFrame
@@ -235,6 +222,4 @@ class TimeFrame
 			@active = true
 		end
 	end
-
-
 end

@@ -17,15 +17,16 @@ describe Node_Query do
 
   	it "Can query nodes with monthly buckets" do
   		this_window = AnalysisWindow.new
-  		this_window.monthly_nodes.each do |bucket|
-  			puts "#{bucket[:start_date]}, #{bucket[:end_date]}, #{bucket[:objects].count}"
+  		
+      this_window.nodes_x_monthly.each do |bucket|
+  	    puts "#{bucket[:start_date]}, #{bucket[:end_date]}, #{bucket[:objects].count}"
   		end
   	end
 
 
   	it "Can query nodes with daily buckets" do
   		this_window = AnalysisWindow.new
-  		puts "Number of daily buckets: #{this_window.daily_nodes.count}"
+  		puts "Number of daily buckets: #{this_window.nodes_x_daily.count}"
   	end
 
   	
