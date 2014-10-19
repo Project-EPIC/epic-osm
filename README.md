@@ -30,6 +30,7 @@ A running tally of questions that we have as we develop
 ###V1 Questions:
 1. Top contributors (per analysis window)
 	a. 	What's the metric here?  nodes, changesets, what makes an active user?
+DONE (At least for changesets)
 
 2. Recent edits
 	a. Again, what's the metric? Nodes, changesets, etc?
@@ -46,6 +47,8 @@ A running tally of questions that we have as we develop
 5. Building Count
 	a. Especially tasks which
 	b. Weekly/Monthly buckets
+
+6. Within temporally adjacent / overlapping changesets, identify users that worked in close geographic proximity
 
 
 ###Refactor Process
