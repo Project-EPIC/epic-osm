@@ -86,6 +86,8 @@ class AnalysisWindow
 	end
 
 	def method_missing(m, *args, &block)
+
+		puts "Called method missing with this function: #{m} and these args: #{args}"
 		begin
 			#Check for nodes_x_all or changesets_x_monthly
 			pieces = m.to_s.split(/\_/)
@@ -96,7 +98,8 @@ class AnalysisWindow
 			
 				#Format: nodes_x_daily, nodes_x_weekly, etc.
 				else
-					instance_eval "#{pieces[0]}.run(unit: #{pieces[2].to_sym})"
+					unit = pieces[2].to_sym
+					instance_eval "#{pieces[0]}.run(unit: unit)"
 				end
 			end
 		rescue => e
@@ -121,6 +124,8 @@ class AnalysisWindow
 #Nodes
 	def nodes
 		@nodes ||= Node_Query.new( analysis_window: self )
+		puts @nodes
+		return @nodes
 	end
 
 	def node_edit_count

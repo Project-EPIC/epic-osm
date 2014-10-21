@@ -9,12 +9,11 @@ class Query
 
 	attr_reader :analysis_window, :constraints, :buckets
 
-	attr_accessor :selector, :unit
+	attr_accessor :selector
 
 	def initialize(args)
 		@analysis_window = args[:analysis_window]
 		@constraints     = args[:constraints]      || {}
-		@unit			 = args[:unit]             || :all
 
 		@selector = {}
 
@@ -41,7 +40,8 @@ class Query
 	end
 
 	def run(args)
-		@buckets = analysis_window.build_buckets(unit)
+		puts "Got to super run function with args #{args}"
+		@buckets = analysis_window.build_buckets(unit = args[:unit])
 
 		buckets.each do |bucket|			
 			update_created_at( bucket[:start_date], bucket[:end_date] )
@@ -58,6 +58,7 @@ end
 #Queries (but they kiiiiind of act like buckets... )
 class Node_Query < Query
 	def run(args)
+		puts "Got to instance of run in node query with args: #{args}"
 		super collection: 'nodes', type: Node, unit: args[:unit]
 	end
 end

@@ -3,13 +3,13 @@ require "spec_helper"
 
 describe Node_Query do
 
-  	it "Can count the total number of nodes edited in a given analysis window" do 
+  	xit "Can count the total number of nodes edited in a given analysis window" do 
 		this_analysis_window = AnalysisWindow.new
 		puts "Number of Nodes Edited: #{this_analysis_window.node_edit_count}"
   	end
 
 
-  	it "Can count the number of nodes added in a given analysis window" do 
+  	xit "Can count the number of nodes added in a given analysis window" do 
 		this_analysis_window = AnalysisWindow.new
 		puts "Number of Nodes added: #{this_analysis_window.node_added_count}"
   	end
@@ -24,7 +24,7 @@ describe Node_Query do
   	end
 
 
-  	it "Can query nodes with daily buckets" do
+  	xit "Can query nodes with daily buckets" do
   		this_window = AnalysisWindow.new
   		puts "Number of daily buckets: #{this_window.nodes_x_daily.count}"
   	end
