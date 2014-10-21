@@ -7,13 +7,12 @@
 class Query
 	require_relative 'AnalysisWindow'
 
-	attr_reader :analysis_window, :constraints, :buckets
+	attr_reader :analysis_window, :buckets
 
 	attr_accessor :selector
 
 	def initialize(args)
 		@analysis_window = args[:analysis_window]
-		@constraints     = args[:constraints]      || {}
 
 		@selector = {}
 
@@ -40,8 +39,12 @@ class Query
 	end
 
 	def run(args)
-		puts "Got to super run function with args #{args}"
+		# puts "Got to super run function with args #{args}"
 		@buckets = analysis_window.build_buckets(unit = args[:unit])
+
+		unless args[:constraints].nil?
+			selector.update(args[:constraints])
+		end
 
 		buckets.each do |bucket|			
 			update_created_at( bucket[:start_date], bucket[:end_date] )
@@ -58,27 +61,26 @@ end
 #Queries (but they kiiiiind of act like buckets... )
 class Node_Query < Query
 	def run(args)
-		puts "Got to instance of run in node query with args: #{args}"
-		super collection: 'nodes', type: Node, unit: args[:unit]
+		super args.update( {collection: 'nodes', type: Node} )
 	end
 end
 
 class Way_Query < Query
 	def run(args)
-		super collection: 'ways', type: Way, unit: args[:unit]
+		super args.update( {collection: 'ways', type: Way } )
 	end
 end
 
 class Relation_Query < Query
 	def run(args)
-		super collection: 'relations', type: Relation, unit: args[:unit]
+		super args.update( {collection: 'relations', type: Relation } )
 	end
 end
 
 
 class Changeset_Query < Query
 	def run(args)
-		super collection: 'changesets', type: Changeset, unit: args[:unit]
+		super args.update( {collection: 'changesets', type: Changeset} )
 	end
 
 	def self.earliest_changeset_date

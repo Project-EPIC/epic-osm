@@ -86,20 +86,22 @@ class AnalysisWindow
 	end
 
 	def method_missing(m, *args, &block)
-
-		puts "Called method missing with this function: #{m} and these args: #{args}"
+		# puts "Called method missing with this function: #{m} and these args: #{args}"
 		begin
 			#Check for nodes_x_all or changesets_x_monthly
 			pieces = m.to_s.split(/\_/)
-			if pieces[1]=='x'
+			if pieces[1] == 'x'
+				unless args.empty?
+					cons = args[0][:constraints] #Better pass a hash
+				end
 				#Asked for all, so send all
 				if pieces[2] == "all"
-					instance_eval "@all_#{pieces[0]} ||= #{pieces[0]}.run(unit: :all).first[:objects]"
+					instance_eval "@all_#{pieces[0]} ||= #{pieces[0]}.run(unit: :all, constraints: cons).first[:objects]"
 			
 				#Format: nodes_x_daily, nodes_x_weekly, etc.
 				else
 					unit = pieces[2].to_sym
-					instance_eval "#{pieces[0]}.run(unit: unit)"
+					instance_eval "#{pieces[0]}.run(unit: unit, constraints: cons)" #TODO: Save this as a local variable so it doesn't call it 10000 times
 				end
 			end
 		rescue => e
@@ -124,8 +126,6 @@ class AnalysisWindow
 #Nodes
 	def nodes
 		@nodes ||= Node_Query.new( analysis_window: self )
-		puts @nodes
-		return @nodes
 	end
 
 	def node_edit_count
@@ -136,6 +136,40 @@ class AnalysisWindow
 		nodes_x_all.select{|node| node.version == 1}.count
 	end
 
+	# def newest_nodes #TODO -- make this prettier
+	# 	distinct_nodes = nodes_x_all.group_by{|node| node.id}
+
+	# 	puts distinct_nodes.keys.count
+	# 	puts distinct_nodes.values.count
+
+	# 	#.values.collect{|nodes| nodes.sort_by{|node| node.version}.last}
+	# end
+
+#Ways
+	def ways
+		@ways ||= Way_Query.new( analysis_window: self )
+	end
+
+	def way_edit_count
+		ways_x_all.count
+	end
+
+	def way_added_count
+		ways_x_all.select{|way| way.version == 1}.count
+	end
+
+#Relations
+	def relations
+		@relations ||= Relation_Query.new( analysis_window: self )
+	end
+
+	def relation_edit_count
+		relations_x_all.count
+	end
+
+	def relation_added_count
+		relations_x_all.select{|relation| relation.version == 1}.count
+	end
 #Users
 	def all_users_data
 		@all_users_data ||= User_Query.new(uids: distinct_users_in_changesets).run
