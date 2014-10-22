@@ -88,22 +88,20 @@ class AnalysisWindow
 	def method_missing(m, *args, &block)
 		# puts "Called method missing with this function: #{m} and these args: #{args}"
 		begin
-			#Check for nodes_x_all or changesets_x_monthly
+			#Break out the method by snake case
 			pieces = m.to_s.split(/\_/)
+
+			#Find the nodes_x_all, changesets_x_monthly, ways_x_yearly type of functions
 			if pieces[1] == 'x'
+				
 				unless args.empty?
 					cons = args[0][:constraints] #Better pass a hash
 				end
-				#Asked for all, so send all
-				if pieces[2] == "all"
-					instance_eval "@all_#{pieces[0]} ||= #{pieces[0]}.run(unit: :all, constraints: cons).first[:objects]"
+
+				instance_eval "@#{pieces[2]}_#{pieces[0]} ||= #{pieces[0]}.run(unit: :#{pieces[2]}, constraints: cons)"
 			
-				#Format: nodes_x_daily, nodes_x_weekly, etc.
-				else
-					unit = pieces[2].to_sym
-					instance_eval "#{pieces[0]}.run(unit: unit, constraints: cons)" #TODO: Save this as a local variable so it doesn't call it 10000 times
-				end
 			end
+
 		rescue => e
 			puts $!
 			super
@@ -116,11 +114,11 @@ class AnalysisWindow
 	end
 
 	def changeset_count
-		changesets_x_all.count
+		changesets_x_all.first[:objects].count
 	end
 
 	def distinct_users_in_changesets
-		changesets_x_all.collect{|changeset| changeset.uid}.uniq
+		changesets_x_all.first[:objects].collect{|changeset| changeset.uid}.uniq
 	end
 
 #Nodes
@@ -129,11 +127,11 @@ class AnalysisWindow
 	end
 
 	def node_edit_count
-		nodes_x_all.count
+		nodes_x_all.first[:objects].count
 	end
 
 	def node_added_count
-		nodes_x_all.select{|node| node.version == 1}.count
+		nodes_x_all.first[:objects].select{|node| node.version == 1}.count
 	end
 
 	# def newest_nodes #TODO -- make this prettier
@@ -151,11 +149,11 @@ class AnalysisWindow
 	end
 
 	def way_edit_count
-		ways_x_all.count
+		ways_x_all.first[:objects].count
 	end
 
 	def way_added_count
-		ways_x_all.select{|way| way.version == 1}.count
+		ways_x_all.first[:objects].select{|way| way.version == 1}.count
 	end
 
 #Relations
@@ -164,11 +162,11 @@ class AnalysisWindow
 	end
 
 	def relation_edit_count
-		relations_x_all.count
+		relations_x_all.first[:objects].count
 	end
 
 	def relation_added_count
-		relations_x_all.select{|relation| relation.version == 1}.count
+		relations_x_all.first[:objects].select{|relation| relation.version == 1}.count
 	end
 #Users
 	def all_users_data
@@ -199,7 +197,7 @@ class AnalysisWindow
 
 		case args[:unit]
 		when :all_time
-			changesets_per_unit = changesets_x_all.group_by{|changeset| changeset.user}.sort_by{|k,v| v.length}.reverse
+			changesets_per_unit = changesets_x_all.first[:objects].group_by{|changeset| changeset.user}.sort_by{|k,v| v.length}.reverse
 		when :month
 			changesets_per_unit = changesets_x_monthly.group_by{|changeset| changeset.created_at.to_i / 100000}
 		end
