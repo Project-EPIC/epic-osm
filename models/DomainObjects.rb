@@ -5,6 +5,7 @@
 #
 
 require_relative '../modules/osm_to_mongo'
+require_relative '../modules/osm_geo'
 
 class OSMObject
 
@@ -24,6 +25,7 @@ end
 class Node < OSMObject
 
 	include OSMongoable::Node
+	include OSMGeo::Node
 
 	attr_reader :lat, :lon, :version, :changeset
 
@@ -40,6 +42,7 @@ end
 class Way < OSMObject
 
 	include OSMongoable::Way
+	include OSMGeo::Way
 
 	attr_reader :nodes, :version, :changeset
 
@@ -69,6 +72,7 @@ end
 class Changeset < OSMObject
 
 	include OSMongoable::Changeset
+	include OSMGeo::Changeset
 
 	attr_reader :comment, :closed_at, :open, :min_lat, :max_lat, :min_lon, :max_lon
 
