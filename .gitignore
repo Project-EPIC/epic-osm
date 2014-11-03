@@ -1,2 +1,4 @@
 *.lock
 config.yml
+
+seattle.osm.pbf

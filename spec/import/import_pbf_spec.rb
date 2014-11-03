@@ -7,7 +7,7 @@ describe OSMPBF do
 	#Open the PBF file
 	before :all do
 		@conn = OSMPBF.new
-		@conn.open_parser("./spec/import/test_files/terre-haute.osm.pbf")
+		@conn.open_parser("./spec/import/test_files/seattle.osm.pbf")
 
 		puts @conn.file_stats
 	end
