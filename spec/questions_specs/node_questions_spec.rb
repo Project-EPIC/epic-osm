@@ -15,7 +15,7 @@ describe Node_Query do
   	end
 
 
-  	it "Can query nodes with monthly buckets" do
+  	xit "Can query nodes with monthly buckets" do
   		this_window = AnalysisWindow.new
   		
       this_window.nodes_x_monthly.each do |bucket|
@@ -28,6 +28,11 @@ describe Node_Query do
   		this_window = AnalysisWindow.new
   		puts "Number of daily buckets: #{this_window.nodes_x_daily.count}"
   	end
+
+    xit "Can get the latest version of distinct nodes" do 
+      this_window = AnalysisWindow.new
+      puts "Number of new distinct nodes: #{this_window.newest_nodes.count}"
+    end
 
   	
 end

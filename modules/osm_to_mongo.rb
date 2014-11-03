@@ -26,7 +26,6 @@ module OSMongoable
 			hash[:created_at] ||= created_at
 			hash[:tags]       ||= tags
 		end
-
 	end
 	
 	module Node
