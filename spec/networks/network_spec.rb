@@ -16,7 +16,7 @@ describe Network do
 		@dw = AnalysisWindow.new
 	end
 
-	it "Make a network showing who created which ways (bipartite)." do
+	xit "Make a network showing who created which ways (bipartite)." do
 		
 		users = {}
 		way_nodes  = {}
@@ -32,7 +32,7 @@ describe Network do
 		end
 	end
 
-	xit "Can make a network connecting users who edited the same node" do 
+	it "Can make a network connecting users who edited the same node" do 
 		users = {}
 
 		@dw.nodes_x_all.first[:objects].group_by{|node| node.id}.each do |id, ways|

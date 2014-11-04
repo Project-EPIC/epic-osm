@@ -1,0 +1,34 @@
+
+
+#
+# This is a sample configuration file for cutting and importing the 
+# Central America OSH PBF file for a test
+#
+#
+#
+
+#User Information
+title: 'Managua'
+email: 'test_user@osm-history2.com'
+
+#Database Information
+pbf_file: '/Users/jenningsanderson/Documents/OSM/central-america.osh.pbf'
+database: 'managua-test'
+
+#Analysis Window Information
+#start_date: '2010-01-01'
+#end_date:   '2010-12-31'
+
+#Bounding Box:
+bbox: '-86.364212,12.074238,-86.123199,12.201113' #Expecting 4 parameters
+
+#Or:
+max_lon: 
+min_lat: 
+min_lon: 
+max_lat: 
+
+# Lower left, upper right #
+tags: none
+
+

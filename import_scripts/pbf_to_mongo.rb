@@ -107,6 +107,11 @@ class OSMPBF
 					to_parse = parser.send(object_type)
 				end
 				to_parse.each do |obj|
+
+					#TODO: Limit the import to only data that comes before the end of the analysis window
+					#Check the date
+					#date = timestamp_to_date(obj[:timestamp])
+
 					begin
 						add_func.call(obj)
 						index += 1
