@@ -22,12 +22,7 @@ This will ignore the ```pbf_parser``` dependencies and allow you to point at an 
 At this time, we are exclusively using MongoDB.  Given the Key/Value Pair nature of OSM data, a document store such as MongoDB makes sense.  Mongo also has reasonable geo-spatial query abilities.
 
 ###PBF File Parsing
-Required for Importing OSM data to Mongo
-
-	$ brew install lzlib
-	$ brew install protobuf-c
-	
-From [Planas/pbf_parser](https://github.com/planas/pbf_parser).  The ```pbf_parser``` gem is included in the Gemfile.
+In order to parse PBF files: [Planas/pbf_parser](https://github.com/planas/pbf_parser).  The ```pbf_parser``` gem is included in the Gemfile, but the dependencies listed both at this link (and below) are required to succeed.
 
 ####PBF File Cutting
 In order to cut analysis windows out of PBF files, the [osm-history-splitter tool from GitHub user MaZderMind is required](https://github.com/MaZderMind/osm-history-splitter).  There are many dependencies which are outlined on the Repository page.
