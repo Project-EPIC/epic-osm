@@ -24,8 +24,8 @@ At this time, we are exclusively using MongoDB.  Given the Key/Value Pair nature
 ###PBF File Parsing
 In order to parse PBF files: [Planas/pbf_parser](https://github.com/planas/pbf_parser).  The ```pbf_parser``` gem is included in the Gemfile, but the dependencies listed both at this link (and below) are required to succeed.
 
-####PBF File Cutting
-In order to cut analysis windows out of PBF files, the [osm-history-splitter tool from GitHub user MaZderMind is required](https://github.com/MaZderMind/osm-history-splitter).  There are many dependencies which are outlined on the Repository page.
+###PBF File Cutting
+In order to cut analysis windows out of PBF files, the [osm-history-splitter tool from GitHub & OSM user MaZderMind is required](https://github.com/MaZderMind/osm-history-splitter).  There are many dependencies which are outlined on the Repository page.
 
 We recommend using [homebrew](http://brew.sh/) for most of these dependencies if developing on a Mac.  You may need to ```brew link --force [FORMULAE]``` on some of the libraries in order to override outdated system libraries.
 
