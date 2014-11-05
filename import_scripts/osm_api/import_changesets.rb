@@ -7,9 +7,9 @@ class ChangesetImport
   def initialize(limit=nil)
     @changeset_api = OSMAPI.new("http://api.openstreetmap.org/api/0.6/changeset/")
 
-    #Open Log files
-    @success_log = LogFile.new("logs/changesets","successful")
-    @fail_log    = LogFile.new("logs/changesets","failed")
+    # #Open Log files
+    # @success_log = LogFile.new("logs/changesets","successful")
+    # @fail_log    = LogFile.new("logs/changesets","failed")
 
     @limit = limit
   end
@@ -39,6 +39,13 @@ class ChangesetImport
         changeset_obj = Changeset.new convert_osm_api_to_domain_object_hash this_changeset
         changeset_obj.save!
       end
+
+      if (index%10).zero?
+        print '.'
+      elsif (index%101).zero?
+        print index
+      end
+
     end
   end
 

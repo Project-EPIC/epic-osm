@@ -1,0 +1,33 @@
+#
+# This is a sample configuration file for cutting and importing the 
+# Central America OSH PBF file from 11/20/13. To get All Costa Rica 2010 OSM data.
+#
+#
+#
+
+#User Information
+title: 'Costa Rica 2010'
+email: 'test_user@osm-history2.com'
+
+#Database Information
+pbf_file: '/Users/jenningsanderson/Documents/OSM/central-america.osh.pbf'
+database: 'costa-rica-2010'
+
+#Analysis Window Information
+start_date: '2010-01-01'
+end_date:   '2010-12-31'
+
+#Bounding Box:
+bbox: [] #Expecting 4 parameters
+
+#Or:
+max_lon: 
+min_lat: 
+min_lon: 
+max_lat: 
+
+# Lower left, upper right #
+
+tags: none
+
+

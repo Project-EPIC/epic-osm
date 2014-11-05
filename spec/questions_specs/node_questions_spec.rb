@@ -15,7 +15,7 @@ describe Node_Query do
   	end
 
 
-  	xit "Can query nodes with monthly buckets" do
+  	it "Can query nodes with monthly buckets" do
   		this_window = AnalysisWindow.new
   		
       this_window.nodes_x_monthly.each do |bucket|
@@ -24,7 +24,7 @@ describe Node_Query do
   	end
 
 
-  	it "Can query nodes with daily buckets" do
+  	xit "Can query nodes with daily buckets" do
   		this_window = AnalysisWindow.new
   		puts "Number of daily buckets: #{this_window.nodes_x_daily.count}"
   	end

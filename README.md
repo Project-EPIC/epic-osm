@@ -52,10 +52,18 @@ DONE (At least for changesets)
 
 
 ###Refactor Process
-1. Implement MongoMapper
 2. Run clean, fresh imports of OSM data in decided "best practice" DB format
 3. Pull appropriate pieces out of Analysis Window
 
 
 ###Database Structure Questions
 1. Should we define a unique compound key on id + version ? <-- this could be a post processing piece
+
+
+###Week of November 3
+1. Refactor + Implement Analysis Window Import based on *any* osm.pbf file
+1.5 Refactor the Rakefile to make this a little bit smoother & cleaner
+2. Update import script to exclude data which is entered after time_end of analysis window.
+2.5 Connection between configuration file and the analysis window.
+3. Finalize rake new task to read configuration file + kick off all of the above.
+3.5 Pull each import task out into the import namespace, clean up this rakefile.  use jekyll Rakefile as example...

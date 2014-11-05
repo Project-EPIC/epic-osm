@@ -12,15 +12,15 @@ describe OSMPBF do
 		puts @conn.file_stats
 	end
 
-	it "Can create node objects from the PBF" do
+	xit "Can create node objects from the PBF" do
 		@conn.parse_to_collection(object_type="nodes", lim=nil)
 	end
 
-	it "Can create Relation objects from the PBF" do
+	xit "Can create Relation objects from the PBF" do
 		@conn.parse_to_collection(object_type="relations", lim=nil)
 	end
 
-	it "Can create way objects from the PBF" do
+	xit "Can create way objects from the PBF" do
 		@conn.parse_to_collection(object_type="ways", lim=nil)
 	end
 
