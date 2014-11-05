@@ -1,48 +1,56 @@
 require_relative 'import_scripts/pbf_to_mongo'
 require_relative 'import_scripts/import_analysis_window'
 
-desc "Create New Analysis Window"
-task :new do
-	puts "Step 1: Reading Configuration File"
+#This function will ensure that we create the proper analysis window
+def window
+	unless ARGV[1].nil?
+		@this_window ||= AnalysisWindowImport.new(config: ARGV[1]) #Pass the configuration in
+	else
+		raise StandardError.new("Need a valid Configuration File")
+	end
 
-	this_window = AnalysisWindowImport.new(config: 'analysis_windows/nicaragua_sample.yml')
-
-	#Reads a config file which was passed in, or by default runs all imports (maybe we need a safety)
-	this_window.write_configuration_file
-
-	# Step 2: Runs OSM History Cutting tool to build temp.pbf file for import
-	#this_window.run_osm_history_splitter
-	
-	# Step 3: Runs osm-history2 import scripts on temp OSM.pbf file with flags for
-	# 		  dates which are too early or too late
-
-	#this_window.run_mongo_import
-
-	# Step 3.5 Clean PBF Files
-	#this_window.remove_temp_files
-
-	# Step 4: Ensures changeset & user API calls are made for the collection
-
-	#this_window.changeset_import
-
-	this_window.user_import
-
-	# this_window.user_import
-	# Step 5: Build Static Site (Jekyll new)
-
-	# Step 6: Email user and tell them their analysis window is up and running:
+	return @this_window
 end
 
+desc "Given a valid configuration file, cut and import all of the data"
+task :new do
+	Rake::Task['cut'].invoke
+	Rake::Task['import:pbf'].invoke
+	Rake::Task['import:changesets'].invoke
+	Rake::Task['import:users'].invoke
+end
 
-#Tasks to flesh out: (Helper tasks)
-# desc "Create a new instance of the import window"
-# task :initialize_window do 
-# 	@this_window = AnalysisWindowImport.new(config: 'analysis_windows/nicaragua_sample.yml')
-# end
+desc "Write appropriate configuration file and cut the file to create temp.osm.pbf file"
+task :cut do
+	window.write_configuration_file
+	window.run_osm_history_splitter
+end
 
-# desc "Import users (make sure to drop User collection first)"
-# namespace :import
+desc "Import Scripts"
+namespace :import do
 
-# 	task :users
-# 	@this_window.import_users
-# end
+	desc "Import PBF File (Nodes, Ways, Relations)"
+	task :pbf do
+		puts window.run_mongo_import
+	end
+
+	desc "Import Changesets"
+	task :changesets do
+		puts window.changeset_import
+	end
+
+	desc "Import Users"
+	task :users do
+		puts window.user_import
+	end
+end
+
+desc "Clean up all temp files"
+task :cleanup do
+	if File.exists? "import_scripts/temp.config"
+		File.delete "import_scripts/temp.config"
+	end
+	if File.exists? "import_scripts/temp.osm.pbf"
+		File.delete "import_scripts/temp.osm.pbf"
+	end
+end

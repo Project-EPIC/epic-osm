@@ -27,13 +27,11 @@ class AnalysisWindowImport
 		rescue
 			raise StandardError.new("Error loading the configuration YAML file.")
 		end
-
-		post_initialize
 	end
 
-	def post_initialize
+	def connect_to_database
 		#Open Database Connection
-		puts "Connecting to: #{config['database']}"
+		puts "Connecting to: #{config['database']} Mongo Database"
 		DatabaseConnection.new(database: config['database'])
 	end
 
@@ -53,10 +51,11 @@ class AnalysisWindowImport
 
 
 	def run_osm_history_splitter
-		exec "~/Applications/osm-history-splitter/osm-history-splitter --hardcut #{config['pbf_file']} import_scripts/temp.config"
+		system "~/Applications/osm-history-splitter/osm-history-splitter --hardcut #{config['pbf_file']} import_scripts/temp.config"
 	end
 
 	def run_mongo_import
+		connect_to_database
 		conn = OSMPBF.new
 		conn.open_parser("import_scripts/temp.osm.pbf")
 		puts conn.file_stats
@@ -73,7 +72,7 @@ class AnalysisWindowImport
 
 	def changeset_import
 		changeset_import = ChangesetImport.new
-		puts "Importing #{changeset_import.distinct_changeset_ids.length} changsets"
+		puts "Importing #{changeset_import.distinct_changeset_ids.length} changesets"
 		changeset_import.import_changeset_objects
 	end
 
@@ -81,16 +80,6 @@ class AnalysisWindowImport
 		user_import = UserImport.new
 		puts "Importing user data for #{user_import.distinct_uids.length} users"
 		user_import.import_user_objects
-	end
-
-	# Delete temporary files
-	def remove_temp_files
-		if File.exists? 'import_scripts/temp.config'
-			File.delete 'import_scripts/temp.config'
-		end
-		if File.exists? 'import_scripts/temp.pbf'
-			File.delete 'import_scripts/temp.pbf'
-		end
 	end
 
 end
