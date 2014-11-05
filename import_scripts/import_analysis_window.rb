@@ -1,3 +1,6 @@
+# This does all of the heavy lifting for Cutting and Importing new data
+
+
 require 'yaml'
 
 #Require Import Scripts
@@ -17,18 +20,17 @@ require_relative '../models/Query'
 
 class AnalysisWindowImport
 
-	attr_reader :config_file, :config, :options_file
-
+	attr_reader :config
 	def initialize(args = {})
-		@config_file = args[:config]
 
 		begin
-			@config = YAML.load_file(config_file)
+			@config = YAML.load_file(args[:config])
 		rescue
-			raise StandardError.new("Error loading the configuration YAML file.")
+			raise IOError.new("Error loading the configuration file: #{args[:config]}")
 		end
 	end
 
+	#Calls the Singleton Database Connection for the specific database
 	def connect_to_database
 		#Open Database Connection
 		puts "Connecting to: #{config['database']} Mongo Database"
@@ -36,7 +38,6 @@ class AnalysisWindowImport
 	end
 
 	def write_configuration_file
-
 		# * the destination path and filename. The file-extension used specifies the generated file format (.osm, .osh, .osm.bz2, .osh.bz2, .osm.pbf, .osh.pbf)
 		# * the type of extract (BBOX or POLY)
 		# * the extract specification
@@ -49,7 +50,7 @@ class AnalysisWindowImport
 		end
 	end
 
-
+	#Runs a system shell script to call the osm-history-splitter
 	def run_osm_history_splitter
 		system "~/Applications/osm-history-splitter/osm-history-splitter --hardcut #{config['pbf_file']} import_scripts/temp.config"
 	end
@@ -81,5 +82,4 @@ class AnalysisWindowImport
 		puts "Importing user data for #{user_import.distinct_uids.length} users"
 		user_import.import_user_objects
 	end
-
 end

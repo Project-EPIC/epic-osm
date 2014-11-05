@@ -1,18 +1,22 @@
-require_relative 'import_scripts/pbf_to_mongo'
+# This Rakefile defines tasks for setting up Analysis Windows
+
+#The import_analysis_window script does all the heavy lifting
 require_relative 'import_scripts/import_analysis_window'
 
 #This function will ensure that we create the proper analysis window
 def window
+
+	#TODO Make this more robust to handle multiple configuration files
 	unless ARGV[1].nil?
 		@this_window ||= AnalysisWindowImport.new(config: ARGV[1]) #Pass the configuration in
 	else
-		raise StandardError.new("Need a valid Configuration File")
+		raise ArgumentError.new("A valid configuration file must be defined")
 	end
 
 	return @this_window
 end
 
-desc "Given a valid configuration file, cut and import all of the data"
+desc "Given a valid configuration file, Cut and Import all of the data"
 task :new do
 	Rake::Task['cut'].invoke
 	Rake::Task['import:pbf'].invoke
