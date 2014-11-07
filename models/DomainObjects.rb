@@ -44,7 +44,7 @@ class Way < OSMObject
 	include OSMongoable::Way
 	include OSMGeo::Way
 
-	attr_reader :nodes, :version, :changeset
+	attr_reader :nodes, :version, :changeset, :missing_nodes
 
 	def initialize(args)
 		@nodes = args[:nodes]

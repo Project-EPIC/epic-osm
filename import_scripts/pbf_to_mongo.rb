@@ -8,14 +8,17 @@ brew install protobuf-c
 gem install pbf_parser
 '''
 
+#Require the PBF Parser -- Subject to change to just 'pbf_parser' with new release
 require 'pbf_parser/pbf_parser.bundle'
 
 class OSMPBF
 	require 'date'
 
-	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file
+	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date
 
-	def initialize
+	def initialize(args)
+
+		@end_date = args[:end_date] || Time.now
 		@missing_nodes		= 0
 		@empty_lines 		= 0
 		@empty_geometries 	= 0
@@ -23,6 +26,9 @@ class OSMPBF
 		@n_count = 0
 		@w_count = 0
 		@r_count = 0
+
+		@nodes = {}
+		@ways  = {}
 	end
 
 
@@ -58,22 +64,24 @@ class OSMPBF
 		Time.at(timestamp/1000).utc #This is a time instance, it should go straight ot ruby
 	end
 
-
 	def add_node(node)
 		node[:created_at] = timestamp_to_date(node[:timestamp])
 		this_node = Node.new(node)
-		this_node.save!
+
+		this_node.save!		#Save to Database
+		this_node.mem_save  #Save to Memory
 	end
 
-	
 
 	def add_way(way)
 		way[:created_at] = timestamp_to_date(way[:timestamp])
 		way[:nodes] = way[:refs]
-		way.delete :refs 
+		way.delete :refs
 		
 		this_way = Way.new(way)
-		this_way.save!
+
+		this_way.save!      #Save to Database
+		this_way.mem_save   #Save to Memory
 	end
 
 
@@ -108,24 +116,21 @@ class OSMPBF
 					to_parse = parser.send(object_type)
 				end
 				to_parse.each do |obj|
-
-					#TODO: Limit the import to only data that comes before the end of the analysis window
-					#Check the date
-					#date = timestamp_to_date(obj[:timestamp])
-
-					begin
-						add_func.call(obj)
-						index += 1
-					rescue => e
-						puts $!
-						puts e.backtrace
+					unless timestamp_to_date(obj[:timestamp]) > end_date
 						begin
-							type["tags"].each do |k,v|
-								k.gsub!('.','_')
-							end
 							add_func.call(obj)
-						rescue
-							next
+							index += 1
+						rescue => e
+							puts $!
+							puts e.backtrace
+							begin
+								type["tags"].each do |k,v|
+									k.gsub!('.','_')
+								end
+								add_func.call(obj)
+							rescue
+								next
+							end
 						end
 					end
 					if index%2000==0
@@ -141,16 +146,15 @@ class OSMPBF
 			end
 		end
 
-		# puts "Adding the appropriate indexes"
-		# begin
-		# 	eval %Q{#{object_type}.ensure_index( id: 1 ) }
-		# 	eval %Q{#{object_type}.ensure_index( changeset: 1 ) }
-		# 	eval %Q{#{object_type}.ensure_index( user_id: 1 ) }
-		# 	eval %Q{#{object_type}.ensure_index( geometry: "2dsphere") }
-		# rescue
-		# 	puts "Error creating index"
-		# 	p $!
-		# end
+		puts "Adding the appropriate indexes: id, changeset, geometry"
+		begin
+			eval %Q{DatabaseConnection.database[#{object_type}.to_s].ensure_index( "id" => 1 ) }
+			eval %Q{DatabaseConnection.database[#{object_type}.to_s].ensure_index( "changeset" => 1 ) }
+			eval %Q{DatabaseConnection.database[#{object_type}.to_s].ensure_index( "geometry" => "2dsphere") }
+		rescue
+			puts "Error creating index"
+			p $!
+		end
 	end
 
 	def read_pbf_to_mongo(lim=nil, types=[:nodes, :ways, :relations])

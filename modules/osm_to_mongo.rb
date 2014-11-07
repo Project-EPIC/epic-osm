@@ -25,6 +25,17 @@ module OSMongoable
 			hash[:user]       ||= user
 			hash[:created_at] ||= created_at
 			hash[:tags]       ||= tags
+			hash[:geometry]   ||= geojson_geometry
+
+			hash.delete :geometry if hash[:geometry].nil?
+		end
+
+		def geojson_geometry
+			nil
+		end
+
+		def mem_save
+			nil
 		end
 	end
 	
@@ -34,7 +45,6 @@ module OSMongoable
 			hash[:lat] ||= lat
 			hash[:lon] ||= lon
 			hash[:version]   ||= version
-			hash[:geometry]  ||= geojson_geometry
 			hash[:changeset] ||= changeset.to_s
 			super(hash)
 			hash
@@ -48,6 +58,9 @@ module OSMongoable
 			DatabaseConnection.database['nodes'].insert( self.to_mongo )
 		end
 
+		def mem_save
+			DatabaseConnection.write_memory_node(self)
+		end
 	end
 
 
@@ -59,11 +72,56 @@ module OSMongoable
 			hash[:changeset]  ||= changeset.to_s
 			hash[:version]    ||= version
 			super(hash)
+			hash[:missing_nodes] = missing_nodes unless missing_nodes.empty?
 			hash
+		end
+
+		def geojson_geometry
+			return nil if nodes.nil?
+			return nil if nodes.empty?
+
+			mem_nodes = DatabaseConnection.memory_nodes
+
+			missing_nodes = []
+			coords = []
+			
+			#Iterate over this way's nodes
+			nodes.each do |node_id| #The id of the node needed
+				if mem_nodes[node_id].nil?	#Look for this node in memory
+					missing_nodes << node_id     #Add it to missing and skip
+					next
+				else
+					if mem_nodes[node_id].length == 1 #If there is only one, use it
+						coords << [mem_nodes[node_id].first.lon, mem_nodes[node_id].first.lat]
+					else
+						this_node = mem_nodes[node_id].select{|node| node.changeset == changeset}
+						unless this_node.empty?
+							coords << [this_node.first.lon, this_node.first.lat]
+						else
+							missing_nodes << node_id
+						end
+					end
+				end
+			end
+
+			@missing_nodes = missing_nodes
+			
+			case coords.length
+			when 0 
+				return nil
+			when 1 
+				return {"type" => "Point", "coordinates" => coords.first}
+			else
+				return {"type" => "LineString", "coordinates" => coords}
+			end
 		end
 
 		def save!
 			DatabaseConnection.database['ways'].insert( self.to_mongo )
+		end
+
+		def mem_save
+			DatabaseConnection.write_memory_way(self)
 		end
 	end
 
@@ -82,6 +140,9 @@ module OSMongoable
 		def save!
 			DatabaseConnection.database['relations'].insert( self.to_mongo )
 		end
+
+		#TODO: Initialize a mem_save function as well as a get_geometry function which will be a 
+			#  collection of geometries (GeometryCollection) for the associated nodes & stuff
 	end
 
 
