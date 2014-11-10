@@ -5,9 +5,8 @@
 
 require 'spec_helper'
 require 'rubigraph'
-require_relative '../../modules/osm_network'
 
-describe Network do
+describe 'nothing' do
 
 	before :each do
 		Rubigraph.init
@@ -35,7 +34,7 @@ describe Network do
 	it "Can make a network connecting users who edited the same node" do 
 		users = {}
 
-		@dw.nodes_x_all.first[:objects].group_by{|node| node.id}.each do |id, ways|
+		@dw.ways_x_all.first[:objects].group_by{|way| way.id}.each do |id, ways|
 
 			puts id, ways.length
 			

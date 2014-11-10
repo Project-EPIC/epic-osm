@@ -37,13 +37,14 @@ class UserImport
 
       user_obj = User.new convert_osm_api_to_domain_object_hash this_user
       user_obj.save!
-    end
+   
 
     if (index%10).zero?
       print '.'
     elsif (index%101).zero?
       print index
     end
+   end
   end
 
   def convert_osm_api_to_domain_object_hash(osm_api_hash)
