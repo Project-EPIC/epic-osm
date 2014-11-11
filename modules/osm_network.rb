@@ -77,7 +77,7 @@ module Network
 		def write_nodes
 			nodes.each do |node|
 				file.write %Q{\tnode [\n} 
-				file.write %Q{\t\tid #{node.delete :id}\n}
+				file.write %Q{\t\tid "#{node.delete :id}"\n}
 				node.keys.each do |key|
 					file.write %Q{\t\t#{key} }
 					if node[key].is_a? String
@@ -93,8 +93,8 @@ module Network
 		def write_edges
 			edges.each do |edge|
 				file.write %Q{\tedge [\n}
-				file.write %Q{\t\tsource #{edge.delete :source}\n}
-				file.write %Q{\t\ttarget #{edge.delete :target}\n}
+				file.write %Q{\t\tsource "#{edge.delete :source}"\n}
+				file.write %Q{\t\ttarget "#{edge.delete :target}"\n}
 				edge.keys.each do |key|
 					file.write %Q{\t\t#{key} }
 					if edge[key].is_a? String
