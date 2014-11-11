@@ -12,7 +12,7 @@ gem 'rgeo'
 
 #Gems required mostly for import abiltiies:
 group :import do
-	gem 'pbf_parser',	github: 'planas/pbf_parser'
+	gem 'pbf_parser',   '0.2.0'
 	gem 'nori',			'2.4.0'
 end
 
