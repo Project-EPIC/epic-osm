@@ -9,7 +9,7 @@ gem install pbf_parser
 '''
 
 #Require the PBF Parser -- Subject to change to just 'pbf_parser' with new release
-require 'pbf_parser/pbf_parser.bundle'
+require 'pbf_parser'
 
 class OSMPBF
 	require 'date'
