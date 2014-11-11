@@ -2,15 +2,6 @@
 
 module Network
 
-	module Node
-		
-	end
-
-
-	module Way
-
-	end
-
 	class GMLAuthor
 
 		require 'builder' #REXML may have been easier? but it seems more contrived?
@@ -106,7 +97,5 @@ module Network
 				file.write %Q{\t]\n}
 			end
 		end
-
 	end
-
 end

@@ -4,8 +4,8 @@
 # 
 #
 
-require_relative '../modules/osm_to_mongo'
-require_relative '../modules/osm_geo'
+require_relative '../modules/domain_objects/osm_to_mongo'
+require_relative '../modules/domain_objects/osm_geo'
 
 class OSMObject
 
