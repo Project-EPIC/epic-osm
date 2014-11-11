@@ -19,13 +19,20 @@ require_relative '../models/Query'
 
 class AnalysisWindowImport
 
-	attr_reader :config
+	attr_reader :config, :global_config
 	def initialize(args = {})
 
 		begin
 			@config = YAML.load_file(args[:config])
 		rescue
 			raise IOError.new("Error loading the configuration file: #{args[:config]}")
+		end
+
+		begin
+			@global_config = YAML.load_file('config.yml')
+			puts global_config
+		rescue
+			raise IOError.new("Error loading global configuration file")
 		end
 	end
 
@@ -52,9 +59,9 @@ class AnalysisWindowImport
 	#Runs a system shell script to call the osm-history-splitter
 	def run_osm_history_splitter
 		unless config['soft-cut']
-			system "~/Applications/osm-history-splitter/osm-history-splitter --hardcut #{config['pbf_file']} import_scripts/temp.config"
+			system "#{global_config['osm-history-splitter']} --hardcut #{config['pbf_file']} import_scripts/temp.config"
 		else
-			system "~/Applications/osm-history-splitter/osm-history-splitter --softcut #{config['pbf_file']} import_scripts/temp.config"
+			system "#{global_config['osm-history-splitter']} --softcut #{config['pbf_file']} import_scripts/temp.config"
 		end
 	end
 
