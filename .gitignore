@@ -1,6 +1,8 @@
 *.lock
 config.yml
 
+*.gml
+
 temp.config
 temp.osm.pbf
 seattle.osm.pbf

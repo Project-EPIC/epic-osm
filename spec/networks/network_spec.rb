@@ -31,31 +31,60 @@ describe 'nothing' do
 		end
 	end
 
-	it "Can make a network connecting users who edited the same node" do 
+	xit "Can make a network connecting users who edited the same node" do 
 		users = {}
 
-		@dw.ways_x_all.first[:objects].group_by{|way| way.id}.each do |id, ways|
+		@dw.changesets_x_hourly.each do |bucket|
 
-			puts id, ways.length
-			
-			#At this point, we have groups of ways.
-			ways.sort_by!{ |way| way.version}
+			puts "#{bucket[:start_date]} - #{bucket[:end_date]}"
 
-			previous_user = users[ways.first.user]
+			users = {}
+			edges = {}
+			size = bucket[:objects].count
 
-			users[previous_user] ||= Rubigraph::Vertex.new
+			size.times do |i|
+				((i+1)..(size-1)).each do |j|
+					changeset_1 = bucket[:objects][i]
+					changeset_2 = bucket[:objects][j]
 
-			unless ways.length == 1
-				ways.each do |version_of_way|
+					user_1 = bucket[:objects][i].user
+					user_2 = bucket[:objects][j].user
 
-					#Make a vertex (if it doesn't already exist for the user that's part of this way)
-					if version_of_way.user != previous_user
-						users[version_of_way.user] ||= Rubigraph::Vertex.new
-						Rubigraph::Edge.new( users[previous_user], users[version_of_way.user] )
+					unless user_1 == user_2
+						if (changeset_1.area < 100000000) and (changeset_2.area < 100000000)
+							if changeset_1.bounding_box.intersects? changeset_2.bounding_box
+								
+								users[user_1] ||= Rubigraph::Vertex.new	
+
+								users[user_2] ||= Rubigraph::Vertex.new	
+
+								#Add labels to the network
+								users[user_1].label = user_1
+								users[user_2].label = user_2
+	
+								unless edges["#{user_1}-#{user_2}"].nil?
+									edges["#{user_1}-#{user_2}"][:width] += 1
+									edges["#{user_1}-#{user_2}"][:edge].width = edges["#{user_1}-#{user_2}"][:width]
+								else
+									edges["#{user_1}-#{user_2}"] = {edge: Rubigraph::Edge.new(users[user_1], users[user_2]), width: 1}
+								end
+								puts "#{user_1} - #{user_2}"
+								users[user_1].shape = 'sphere'
+								users[user_2].shape = 'sphere'
+								users[user_1].color = '#003366'
+								users[user_2].color = '#003366'
+
+								sleep(4)
+							end
+						end
 					end
-					previous_user = version_of_way.user
 				end
 			end
+			Rubigraph.clear
+			users = {}
+			edges={}
 		end
 	end
+
+
 end
