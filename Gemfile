@@ -10,6 +10,9 @@ gem 'bson_ext',		'1.11.1'
 #Geo:
 gem 'rgeo'
 
+#Export to GraphML
+gem 'builder'
+
 
 #Gems required mostly for import abiltiies:
 group :import do

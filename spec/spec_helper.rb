@@ -11,4 +11,5 @@ require_relative '../models/Query'
 require 'debugger'
 
 #Open connection to the test database
-DatabaseConnection.new(database: 'osm-test')
+# DatabaseConnection.new(database: 'philippines', host: 'epic-analytics.cs.colorado.edu', port: 27018)
+DatabaseConnection.new(database: 'managua-test')
