@@ -9,14 +9,14 @@ gem install pbf_parser
 '''
 
 #Require the PBF Parser -- Subject to change to just 'pbf_parser' with new release
-require 'pbf_parser/pbf_parser.bundle'
+require 'pbf_parser'
 
 class OSMPBF
 	require 'date'
 
 	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date
 
-	def initialize(args)
+	def initialize(args={})
 
 		@end_date = args[:end_date] || Time.now
 		@missing_nodes		= 0

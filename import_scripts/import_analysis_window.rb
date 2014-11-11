@@ -1,6 +1,5 @@
 # This does all of the heavy lifting for Cutting and Importing new data
 
-
 require 'yaml'
 
 #Require Import Scripts
@@ -52,12 +51,16 @@ class AnalysisWindowImport
 
 	#Runs a system shell script to call the osm-history-splitter
 	def run_osm_history_splitter
-		system "~/Applications/osm-history-splitter/osm-history-splitter --hardcut #{config['pbf_file']} import_scripts/temp.config"
+		unless config['soft-cut']
+			system "~/Applications/osm-history-splitter/osm-history-splitter --hardcut #{config['pbf_file']} import_scripts/temp.config"
+		else
+			system "~/Applications/osm-history-splitter/osm-history-splitter --softcut #{config['pbf_file']} import_scripts/temp.config"
+		end
 	end
 
 	def run_mongo_import
 		connect_to_database
-		conn = OSMPBF.new
+		conn = OSMPBF.new(end_date: config[:end_date])
 		conn.open_parser("import_scripts/temp.osm.pbf")
 		puts conn.file_stats
 	
