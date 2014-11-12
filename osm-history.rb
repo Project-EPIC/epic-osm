@@ -1,25 +1,24 @@
-#
-#
-#
 # THIS IS THE MAIN CONTROLLER.
 
-#
+#This adds the current directory to the loadpath
 $:.unshift File.dirname(__FILE__)
 
-#Require the questions modules #These should be autoloaded, but we have to put this in the load path
+#Require the questions modules # => These could be autoloaded?
 require 'modules/questions/node_questions'
 require 'modules/questions/way_questions'
 require 'modules/questions/relation_questions'
 require 'modules/questions/user_questions'
 require 'modules/questions/changeset_questions'
 
-#Require the rest of stuff here
+#This is what's required to make it all work
 require 'models/DomainObjects'
 require 'models/DatabaseConnection'
 require 'models/Query'
 
+#Standard ruby Libraries we need?
 require 'yaml'
 
+#Autoload FileIO as needed
 autoload :FileIO, 'modules/file_io'
 
 #TODO: Things
@@ -54,7 +53,10 @@ class OSMHistory
 	
 		puts number_of_nodes_added
 
-		buildings_by_month
+		#Do all the way questions:
+		Questions::Ways.instance_methods.each do |method|
+			print method.to_s + ': '; eval "#{method}"
+		end
 	end
 
 	def write_json(args)
