@@ -8,9 +8,12 @@ module Questions
 		end
 
 		def number_of_nodes_added
-      analysis_window.node_added_count
-  	end
+     		analysis_window.node_added_count
+  		end
+
     
- end
+    	# def temporal_test
+    	# 	analysis_window.nodes_x_hour(1)
+	 end
   	
 end

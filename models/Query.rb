@@ -40,7 +40,7 @@ class Query
 
 	def run(args)
 		# puts "Got to super run function with args #{args}"
-		@buckets = analysis_window.build_buckets( unit = args[:unit] )
+		@buckets = analysis_window.build_buckets( unit = args[:unit], step = args[:step] )
 
 		unless args[:constraints].nil?
 			selector.update(args[:constraints])

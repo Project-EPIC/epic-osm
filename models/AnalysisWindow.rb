@@ -24,9 +24,15 @@ class AnalysisWindow
 		end
 	end
 
-	def build_buckets(unit=:all)
+	def build_buckets(unit=:all, step=1)
+
+		puts "unit: #{unit}, step: #{step}"
 		hour   = 60 * 60
 		day    = 24 * hour
+
+		if step.nil?
+			step = 1
+		end
 
 		buckets = []
 		
@@ -38,7 +44,7 @@ class AnalysisWindow
 			year = time_frame.start.year
 			bucket_start = Time.mktime(year, 1, 1)
 			while bucket_start < time_frame.end
-				bucket_end   = Time.mktime(year+=1, 1, 1)
+				bucket_end   = Time.mktime(year+=step, 1, 1)
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
@@ -49,11 +55,13 @@ class AnalysisWindow
 			bucket_start = time_frame.start
 			while bucket_start < time_frame.end
 				bucket_start = Time.mktime( year, (month) )
-				if (month%12).zero?
+				
+				month+=step
+				if (month-12) > 0
 					year  += 1
-					month = 0
+				    month = month-12
 				end
-				month+=1
+				
 				bucket_end   = Time.mktime(year, (month) )
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 			end
@@ -61,7 +69,7 @@ class AnalysisWindow
 		when :day
 			bucket_start = Time.mktime(time_frame.start.year, time_frame.start.mon, time_frame.start.day)
 			while bucket_start < time_frame.end
-				bucket_end   = Time.at( bucket_start.to_i + 1*day )
+				bucket_end   = Time.at( bucket_start.to_i + step*day )
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
@@ -73,7 +81,7 @@ class AnalysisWindow
 		when :hour
 			bucket_start = Time.mktime(time_frame.start.year, time_frame.start.mon, time_frame.start.day, time_frame.start.hour)
 			while bucket_start < time_frame.end
-				bucket_end   = Time.at( bucket_start.to_i + 1*hour )
+				bucket_end   = Time.at( bucket_start.to_i + step*hour )
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
@@ -93,13 +101,13 @@ class AnalysisWindow
 
 			#Find the nodes_x_all, changesets_x_month, ways_x_yearly type of functions
 			if pieces[1] == 'x'
-				
+
 				unless args.empty?
 					cons = args[0][:constraints] #Better pass a hash
+					step = args[0][:step] || 1
 				end
-
-				instance_eval "@#{pieces[2]}_#{pieces[0]} ||= #{pieces[0]}.run(unit: :#{pieces[2]}, constraints: cons)"
-			
+				
+				instance_eval "@#{pieces[2]}_#{pieces[0]} ||= #{pieces[0]}.run(unit: :#{pieces[2]}, step: step, constraints: cons)"
 			end
 
 		rescue => e

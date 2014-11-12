@@ -51,12 +51,18 @@ class OSMHistory
 	def run_questions
 		#Go through questions in the configuration file and run the appropriate algorithms to get answers
 	
-		puts number_of_nodes_added
+		#puts number_of_nodes_added
+
+		#nodes_by_2_months
+
+  		analysis_window.ways_x_month(step: 3).each do |bucket|
+  			puts "#{bucket[:start_date]} - #{bucket[:end_date]} : #{bucket[:objects].count}"
+  		end
 
 		#Do all the way questions:
-		Questions::Ways.instance_methods.each do |method|
-			print method.to_s + ': '; eval "#{method}"
-		end
+		#Questions::Ways.instance_methods.each do |method|
+			#print method.to_s + ': '; eval "#{method}"
+		#end
 	end
 
 	def write_json(args)
