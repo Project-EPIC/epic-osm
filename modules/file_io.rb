@@ -1,6 +1,7 @@
 
 module FileIO
 
+	#Main File Exporter (Should be VERY simple)
 	class JSONExporter
 
 		def initialize(args)
@@ -9,9 +10,8 @@ module FileIO
 	end
 
 
+	#Write a 'gml' file for network analytics
 	class GMLAuthor
-
-		require 'builder' #REXML may have been easier? but it seems more contrived?
 
 		attr_reader :nodes, :edges, :file, :directed, :id, :label, :comment
 
