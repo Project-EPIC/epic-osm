@@ -34,7 +34,7 @@ class AnalysisWindow
 		when :all
 			buckets << {start_date: time_frame.start, end_date: time_frame.end, objects: []}
 		
-		when :yearly
+		when :year
 			year = time_frame.start.year
 			bucket_start = Time.mktime(year, 1, 1)
 			while bucket_start < time_frame.end
@@ -43,7 +43,7 @@ class AnalysisWindow
 				bucket_start = bucket_end
 			end
 
-		when :monthly
+		when :month
 			month = time_frame.start.mon
 			year  = time_frame.start.year
 			bucket_start = time_frame.start
@@ -58,7 +58,7 @@ class AnalysisWindow
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 			end
 
-		when :daily
+		when :day
 			bucket_start = Time.mktime(time_frame.start.year, time_frame.start.mon, time_frame.start.day)
 			while bucket_start < time_frame.end
 				bucket_end   = Time.at( bucket_start.to_i + 1*day )
@@ -66,11 +66,11 @@ class AnalysisWindow
 				bucket_start = bucket_end
 			end
 		
-		when :weekly
+		when :week
 			#fuck us, this is going to be ugly.  How should we do this? just start from the first week of the analysis window?
 			#We could just add 7 days.
 
-		when :hourly
+		when :hour
 			bucket_start = Time.mktime(time_frame.start.year, time_frame.start.mon, time_frame.start.day, time_frame.start.hour)
 			while bucket_start < time_frame.end
 				bucket_end   = Time.at( bucket_start.to_i + 1*hour )
@@ -91,7 +91,7 @@ class AnalysisWindow
 			#Break out the method by snake case
 			pieces = m.to_s.split(/\_/)
 
-			#Find the nodes_x_all, changesets_x_monthly, ways_x_yearly type of functions
+			#Find the nodes_x_all, changesets_x_month, ways_x_yearly type of functions
 			if pieces[1] == 'x'
 				
 				unless args.empty?
@@ -175,7 +175,7 @@ class AnalysisWindow
 
 	def users_editing_per_year
 		years = {}
-		changesets_x_yearly.each do |bucket|
+		changesets_x_year.each do |bucket|
 			years[ bucket[:start_date] ] = bucket[:objects].collect{|changeset| changeset.user}.uniq
 		end
 		years
@@ -183,7 +183,7 @@ class AnalysisWindow
 
 	def users_editing_per_month
 		months = {}
-		changesets_x_monthly.each do |bucket|
+		changesets_x_month.each do |bucket|
 			months[ bucket[:start_date] ] = bucket[:objects].collect{|changeset| changeset.user}.uniq
 		end
 		months
@@ -199,7 +199,7 @@ class AnalysisWindow
 		when :all_time
 			changesets_per_unit = changesets_x_all.first[:objects].group_by{|changeset| changeset.user}.sort_by{|k,v| v.length}.reverse
 		when :month
-			changesets_per_unit = changesets_x_monthly.group_by{|changeset| changeset.created_at.to_i / 100000}
+			changesets_per_unit = changesets_x_month.group_by{|changeset| changeset.created_at.to_i / 100000}
 		end
 		changesets_per_unit.first(args[:limit])
 	end
@@ -241,6 +241,8 @@ end
 
 class TimeFrame
 
+	require 'time'
+
 	#TODO:
 	# => We want flexiblity in how we input dates, so this class will
 	# => transform these dates to the proper format.
@@ -255,9 +257,17 @@ class TimeFrame
 		if args.nil?
 			@active = false
 		else
-			@start = args[:start]
-			@end   = args[:end]
+			@start = validate_time(args[:start])
+			@end   = validate_time(args[:end])
 			@active = true
+		end
+	end
+
+	def validate_time(time)
+		if time.is_a? Time
+			return time
+		else
+			return Time.parse(time)
 		end
 	end
 end

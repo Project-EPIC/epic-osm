@@ -3,17 +3,30 @@
 #
 # THIS IS THE MAIN CONTROLLER.
 
-#Require modules here
+#
+$:.unshift File.dirname(__FILE__)
+
+#Require the questions modules #These should be autoloaded, but we have to put this in the load path
+require 'modules/questions/node_questions'
+require 'modules/questions/way_questions'
+require 'modules/questions/relation_questions'
+require 'modules/questions/user_questions'
+require 'modules/questions/changeset_questions'
 
 #Require the rest of stuff here
-require_relative 'models/DomainObjects'
-require_relative 'models/DatabaseConnection'
-require_relative 'models/Query'
+require 'models/DomainObjects'
+require 'models/DatabaseConnection'
+require 'models/Query'
 
 require 'yaml'
 
+autoload :FileIO, 'modules/file_io'
+
 #TODO: Things
 class OSMHistory
+
+	include Questions::Nodes
+	include Questions::Ways
 
 	attr_reader :aw_config
 
@@ -38,9 +51,13 @@ class OSMHistory
 
 	def run_questions
 		#Go through questions in the configuration file and run the appropriate algorithms to get answers
+	
+		puts number_of_nodes_added
+
+		buildings_by_month
 	end
 
 	def write_json(args)
-		nil
+		FileIO::JSONExporter.new(name: args[:name])
 	end
 end

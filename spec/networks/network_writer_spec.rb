@@ -1,9 +1,9 @@
 
 require 'spec_helper'
 
-require_relative '../../modules/osm_network'
+require_relative '../../io_plugins/network_exporter'
 
-describe Network do
+describe FileIO do
 
 	before :each do 
 		@dw = AnalysisWindow.new
@@ -11,7 +11,7 @@ describe Network do
 
 	it "Can write a GraphML file from the data" do
 
-		file = Network::GMLAuthor.new(filename: 'changesets_per_month.gml', directed: 1, id: 1, comment: "Changesets Per Month", label: "Testing")
+		file = GMLAuthor.new(filename: 'changesets_per_month.gml', directed: 1, id: 1, comment: "Changesets Per Month", label: "Testing")
 
 		users = {}
 		edges = {}

@@ -1,6 +1,13 @@
 
+module FileIO
 
-module Network
+	class JSONExporter
+
+		def initialize(args)
+			puts args
+		end
+	end
+
 
 	class GMLAuthor
 

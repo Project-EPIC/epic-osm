@@ -16,8 +16,8 @@ pbf_file: '/Users/jenningsanderson/Documents/OSM/central-america.osh.pbf'
 database: 'managua-test'
 
 #Analysis Window Information
-#start_date: '2010-01-01'
-#end_date:   '2010-12-31'
+start_date: '2010-01-01'
+end_date:   '2010-12-31'
 
 #Bounding Box:
 bbox: '-86.364212,12.074238,-86.123199,12.201113' #Expecting 4 parameters
