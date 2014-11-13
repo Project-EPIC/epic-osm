@@ -1,11 +1,17 @@
 # Config
+#These are currently unimplemented -- but can be called back
+# test:
+#   host: 'localhost'
+#   port: '27017'
+#   database: 'seattle'
 
-production:
-  database: 'osm'
-  port: '28017'
-  host: 'some-host.com'
+# production:
+#   host: 'epic-analytics.cs.colorado.edu'
+#   port: '27018'
+#   database: 'haiti'
 
-test:
-  database: 'osm-test'
-  port: '27017'
-  host: 'localhost'
+
+#Point to your installation location for osm-history-splitter
+osm-history-splitter: '~/Applications/osm-history-splitter/osm-history-splitter'
+
+data_directory: _data
