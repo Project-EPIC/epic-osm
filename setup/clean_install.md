@@ -43,7 +43,7 @@ I also modified my ```$PATH``` to put ```/usr/local/bin``` before ```/usr/bin```
 
 Mac OS X already has expat 1.5, so I had to ```brew link --force expat``` to override it.
 
-	$ brew install goes 	# => geos-3.4.2 already installed
+	$ brew install geos 	# => geos-3.4.2 already installed
 
 I suppose this is good -- probably happened with GDAL.
 
@@ -71,7 +71,7 @@ At this point, I attempted to install Osmium (per instructions in the README)
 
 Run the tests?
 
-	$ cd tests
+	$ cd test
 	$ ./run_tests.sh
 	
 I had 27 tests ok and 1 compile error, I think it was a BOOST error, and I did not install libboost-test, so we'll just assume that's what happened...
