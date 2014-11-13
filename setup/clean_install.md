@@ -43,7 +43,7 @@ I also modified my ```$PATH``` to put ```/usr/local/bin``` before ```/usr/bin```
 
 Mac OS X already has expat 1.5, so I had to ```brew link --force expat``` to override it.
 
-	$ brew install goes 	# => geos-3.4.2 already installed
+	$ brew install geos 	# => geos-3.4.2 already installed
 
 I suppose this is good -- probably happened with GDAL.
 
