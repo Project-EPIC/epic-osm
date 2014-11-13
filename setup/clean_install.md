@@ -149,6 +149,8 @@ OSM OpenSUSE Virtual Machine
 ####Enable Shared Library
 	export LD_LIBRARY_PATH=/usr/local/lib
 
+
+
 ####Gain Root access:
 
 	su (osm)
@@ -159,23 +161,31 @@ OSM OpenSUSE Virtual Machine
 	
 ####Install protobuf 2.6.0 from source: 
 
-	cd /home/osmhistory/protobuf-2.6.0-master
+	cd /home/osmhistory/protobuf-2.6.0
 	./autogen.sh
 	./configure
-	make
-	make install
+	make && make install
 	
 ####Build protobuf-c from source:
 
 	cd /home/osmhistory/protobuf-c-master
 	./autogen.sh
-	./configure	make
-	make install
+	./configure	
+	make && make install
 	
+That part crashed so I did this again:
+	
+	export LD_LIBRARY_PATH=/usr/local/lib
+	
+and then ran
+
+	make && make install
+		
 ####Install the OSM-Binary headers: 
 
 	cd /home/osmhistory/OSM-binary-master
 	cd src
+	make
 	make install
 
 ####Build Osmium: 
@@ -184,6 +194,8 @@ OSM OpenSUSE Virtual Machine
 	make install
 	
 	test/run_tests.sh 
+	
+27 ok, 0 compile error, 1 fail
 	
 ####Install osm-history-splitter
 
@@ -216,7 +228,7 @@ Yes, this works!
 #Running the Server
 
 ##Start Mongo
-	/etc/init.d/mongo start
+	/etc/init.d/mongodb start
 	
 	
 #Running the Application
