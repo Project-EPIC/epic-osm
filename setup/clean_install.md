@@ -71,7 +71,7 @@ At this point, I attempted to install Osmium (per instructions in the README)
 
 Run the tests?
 
-	$ cd tests
+	$ cd test
 	$ ./run_tests.sh
 	
 I had 27 tests ok and 1 compile error, I think it was a BOOST error, and I did not install libboost-test, so we'll just assume that's what happened...
