@@ -21,9 +21,9 @@ describe 'Overlapping Changeset Network' do
 
 	it "Can make a network connecting users who edited overlapping changesets" do 
 		
-		@dw.changesets_x_daily.each do |bucket|
+		@dw.changesets_x_hour.each do |bucket|
 
-			puts "#{bucket[:start_date]} - #{bucket[:end_date]}"
+			puts "#{bucket[:start_date]} - #{bucket[:end_date]} : #{bucket[:objects].count}"
 
 			users = {}
 			edges = {}
