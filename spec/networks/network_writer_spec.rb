@@ -16,7 +16,7 @@ describe FileIO do
 		users = {}
 		edges = {}
 
-		@dw.changesets_x_monthly.each do |bucket|
+		@dw.changesets_x_month.each do |bucket|
 
 			puts "#{bucket[:start_date]} - #{bucket[:end_date]}"
 
