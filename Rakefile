@@ -3,6 +3,8 @@
 #The import_analysis_window script does all the heavy lifting
 require_relative 'import_scripts/import_analysis_window'
 
+require_relative 'osm-history'
+
 #This function will ensure that we create the proper analysis window
 def window
 
@@ -57,4 +59,10 @@ task :cleanup do
 	if File.exists? "import_scripts/temp.osm.pbf"
 		File.delete "import_scripts/temp.osm.pbf"
 	end
+end
+
+desc "Network Writers"
+task :network do 
+	osmhistory = OSMHistory.new(analysis_window: ARGV[1])
+	osmhistory.run_network_functions #This will need to be pulled out eventually...
 end

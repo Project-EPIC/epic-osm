@@ -9,6 +9,7 @@ require 'modules/questions/way_questions'
 require 'modules/questions/relation_questions'
 require 'modules/questions/user_questions'
 require 'modules/questions/changeset_questions'
+require 'modules/questions/network_questions'
 
 #This is what's required to make it all work
 require 'models/DomainObjects'
@@ -26,6 +27,8 @@ class OSMHistory
 
 	include Questions::Nodes
 	include Questions::Ways
+
+	include Questions::Network
 
 	attr_reader :aw_config
 
@@ -65,7 +68,16 @@ class OSMHistory
 		#end
 	end
 
+	def run_network_functions
+
+  		network_info = aw_config['temporal_network']
+
+		temp = TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: network_info['files'])
+
+		temp.run
+	end
+
 	def write_json(args)
-		FileIO::JSONExporter.new(name: args[:name])
+		FileIO::JSONExporter.new(name: args[:name]) 
 	end
 end
