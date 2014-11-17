@@ -30,6 +30,9 @@ Current password is 'osm'
 
 ####Build protobuf-c from source:
 	cd /home/osmhistory/protobuf-c-master
+
+	ldconfig
+
 	./autogen.sh
 	./configure	
 	make && make install
@@ -60,7 +63,9 @@ Optionally, run tests
 ##Ruby
 Perform a new install of Ruby with zypper, this seems to enable Ruby to find the previously installed headers easier...
 
-	zipper in ruby-devel
+	zypper in ruby-devel
+
+It will scream about not finding ruby in the first two repositories it searches, use 'i' to ignore, then 'y' to install when it finds it...
 
 ###Install Gems: 
 

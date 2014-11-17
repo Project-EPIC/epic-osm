@@ -4,7 +4,7 @@ require 'mongo'
 class DatabaseConnection
 	attr_reader :host, :port, :database
 
-	def initialize(args)
+	def initialize(args={})
 
 		@host = args[:host] || 'localhost'
 		@port = args[:port] || '27017'

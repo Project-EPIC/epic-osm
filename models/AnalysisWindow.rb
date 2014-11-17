@@ -26,7 +26,6 @@ class AnalysisWindow
 
 	def build_buckets(unit=:all, step=1)
 
-		puts "unit: #{unit}, step: #{step}"
 		hour   = 60 * 60
 		day    = 24 * hour
 

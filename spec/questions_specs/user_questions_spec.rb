@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Query do
 
-	before :each do
+	before :all do
 		@this_analysis_window = this_analysis_window = AnalysisWindow.new
 	end
 

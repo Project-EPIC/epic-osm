@@ -18,7 +18,7 @@ describe Changeset_Query do
 
 
   	it "Can count the number of changesets per Month" do 
-		per_month = @this_analysis_window.changesets_x_monthly
+		per_month = @this_analysis_window.changesets_x_month
 
 		puts "Month : Number of Changesets"
 		per_month.each do |bucket|
