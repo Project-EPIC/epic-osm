@@ -18,7 +18,7 @@ module Network
 			@buckets = instance_eval "aw.changesets_x_#{unit}(step: #{step})"
 		end
 
-		def run
+		def run_overlapping_changesets
 			buckets.each do |bucket|
 				this_file = make_file(filename="#{bucket[:start_date]}-#{bucket[:end_date]}")
 

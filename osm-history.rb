@@ -69,12 +69,9 @@ class OSMHistory
 	end
 
 	def run_network_functions
-
   		network_info = aw_config['temporal_network']
-
 		temp = TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: network_info['files'])
-
-		temp.run
+		temp.run_overlapping_changesets
 	end
 
 	def write_json(args)
