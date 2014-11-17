@@ -27,7 +27,6 @@ class OSMHistory
 
 	include Questions::Nodes
 	include Questions::Ways
-
 	include Questions::Network
 
 	attr_reader :aw_config
@@ -38,10 +37,10 @@ class OSMHistory
 		rescue
 			raise IOError.new("Can't load analysis window configuration file")
 		end
-		
+
 		#Set Database Connection
 		DatabaseConnection.new(database: aw_config['database'], host: aw_config['host'], port: aw_config['port'])
-		
+
 		analysis_window
 
 		puts "Successfully initialized Analysis Window: #{aw_config['title']}"
@@ -52,11 +51,11 @@ class OSMHistory
 	end
 
 	def run_questions
-		#Go through questions in the configuration file and run the appropriate algorithms to get answers
+		# Go through questions in the configuration file and run the appropriate algorithms to get answers
 	
-		#puts number_of_nodes_added
+		# puts number_of_nodes_added
 
-		#nodes_by_2_months
+		# nodes_by_2_months
 
   		analysis_window.ways_x_month(step: 3).each do |bucket|
   			puts "#{bucket[:start_date]} - #{bucket[:end_date]} : #{bucket[:objects].count}"

@@ -65,7 +65,7 @@ Perform a new install of Ruby with zypper, this seems to enable Ruby to find the
 
 	zypper in ruby-devel
 
-It will scream about not finding ruby in the first two repositories it searches, use 'i' to ignore, then 'y' to install when it finds it...
+It will scream about not finding ruby in the first two repositories it searches, use ```i``` to ignore, then ```y``` to install when it finds it...
 
 ###Install Gems: 
 
@@ -90,8 +90,12 @@ This should be integrated into a startup script.
 	
 #Running the Application
 
-	cd /home/osmhistory/osm-history2
-	git pull
+Unfortunately, the version of osm-history2 which is in the VM is configured for ssh, so first delete it, then reclone it.
+
+	cd /home/osmhistory
+	rm -r osm-history2
+	git clone https://github.com/rsoden/osm-history2.git
+	cd osm-history2
 
 ##Import a new file?
 	rake new analysis_windows/nic_test.yml
