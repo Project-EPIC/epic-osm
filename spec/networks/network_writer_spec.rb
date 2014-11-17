@@ -1,7 +1,7 @@
 
 require 'spec_helper'
 
-require_relative '../modules/file_io'
+require_relative '../../modules/file_io'
 
 describe FileIO do
 
