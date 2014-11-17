@@ -1,7 +1,7 @@
 
 require 'spec_helper'
 
-require_relative '../../io_plugins/network_exporter'
+require_relative '../modules/file_io'
 
 describe FileIO do
 
@@ -11,7 +11,7 @@ describe FileIO do
 
 	it "Can write a GraphML file from the data" do
 
-		file = GMLAuthor.new(filename: 'changesets_per_month.gml', directed: 1, id: 1, comment: "Changesets Per Month", label: "Testing")
+		file = FileIO::GMLAuthor.new(filename: 'changesets_per_month.gml', directed: 1, id: 1, comment: "Changesets Per Month", label: "Testing")
 
 		users = {}
 		edges = {}
