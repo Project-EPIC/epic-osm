@@ -6,4 +6,4 @@ require 'debugger'
 
 #Open connection to a test database:
 #DatabaseConnection.new(database: 'philippines', host: 'epic-analytics.cs.colorado.edu', port: 27018)
-DatabaseConnection.new(database: 'managua-test')
+DatabaseConnection.new(database: 'nic-test')
