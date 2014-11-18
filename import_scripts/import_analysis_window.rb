@@ -13,17 +13,19 @@ require_relative '../models/DatabaseConnection'
 
 #Require Domain Objects
 require_relative '../models/DomainObjects'
+require_relative '../models/AnalysisWindow'
 require_relative '../models/DatabaseConnection'
 require_relative '../models/Query'
 
 
 class AnalysisWindowImport
 
-	attr_reader :config, :global_config
+	attr_reader :config, :global_config, :time_frame
 	def initialize(args = {})
 
 		begin
 			@config = YAML.load_file(args[:config])
+			@time_frame = TimeFrame.new(start: config['start_date'], end: config['end_date'])
 		rescue
 			raise IOError.new("Error loading the configuration file: #{args[:config]}")
 		end
@@ -67,7 +69,7 @@ class AnalysisWindowImport
 
 	def run_mongo_import
 		connect_to_database
-		conn = OSMPBF.new(end_date: config[:end_date])
+		conn = OSMPBF.new(end_date: time_frame.end)
 		conn.open_parser("import_scripts/temp.osm.pbf")
 		puts conn.file_stats
 	

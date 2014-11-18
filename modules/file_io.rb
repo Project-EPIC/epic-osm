@@ -1,11 +1,25 @@
 
 module FileIO
 
+	require 'json'
+
 	#Main File Exporter (Should be VERY simple)
 	class JSONExporter
 
+		attr_reader :file_path, :file_name, :data
+
 		def initialize(args)
-			puts args
+			@file_path = args[:path]
+			@file_name = args[:name]
+			@data      = args[:data]
+
+			FileUtils.mkdir_p(file_path) unless Dir.exists? file_path
+		end
+
+		def write
+			File.open(file_path+'/'+file_name, 'wb') do |file|
+				file.write( data.to_json )
+			end
 		end
 	end
 
@@ -103,6 +117,28 @@ module FileIO
 				end
 				file.write %Q{\t]\n}
 			end
+		end
+	end
+
+	def self.unpack_objects(arg)
+		return arg if arg.is_a? Numeric
+		return arg if arg.is_a? String
+		raise "nil" if arg.nil?
+
+		begin
+			arg.each do |bucket|
+				hash_objs = []
+				bucket[:objects].each do |object|
+					hash = {}
+					object.instance_variables.each {|var| hash[var.to_s.delete("@")] = object.instance_variable_get(var) }
+					hash_objs << hash
+				end
+				bucket[:objects] = hash_objs
+			end
+			return arg
+		rescue
+			puts $!
+			raise "error"
 		end
 	end
 end

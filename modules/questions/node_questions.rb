@@ -1,19 +1,44 @@
 module Questions
 
-	module Nodes
+	class Nodes
+		attr_reader :aw
 
-    #This is starting to look less and less necessary
-		def number_of_nodes_edited
-			analysis_window.node_edit_count
+		def initialize(args)
+			@aw = args[:analysis_window]
+		end
+
+		def run(command)
+			print "Running Function: #{command}..."
+			
+			begin
+				data = FileIO::unpack_objects( instance_eval ("aw.#{command}") )
+				
+				print "Success: Analysis Window\n"
+				
+				if data.is_a? Hash or data.is_a? Array
+					return data
+				else
+					return {command.to_s => data}
+				end
+			rescue
+				begin 
+					print "Up to QM..."
+					x = instance_eval(command)
+					print "Success\n"
+					return x
+				rescue
+					print "FUNCTION NOT FOUND -- SKIPPING\n"
+				end
+			end
+		end
+
+    	def total_nodes_edited
+			return {'Total Nodes Edited' => aw.node_edit_count }
 		end
 
 		def number_of_nodes_added
-     		analysis_window.node_added_count
+     		aw.node_added_count
   		end
-
-    
-    	# def temporal_test
-    	# 	analysis_window.nodes_x_hour(1)
 	 end
   	
 end

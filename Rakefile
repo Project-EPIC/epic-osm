@@ -18,6 +18,16 @@ def window
 	return @this_window
 end
 
+def osmhistory
+	unless ARGV[1].nil?
+		@osm_history ||= OSMHistory.new( analysis_window: ARGV[1]) #Pass the configuration in
+	else
+		raise ArgumentError.new("A valid configuration file must be defined")
+	end
+
+	return @osm_history
+end
+
 desc "Given a valid configuration file, Cut and Import all of the data"
 task :new do
 	Rake::Task['cut'].invoke
@@ -65,4 +75,13 @@ desc "Network Writers"
 task :network do 
 	osmhistory = OSMHistory.new(analysis_window: ARGV[1])
 	osmhistory.run_network_functions #This will need to be pulled out eventually...
+end
+
+
+namespace :questions do
+
+	desc "Run Node Questions"
+	task :nodes do
+		osmhistory.run_node_questions
+	end
 end

@@ -25,7 +25,6 @@ autoload :FileIO, 'modules/file_io'
 #TODO: Things
 class OSMHistory
 
-	include Questions::Nodes
 	include Questions::Ways
 	include Questions::Network
 
@@ -49,6 +48,16 @@ class OSMHistory
 	def analysis_window
 		@analysis_window ||= AnalysisWindow.new(time_frame: TimeFrame.new(start: aw_config['start_date'], end: aw_config['end_date']), bounding_box: nil)
 	end
+
+	def run_node_questions
+
+		node_questions = Questions::Nodes.new(analysis_window: analysis_window)
+
+		aw_config['Node Questions'].each do |node_q|
+			write_json( data: node_questions.run(node_q), name: "#{node_q}.json")
+		end
+	end
+
 
 	def run_questions
 		# Go through questions in the configuration file and run the appropriate algorithms to get answers
@@ -74,6 +83,9 @@ class OSMHistory
 	end
 
 	def write_json(args)
-		FileIO::JSONExporter.new(name: args[:name]) 
+		out_file = FileIO::JSONExporter.new(name: args[:name], data: args[:data], path: aw_config['data_directory']+'/'+aw_config['title']) 
+		unless out_file.data.nil? 
+			out_file.write
+		end
 	end
 end

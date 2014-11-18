@@ -29,6 +29,8 @@ class OSMPBF
 
 		@nodes = {}
 		@ways  = {}
+
+		puts "Only parsing data up to #{end_date}"
 	end
 
 

@@ -3,6 +3,8 @@ config.yml
 
 *.gml
 
+*.json
+
 temp.config
 temp.osm.pbf
 seattle.osm.pbf
