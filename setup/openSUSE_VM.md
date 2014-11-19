@@ -4,10 +4,11 @@ There is a [virtual machine image available for download from susestudio.org](ht
 
 The repository owners are attempting to maintain this machine for quick deployment of a development / research environment for this project.
 
-This seems to be relatively stable thus far -- However, when things become completely stable, this will be integrated into a first-boot script.
+#Running Install Script
+With any luck, the first time you start the vm, you should be able to login as root ```su``` with the password ```osm``` and then type ```./install.sh```, and the machine will build itself.
 
 
-#First Time Startup
+#First Time Startup: Manually
 
 (Latest update: These apply to current VM version 1.3.14)
 ##Tools & Environment
