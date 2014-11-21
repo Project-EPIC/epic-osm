@@ -2,19 +2,21 @@
 # This is a sample configuration file for cutting and importing a PBF history file.
 #
 
-#User Information:
+#############   User Information     ####################################
 title: 'Test User'
 email: 'test_user@osm-history2.com'
 
-#Import & Cutting Information: 
+#############   Data Import & PBF Cutting Information   ################## 
 #Database Information
 pbf_file: 'osm-test.osm.pbf'
 database: 'osm-test'
+#port: defaults to 27017, but can be over-ridden here
+#host: defaults to localhost, but can be over-ridden here
 
 #Bounding Box: Expecting 4 parameters, as received from most bounding box tools.
 bbox: '-86.354212,12.084238,-86.133199,12.191113' 
 
-#AW Window Information
+############    AW Window Information     ################################
 #These strings are parsed by Ruby: YYYY-MM-DD works well
 start_date: '2010-01-01'
 end_date:   '2010-12-31'

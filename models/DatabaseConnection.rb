@@ -1,4 +1,5 @@
 require 'mongo'
+require 'yaml'
 
 #Using a Singleton Design Pattern to have point of access to the database
 class DatabaseConnection
