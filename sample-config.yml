@@ -1,4 +1,4 @@
 #Point to your installation location for osm-history-splitter
-osm-history-splitter: '~/Applications/osm-history-splitter/osm-history-splitter'
+osm-history-splitter: '/home/osmhistory/osm-history-splitter-master/osm-history-splitter'
 
 data_directory: _data
