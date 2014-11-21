@@ -1,5 +1,6 @@
 OSM History Setup
 =====
+There are explicit instructions in this directory for installing on Mac OS X Mavericks and for using the OpenSUSE virtual machine.
 
 Unfortunately, the Dependencies for this project are fairly massive and unruly.  This is due to the complexities of dealing with PBF files as well as the OSM-history-splitter tool.  We aim to maintain a virtual image which is always in functioning order and available for download.
 
