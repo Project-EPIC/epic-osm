@@ -3,6 +3,14 @@ module OSMGeo
 	require 'rgeo'
 	Factory = RGeo::Geographic.simple_mercator_factory
 
+	module OSMObject
+
+		def geojson_geometry
+			@geometry ||= get_geojson_geometry
+		end
+
+	end
+
 	module Node
 
 		def point

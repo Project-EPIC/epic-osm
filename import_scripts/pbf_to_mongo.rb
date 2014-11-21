@@ -1,20 +1,9 @@
-'''
-The OSMGeoJSONMongo reads a PBF file and wll create the appropriate collections in the database.
-
-PBF Parser from: https://github.com/planas/pbf_parser
-
-//These two are for parsing PBF: (mac oriented)
-brew install protobuf-c
-gem install pbf_parser
-'''
-
-#Require the PBF Parser -- Subject to change to just 'pbf_parser' with new release
 require 'pbf_parser'
 
 class OSMPBF
 	require 'date'
 
-	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date
+	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date, :memory_only
 
 	def initialize(args={})
 
@@ -30,7 +19,11 @@ class OSMPBF
 		@nodes = {}
 		@ways  = {}
 
+		@memory_only = args[:memory_only] || false
+
+		puts "---------------------------------------"
 		puts "Only parsing data up to #{end_date}"
+		puts "---------------------------------------"
 	end
 
 
@@ -46,6 +39,7 @@ class OSMPBF
 		@parser = PbfParser.new(file)
 	end
 
+	#Get stats on the PBF file.
 	def file_stats
 		test_parser = PbfParser.new(file)
 		while test_parser.next
@@ -62,6 +56,7 @@ class OSMPBF
 		puts "Nodes: #{n_count}, Ways: #{w_count}, Relations: #{r_count}"
 	end
 
+	#Convert the Timestmap to an instance of Time
 	def timestamp_to_date(timestamp)
 		Time.at(timestamp/1000).utc #This is a time instance, it should go straight ot ruby
 	end
@@ -70,7 +65,7 @@ class OSMPBF
 		node[:created_at] = timestamp_to_date(node[:timestamp])
 		this_node = Node.new(node)
 
-		this_node.save!		#Save to Database
+		this_node.save! unless memory_only #Save to Database
 		this_node.mem_save  #Save to Memory
 	end
 
@@ -82,7 +77,8 @@ class OSMPBF
 		
 		this_way = Way.new(way)
 
-		this_way.save!      #Save to Database
+		
+		this_way.save! unless memory_only #Save to Database
 		this_way.mem_save   #Save to Memory
 	end
 
@@ -90,12 +86,13 @@ class OSMPBF
 
 	def add_relation(relation)
 		relation[:created_at] = timestamp_to_date(relation[:timestamp])
-		relation[:nodes] = relation[:members][:nodes]
-		relation[:ways]  = relation[:members][:ways]
+		relation[:nodes] = relation[:members][:nodes].collect{|n| n[:id].to_s}
+		relation[:ways]  = relation[:members][:ways].collect{|w| w[:id].to_s}
 		
 		relation.delete :members
 
 		this_rel = Relation.new(relation)
+
 		this_rel.save!
 	end
 
@@ -103,6 +100,7 @@ class OSMPBF
 	def parse_to_collection(object_type, lim=nil)
 		start_time = Time.now
     	puts "Started #{object_type} import at: #{start_time}"
+    	puts "-----------------------------------------------\n"
 		reset_parser #Reset the parser because 'seek' does not work
 
 		@missing_nodes = 0
@@ -135,9 +133,9 @@ class OSMPBF
 							end
 						end
 					end
-					if index%2000==0
+					if index%5000==0
 						puts "Processed #{index} of #{count} #{object_type}"
-						if index%10000==0
+						if index%1000==0
         			rate = index/(Time.now() - start_time) #Tweets processed / seconds elapsed
         			mins = (count-index) / rate / 60         #minutes left = tweets left * seconds/tweet / 60
         			hours = mins / 60
@@ -148,12 +146,13 @@ class OSMPBF
 			end
 		end
 
-		puts "Adding the appropriate indexes: id, changeset, geometry"
+		puts "Adding the appropriate indexes: id, changeset, geometry\n"
+		puts "=======================================================\n\n"
 		begin
-			eval %Q{DatabaseConnection.database[#{object_type}.to_s].ensure_index( "id" => 1 ) }
-			eval %Q{DatabaseConnection.database[#{object_type}.to_s].ensure_index( "changeset" => 1 ) }
-			eval %Q{DatabaseConnection.database[#{object_type}.to_s].ensure_index( "geometry" => "2dsphere") }
-		rescue
+			DatabaseConnection.database[object_type.to_sym].ensure_index( id: 1 )
+			DatabaseConnection.database[object_type.to_sym].ensure_index( changeset: 1 )
+			DatabaseConnection.database[object_type.to_sym].ensure_index( geometry: "2dsphere")
+		rescue => e
 			puts "Error creating index"
 			p $!
 		end

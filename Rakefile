@@ -47,17 +47,17 @@ namespace :import do
 
 	desc "Import PBF File (Nodes, Ways, Relations)"
 	task :pbf do
-		puts window.run_mongo_import
+		window.run_mongo_import
 	end
 
 	desc "Import Changesets"
 	task :changesets do
-		puts window.changeset_import
+		window.changeset_import
 	end
 
 	desc "Import Users"
 	task :users do
-		puts window.user_import
+		window.user_import
 	end
 end
 

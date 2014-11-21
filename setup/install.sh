@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#disable SSL verification on Git:
+#Ensure SSL verification on Git is disabled:
 git config --global http.sslVerify false
 
-echo "Building Protobuf 2.6.0 & Protobuf-C"
+echo "Building Protobuf 2.6.0"
 ldconfig
 cd /home/osmhistory/protobuf-2.6.0
 ./autogen.sh
@@ -14,9 +14,10 @@ clear
 echo "Installing OSM-Binary Headers"
 ldconfig
 cd /home/osmhistory/OSM-binary-master
+make -C src
 make -C src install
+make -C tools
 clear
-
 
 echo "Building OSMIUM"
 ldconfig
@@ -34,7 +35,14 @@ make clean
 make install
 
 echo "Now Running osm-history-splitter test"
-./osm-history-splitter test/version-two-node-after.osh test/test.config
+osm-history-splitter test/version-two-node-after.osh test/test.config
+
+ldconfig
+
+echo "Building Protobuf-C"
+cd /home/osmhistory/protobuf-c-master
+./autogen.sh && ./configure && make && make install
+clear 
 
 ldconfig
 

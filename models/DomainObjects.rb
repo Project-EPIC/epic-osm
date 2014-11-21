@@ -1,20 +1,15 @@
-# 
-# Base Domain Object Class.
-# 
-# 
-#
-
 require_relative '../modules/domain_objects/osm_to_mongo'
 require_relative '../modules/domain_objects/osm_geo'
 
 class OSMObject
 
 	include OSMongoable::OSMObject
+	include OSMGeo::OSMObject
 
-	attr_reader :id, :uid, :user, :created_at, :tags
+	attr_reader :id, :uid, :user, :created_at, :tags, :geometry
 
 	def initialize(args)
-		@id         ||= args[:id]
+		@id         ||= args[:id].to_s
 		@uid    	||= args[:uid]
 		@user  		||= args[:user]
 		@created_at ||= args[:created_at]
@@ -47,7 +42,7 @@ class Way < OSMObject
 	attr_reader :nodes, :version, :changeset, :missing_nodes
 
 	def initialize(args)
-		@nodes = args[:nodes]
+		@nodes 		||= args[:nodes].collect{|node| node.to_s}
 		@version    ||= args[:version]
 		@changeset  ||= args[:changeset]
 		super(args)
@@ -58,7 +53,7 @@ class Relation < OSMObject
 
 	include OSMongoable::Relation
 
-	attr_reader :nodes, :ways, :version, :changeset
+	attr_reader :nodes, :ways, :version, :changeset, :missing_nodes, :missing_ways
 	
 	def initialize(args)
 		@nodes = args[:nodes]
@@ -80,10 +75,10 @@ class Changeset < OSMObject
 		@comment   = args[:comment]
 		@closed_at = args[:closed_at]
 		@open      = args[:open]
-		@min_lat   = args[:min_lat]
-		@max_lat   = args[:max_lat]
-		@min_lon   = args[:min_lon]
-		@max_lon   = args[:max_lon]
+		@min_lat   = args[:min_lat].to_f
+		@max_lat   = args[:max_lat].to_f
+		@min_lon   = args[:min_lon].to_f
+		@max_lon   = args[:max_lon].to_f
 		super(args)
 	end
 

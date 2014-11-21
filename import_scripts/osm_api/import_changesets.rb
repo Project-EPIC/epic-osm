@@ -49,6 +49,12 @@ class ChangesetImport
     end
   end
 
+  def add_indexes
+    DatabaseConnection.database['changesets'].ensure_index( id: 1 )
+    DatabaseConnection.database['changesets'].ensure_index( user: 1 )
+    DatabaseConnection.database['changesets'].ensure_index( geometry: "2dsphere")
+  end
+
   def convert_osm_api_to_domain_object_hash(osm_api_hash)
     data = osm_api_hash[:osm][:changeset]
 

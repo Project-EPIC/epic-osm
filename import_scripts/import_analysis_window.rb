@@ -32,16 +32,16 @@ class AnalysisWindowImport
 
 		begin
 			@global_config = YAML.load_file('config.yml')
-			puts global_config
 		rescue
 			raise IOError.new("Error loading global configuration file")
 		end
+		connect_to_database
 	end
 
 	#Calls the Singleton Database Connection for the specific database
 	def connect_to_database
 		#Open Database Connection
-		puts "Connecting to: #{config['database']} Mongo Database"
+		puts "Connecting to: #{config['database']} Mongo Database\n"
 		DatabaseConnection.new(database: config['database'])
 	end
 
@@ -68,7 +68,6 @@ class AnalysisWindowImport
 	end
 
 	def run_mongo_import
-		connect_to_database
 		conn = OSMPBF.new(end_date: time_frame.end)
 		conn.open_parser("import_scripts/temp.osm.pbf")
 		puts conn.file_stats
@@ -76,10 +75,8 @@ class AnalysisWindowImport
 		#Import Nodes, Ways, Relations
 		conn.parse_to_collection(object_type="nodes", lim=nil)
 
-		#TODO: Build Node Indexes so Ways can get their geometries
 		conn.parse_to_collection(object_type="ways", lim=nil)
 
-		#TODO: Build Node, Way Indexes so Relations can get their members
 		conn.parse_to_collection(object_type="relations", lim=nil)
 	end
 
@@ -87,6 +84,7 @@ class AnalysisWindowImport
 		changeset_import = ChangesetImport.new
 		puts "Importing #{changeset_import.distinct_changeset_ids.length} changesets"
 		changeset_import.import_changeset_objects
+		changeset_import.add_indexes
 	end
 
 	def user_import
