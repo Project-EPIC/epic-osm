@@ -1,38 +1,13 @@
 Import Scripts
 =============================
-The first import script **read_pbf** will parse the PBF file and create the nodes, ways, and relations collections in the database.  The last two scripts will gather data from these collections in order to build the changesets and users collections.
+
+##import_analysis_window.rb
+This file is a driver which kicks off the pbf import as well as the changeset and user imports which hit the OSM API.
+
+The best way to call it is with one of the rake functions, such as ```rake new``` or ```rake import:users```
 
 
-###read_pbf.rb
-	Call this in the following manner: 
-		ruby read_pbf.rb [database name] [pbf file]
-		Optional arguments include: limit=, port=, and host=
+##pbf_to_mongo.rb
+This is the only place where the PBF parser gem is required.  The ```OSMPBF``` class in this script will open a .osm.pbf file and import each node, way, relation to MongoDB for a given analysis window.
 
-
-
-
-###import_changesets.rb
-	Usage: ruby import_changesets.rb -d DATABASE -c COLLECTION  [-l LIMIT]
-		Iterate over a collection and hit the API for the changeset information.
-
-	Specific options:
-	    -d, --database Database Name     Name of Database (Haiti, Philippines)
-	    -c, --Collection Name            Type of OSM object (nodes, ways, relations)
-	    -l, --limit [LIMIT]              [Optional] Limit of objects to parse
-	    -h, --help                       Show this message
-
-This script performs an **upsert** on the changeset collection for a given database.  It collects changesets from the nodes/ways/relations collections and then hits the API for the details of that changeset.
-
-
-
-###import_users.rb
-	Usage: ruby import_users.rb -d DATABASE  [-l LIMIT]
-		This will import users specifically from the changesets found in the desired database
-	
-	Specific options:
-	    -d, --database Database Name     Name of Database (Haiti, Philippines)
-	    -l, --limit [LIMIT]              [Optional] Limit of users to parse
-	    -h, --help                       Show this message
-
-This script performs an **upsert** on the user collection for a given database.  It collects users from the changesets collection and then hits the api for each one, upsetting their details to the Mongo collection.
-
+It will only import data up to the ```end_date``` parameter in the analysis window configuration file.  It will, however, import data from the earliest point in the .osm.pbf file.
