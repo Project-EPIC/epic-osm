@@ -5,7 +5,49 @@ There is a [virtual machine image available for download from susestudio.org](ht
 The repository owners are attempting to maintain this machine for quick deployment of a development / research environment for this project.
 
 #Running Install Script
-With any luck, the first time you start the vm, you should be able to login as root ```su``` with the password ```osm``` and then type ```./install.sh```, and the machine will build itself.
+To get the machine up and running, run the script located here: 
+https://gist.github.com/jenningsanderson/8b3a590e4662e0fc27eb
+
+There is a script which automatically clones this script located in ```/root/get_install.sh```
+
+If Git does not clone it properly, run: ```git config --global http.sslVerify false```
+
+This should allow you to clone the script properly. It will automatically copy it to ```/home/osmhistory/install.sh```
+
+Password for both root and osmhistory is “osm”
+
+Now you can just run ```/home/osmhistory/install.sh``` and the machine should build itself...
+
+#Enabling Shared Folders:
+In virtualbox, setup a shared folder pointing to your osm-history2 directory (or parent directory).
+
+Then install guest tools with:
+
+	zypper in virtualbox-ose-guest-tools
+
+Ignore the repositories that don't have it with (i), once installed, run this to activate it:
+
+	modprobe vboxsf
+
+Make a folder you want to link: 
+	
+	mkdir /home/share
+
+To mount the folder do:
+	
+	mount -t vboxsf {name of folder} /home/share
+
+The host folder now appears at /home/share/  You can use the host for editing, version control, etc, and then just switch over to the VM for running tests and scripts.
+
+To have this done automagically, put the following lines into ```/etc/init.d/after.local```
+	
+	modprobe vboxsf
+	mount -t vboxsf {name of folder} /home/share
+
+	/etc/init.d/mongodb start
+
+
+##Before you can shutdown the machine, be sure to run ```mongod --shutdown``` as root!  Then you can run ```shutdown now``` to power off the machine
 
 
 #First Time Startup: Manually
