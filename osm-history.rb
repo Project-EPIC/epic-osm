@@ -22,7 +22,7 @@ require 'yaml'
 #Autoload FileIO as needed
 autoload :FileIO, 'modules/file_io'
 
-#TODO: Things
+#The main Controller for OSM History
 class OSMHistory
 
 	include Questions::Ways

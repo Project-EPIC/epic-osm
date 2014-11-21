@@ -1,15 +1,12 @@
+#The analysis window is defined by an analysis window configuration file.
 #
-# AnalysisWindow Module
-#
-# Queries are built from Analysis windows, which are comprised of a TimeFrame and a Bounding Box.
-#
-
+#They are aware of the geographical and temporal bounds of the study and handle all of the
+#helper functions for performing calculations.  All Queries happen through the analysis window
+#and the method missing located within defines functions such as nodes_x_month.
 class AnalysisWindow
-
 	attr_reader :time_frame, :bounding_box
 
-	#These will get refactoredout of this class, but we're not sure how or when yet
-
+	#Can pass in an instance of a timeframe and bounding box, or use defaults
 	def initialize(args={})
 		@bounding_box = args[:bounding_box] || BoundingBox.new
 		@time_frame   = args[:time_frame]   || TimeFrame.new
@@ -17,6 +14,7 @@ class AnalysisWindow
 		post_initialize
 	end
 
+	#If the frame failed or doesn't exist, then use all of the data by default
 	def post_initialize
 		unless time_frame.active?
 			@time_frame = TimeFrame.new( start: Changeset_Query.earliest_changeset_date,
@@ -24,8 +22,8 @@ class AnalysisWindow
 		end
 	end
 
+	#Buckets are temporal units which the query results are binned into.
 	def build_buckets(unit=:all, step=1)
-
 		hour   = 60 * 60
 		day    = 24 * hour
 
@@ -115,7 +113,7 @@ class AnalysisWindow
 		end
 	end
 
-# Changesets
+	# Changesets
 	def changesets
 		@changesets ||= Changeset_Query.new(analysis_window: self)
 	end
@@ -128,7 +126,7 @@ class AnalysisWindow
 		changesets_x_all.first[:objects].collect{|changeset| changeset.uid}.uniq
 	end
 
-#Nodes
+	#Nodes
 	def nodes
 		@nodes ||= Node_Query.new( analysis_window: self )
 	end
@@ -150,7 +148,7 @@ class AnalysisWindow
 	# 	#.values.collect{|nodes| nodes.sort_by{|node| node.version}.last}
 	# end
 
-#Ways
+	#Ways
 	def ways
 		@ways ||= Way_Query.new( analysis_window: self )
 	end
@@ -163,8 +161,8 @@ class AnalysisWindow
 		ways_x_all.first[:objects].select{|way| way.version == 1}.count
 	end
 
-#Relations
-	def relations
+	#Relations
+	def relations # :doc:
 		@relations ||= Relation_Query.new( analysis_window: self )
 	end
 
@@ -175,7 +173,8 @@ class AnalysisWindow
 	def relation_added_count
 		relations_x_all.first[:objects].select{|relation| relation.version == 1}.count
 	end
-#Users
+	
+	#Users
 	def all_users_data
 		@all_users_data ||= User_Query.new(uids: distinct_users_in_changesets).run
 	end
@@ -212,8 +211,14 @@ class AnalysisWindow
 	end
 end
 
-
-class BoundingBox
+#A bounding box is a geographical box determined by the configuration file.
+#
+#It is currently not being implemented because the import scripts are cutting the excess data
+#away, so there is nothing outside of the bounding box in the database.
+#
+#However, queries are capable of only querying within the bounding box, so it is possible to change
+#the box throughout calculations to get a subset of the data.
+class BoundingBox # :doc:
 
 	attr_reader :bottom_left, :top_right, :active
 
@@ -234,10 +239,6 @@ class BoundingBox
 		end
 	end
 
-	#TODO: 
-	# => Area, Width, Height, Hemisphere, Country, Continent, etc.
-
-
 	#Going to need some pretty robust methods to pass to Mongo queries, but painless for now
 	def mongo_format
 		h = Hash.new
@@ -246,16 +247,13 @@ class BoundingBox
 	end
 end
 
-class TimeFrame
-
+#Timeframes are the temporal bounds of the analysis window.
+class TimeFrame # :doc:
 	require 'time'
-
-	#TODO:
-	# => We want flexiblity in how we input dates, so this class will
-	# => transform these dates to the proper format.
 
 	attr_reader :start, :end, :active
 
+	#If the time frame is active, then start and end dates are defined and functioning
 	def active?
 		active
 	end
