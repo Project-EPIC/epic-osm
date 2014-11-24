@@ -44,7 +44,7 @@ module FileIO
 				@directed = 0
 			end
 
-			@filename = filename.gsub(/[A-Za-z0-9]/,'_')
+			@filename = filename.gsub(/^[A-Za-z0-9]/,'_')
 
 			@file = File.open(filename, 'wb')
 		end
