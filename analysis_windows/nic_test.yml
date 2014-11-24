@@ -36,6 +36,6 @@ memory_only: false
 tags: none
 
 temporal_network:
-  files: '/home/osmhistory/share/overlapping_changesets_by_1_month' 
+  files: '/home/share/overlapping_changesets_by_1_month' 
   unit: 'month'
   step: 1
