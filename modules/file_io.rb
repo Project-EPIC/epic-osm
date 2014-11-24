@@ -27,7 +27,7 @@ module FileIO
 	#Write a 'gml' file for network analytics
 	class GMLAuthor
 
-		attr_reader :nodes, :edges, :file, :directed, :id, :label, :comment
+		attr_reader :nodes, :edges, :file, :directed, :id, :label, :comment, :filename
 
 		def initialize(args)
 			@filename= args[:filename] || Time.new.to_s + '.gml'
@@ -43,6 +43,8 @@ module FileIO
 			else
 				@directed = 0
 			end
+
+			@filename = filename.gsub(':','_')
 
 			@file = File.open(args[:filename], 'wb')
 		end
