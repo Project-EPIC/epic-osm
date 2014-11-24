@@ -44,9 +44,9 @@ module FileIO
 				@directed = 0
 			end
 
-			@filename = filename.gsub(':','_')
+			@filename = filename.gsub(/[A-Za-z0-9]/,'_')
 
-			@file = File.open(args[:filename], 'wb')
+			@file = File.open(filename, 'wb')
 		end
 
 		def write
