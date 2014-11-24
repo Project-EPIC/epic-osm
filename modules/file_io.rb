@@ -30,7 +30,7 @@ module FileIO
 		attr_reader :nodes, :edges, :file, :directed, :id, :label, :comment, :filename
 
 		def initialize(args)
-			@filename= args[:filename] || Time.new.to_s + '.gml'
+			@filename= args[:filename].to_s || Time.new.to_s + '.gml'
 			@nodes = []
 			@edges = []
 
