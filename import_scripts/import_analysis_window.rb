@@ -60,10 +60,15 @@ class AnalysisWindowImport
 
 	#Runs a system shell script to call the osm-history-splitter
 	def run_osm_history_splitter
-		unless config['soft-cut']
-			system "#{global_config['osm-history-splitter']} --hardcut #{config['pbf_file']} import_scripts/temp.config"
-		else
-			system "#{global_config['osm-history-splitter']} --softcut #{config['pbf_file']} import_scripts/temp.config"
+		begin
+			unless config['soft-cut']
+				system "#{global_config['osm-history-splitter']} --hardcut #{config['pbf_file']} import_scripts/temp.config"
+			else
+				system "#{global_config['osm-history-splitter']} --softcut #{config['pbf_file']} import_scripts/temp.config"
+			end
+		rescue
+			raise Error.new("OSM History Splitter Failed")
+			puts $!
 		end
 	end
 
