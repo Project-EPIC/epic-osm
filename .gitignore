@@ -1,6 +1,9 @@
 *.lock
 config.yml
 
+haiti_*
+
+
 *.gml
 
 *.json
