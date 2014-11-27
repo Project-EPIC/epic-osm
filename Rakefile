@@ -38,7 +38,7 @@ end
 
 desc "Write appropriate configuration file and cut the file to create temp.osm.pbf file"
 task :cut do
-	puts "Writing Configuraiton File for Cut"
+	puts "Writing Configuration File for Cut"
 	window.write_configuration_file
 	puts "Running osm history splitter"
 	window.run_osm_history_splitter
