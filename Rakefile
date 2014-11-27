@@ -30,6 +30,7 @@ end
 
 desc "Given a valid configuration file, Cut and Import all of the data"
 task :new do
+	Rake::Task['cleanup'].invoke
 	Rake::Task['cut'].invoke
 	Rake::Task['import:pbf'].invoke
 	Rake::Task['import:changesets'].invoke
