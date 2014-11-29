@@ -3,7 +3,7 @@ require 'pbf_parser'
 class OSMPBF
 	require 'date'
 
-	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date, :memory_only
+	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date
 
 	def initialize(args={})
 
@@ -18,8 +18,6 @@ class OSMPBF
 
 		@nodes = {}
 		@ways  = {}
-
-		@memory_only = args[:memory_only] || false
 
 		puts "---------------------------------------"
 		puts "Only parsing data up to #{end_date}"
@@ -63,12 +61,10 @@ class OSMPBF
 
 	def add_node(node)
 		node[:created_at] = timestamp_to_date(node[:timestamp])
+
 		this_node = Node.new(node)
-
-		this_node.save! unless memory_only #Save to Database
-		this_node.mem_save  #Save to Memory
+		this_node.save!
 	end
-
 
 	def add_way(way)
 		way[:created_at] = timestamp_to_date(way[:timestamp])
@@ -76,13 +72,8 @@ class OSMPBF
 		way.delete :refs
 		
 		this_way = Way.new(way)
-
-		
-		this_way.save! unless memory_only #Save to Database
-		this_way.mem_save   #Save to Memory
+		this_way.save!
 	end
-
-
 
 	def add_relation(relation)
 		relation[:created_at] = timestamp_to_date(relation[:timestamp])
@@ -92,7 +83,6 @@ class OSMPBF
 		relation.delete :members
 
 		this_rel = Relation.new(relation)
-
 		this_rel.save!
 	end
 

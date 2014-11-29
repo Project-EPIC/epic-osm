@@ -8,15 +8,11 @@ require_relative 'osm_api/import_users'
 require_relative 'osm_api/osm_api'
 require_relative 'pbf_to_mongo'
 
-#Require Database Connection
-require_relative '../models/DatabaseConnection'
-
 #Require Domain Objects
 require_relative '../models/DomainObjects'
 require_relative '../models/AnalysisWindow'
-require_relative '../models/DatabaseConnection'
+require_relative '../models/Persistence'
 require_relative '../models/Query'
-
 
 class AnalysisWindowImport
 
@@ -42,7 +38,7 @@ class AnalysisWindowImport
 	def connect_to_database
 		#Open Database Connection
 		puts "Connecting to: #{config['database']} Mongo Database\n"
-		DatabaseConnection.new(database: config['database'])
+		DatabaseConnection.new(database: config['database'], mongo_only: config[:mongo_only], mem_only: config[:mem_only])
 	end
 
 	def write_configuration_file

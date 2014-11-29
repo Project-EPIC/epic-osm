@@ -13,7 +13,7 @@ require 'modules/questions/network_questions'
 
 #This is what's required to make it all work
 require 'models/DomainObjects'
-require 'models/DatabaseConnection'
+require 'models/Persistence'
 require 'models/Query'
 
 #Standard ruby Libraries we need?

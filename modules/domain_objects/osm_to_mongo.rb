@@ -13,7 +13,7 @@ class BSON::OrderedHash
 end
 
 module OSMongoable
-	
+
 	#Nodes, Ways, Relations share these features
 	module OSMObject
 		def to_mongo(hash)
@@ -25,6 +25,10 @@ module OSMongoable
 			hash[:geometry]   ||= geojson_geometry
 
 			hash.delete :geometry if hash[:geometry].nil?
+		end
+
+		def save!
+			DatabaseConnection.insert(self)
 		end
 	end
 	
@@ -42,17 +46,7 @@ module OSMongoable
 		def get_geojson_geometry
 			@geometry ||= {type: "Point", coordinates: [lon,lat]}
 		end
-
-		def save!
-			DatabaseConnection.database['nodes'].insert( self.to_mongo )
-		end
-
-		def mem_save
-			DatabaseConnection.write_memory_node(self)
-		end
 	end
-
-
 
 	module Way
 		def to_mongo
@@ -69,21 +63,21 @@ module OSMongoable
 			return nil if nodes.nil?
 			return nil if nodes.empty?
 
-			mem_nodes = DatabaseConnection.memory_nodes
-
 			missing_nodes = []
 			coords = []
 			
 			#Iterate over this way's nodes
 			nodes.each do |node_id| #The id of the node needed
-				if mem_nodes[node_id].nil?	#Look for this node in memory
+				mem_nodes = DatabaseConnection.persistent_nodes(node_id)
+				
+				if mem_nodes.nil?	#Look for this node in memory
 					missing_nodes << node_id     #Add it to missing and skip
 					next
 				else
-					if mem_nodes[node_id].length == 1 #If there is only one, use it
-						coords << [mem_nodes[node_id].first.lon, mem_nodes[node_id].first.lat]
+					if mem_nodes.length == 1 #If there is only one, use it
+						coords << [mem_nodes.first.lon, mem_nodes.first.lat]
 					else
-						this_node = mem_nodes[node_id].select{|node| node.changeset == changeset}
+						this_node = mem_nodes.select{|node| node.changeset == changeset}
 						unless this_node.empty?
 							coords << [this_node.first.lon, this_node.first.lat]
 						else
@@ -103,14 +97,6 @@ module OSMongoable
 			else
 				return {"type" => "LineString", "coordinates" => coords}
 			end
-		end
-
-		def save!
-			DatabaseConnection.database['ways'].insert( self.to_mongo )
-		end
-
-		def mem_save
-			DatabaseConnection.write_memory_way(self)
 		end
 	end
 
@@ -133,18 +119,18 @@ module OSMongoable
 			@missing_nodes = []
 			@missing_ways  = []
 
-			mem_nodes = DatabaseConnection.memory_nodes
-			mem_ways  = DatabaseConnection.memory_ways
-
 			unless nodes.nil? or nodes.empty?
 				nodes.each do |node_id|
-					if mem_nodes[node_id].nil?	#Look for this node in memory
+					
+					mem_nodes = DatabaseConnection.persistent_nodes(node_id)
+					
+					if mem_nodes.nil?	#Look for this node in memory
 						@missing_nodes << node_id    	#Add it to missing and skip
 						next
-					elsif mem_nodes[node_id].length == 1 #If there is only one, use it
-						geometries << mem_nodes[node_id].first.geometry
+					elsif mem_nodes.length == 1 #If there is only one, use it
+						geometries << mem_nodes.first.geometry
 					else
-						this_node = mem_nodes[node_id].select{|node| node.changeset == changeset}
+						this_node = mem_nodes.select{|node| node.changeset == changeset}
 						unless this_node.empty?
 							geometries << this_node.first.geometry
 						else
@@ -156,13 +142,16 @@ module OSMongoable
 
 			unless ways.nil? or ways.empty?
 				ways.each do |way_id|
-					if mem_ways[way_id].nil?	#Look for this way in memory
+
+					mem_ways = DatabaseConnection.persistent_ways(way_id)
+
+					if mem_ways.nil?	#Look for this way in memory
 						@missing_ways << way_id    	#Add it to missing and skip
 						next
-					elsif mem_ways[way_id].length == 1 #If there is only one, use it
-						geometries << mem_ways[way_id].first.geometry unless mem_ways[way_id].first.geometry.nil?
+					elsif mem_ways.length == 1 #If there is only one, use it
+						geometries << mem_ways.first.geometry unless mem_ways.first.geometry.nil?
 					else
-						this_way = mem_ways[way_id].select{|way| way.changeset == changeset}
+						this_way = mem_ways.select{|way| way.changeset == changeset}
 						unless this_way.empty?
 							geometries << this_way.first.geometry unless this_way.first.geometry.nil?
 						else
@@ -180,11 +169,6 @@ module OSMongoable
 				return nil
 			end
 		end
-
-		def save!
-			DatabaseConnection.database['relations'].insert( self.to_mongo )
-		end
-
 	end
 
 

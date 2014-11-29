@@ -19,7 +19,7 @@ database: 'nic-test'
 
 #Will need to allow for proper processing of this!
 start_date: '2010-01-01'
-end_date:   '2011-12-31'
+end_date:   '2010-02-01'
 
 #Bounding Box:
 bbox: '-86.354212,12.084238,-86.133199,12.191113' #Expecting 4 parameters
@@ -30,10 +30,10 @@ min_lat:
 min_lon: 
 max_lat: 
 
-memory_only: false
-
 # Lower left, upper right #
 tags: none
+
+mongo_only: true
 
 temporal_network:
   files: '/home/share/overlapping_changesets_by_1_month' 
