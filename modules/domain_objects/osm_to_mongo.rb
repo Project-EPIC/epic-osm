@@ -203,8 +203,11 @@ module OSMongoable
 		end
 
 		def get_geojson_geometry
-
-			if (min_lon - max_lon < 0.000000001) and (min_lat - max_lat < 0.000000001)
+			#Check if it's valid
+			if min_lon < -180 or max_lon > 180 or min_lat < -90 or max_lat > 90
+				return nil
+			#Check if it's just a point
+			elsif (min_lon - max_lon < 0.000000001) and (min_lat - max_lat < 0.000000001)
 				return {type: "Point", coordinates: [min_lon, max_lat]}
 			else
 				return {type: "Polygon",
@@ -214,7 +217,6 @@ module OSMongoable
 										[max_lon, min_lat],
 										[min_lon, min_lat] ]] }
 			end
-
 		end
 
 		def save!
