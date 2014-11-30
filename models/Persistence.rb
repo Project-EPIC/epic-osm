@@ -62,8 +62,6 @@ class DatabaseConnection
 		when "Relation"
 			database['relations'].insert( osm_object.to_mongo ) unless mem_only
 		end
-
-		osm_object = nil
 	end
 
 	def self.persistent_nodes(node_id)

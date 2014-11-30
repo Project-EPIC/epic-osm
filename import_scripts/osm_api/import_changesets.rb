@@ -33,17 +33,22 @@ class ChangesetImport
 
   def import_changeset_objects
     distinct_changeset_ids.each_with_index do |changeset_id, index|
-     
-      this_changeset = changeset_api.hit_api(changeset_id)
-      if this_changeset
-        changeset_obj = Changeset.new convert_osm_api_to_domain_object_hash this_changeset
-        changeset_obj.save!
-      end
 
-      if (index%10).zero?
-        print '.'
-      elsif (index%101).zero?
-        print index
+      begin
+        this_changeset = changeset_api.hit_api(changeset_id)
+        if this_changeset
+          changeset_obj = Changeset.new convert_osm_api_to_domain_object_hash this_changeset
+          changeset_obj.save!
+        end
+
+        if (index%10).zero?
+          print '.'
+        elsif (index%101).zero?
+          print index
+        end
+      rescue => e
+        puts "Error on Changeset: #{changeset_id}, continuing"
+        puts $!
       end
 
     end
