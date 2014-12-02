@@ -2,6 +2,9 @@ source 'http://rubygems.org/'
 
 #These gems are 100% required:
 
+#Jekyll
+gem 'jekyll'
+
 #Mongo
 gem 'mongo',		'1.11.1'
 gem 'bson',			'1.11.1'
