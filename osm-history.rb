@@ -1,15 +1,18 @@
-# THIS IS THE MAIN CONTROLLER.
-
-#This adds the current directory to the loadpath
+#Add the current directory to the load path to cleanup installs
 $:.unshift File.dirname(__FILE__)
 
-#Require the questions modules # => These could be autoloaded?
+#Load the Questions Base Module
+require 'modules/questions/questions.rb'
+
+#Load Individual Questions Modules
 require 'modules/questions/node_questions'
 require 'modules/questions/way_questions'
 require 'modules/questions/relation_questions'
 require 'modules/questions/user_questions'
 require 'modules/questions/changeset_questions'
 require 'modules/questions/network_questions'
+
+#TODO: Load custom questions modules as desired....
 
 #This is what's required to make it all work
 require 'models/DomainObjects'
@@ -22,7 +25,9 @@ require 'yaml'
 #Autoload FileIO as needed
 autoload :FileIO, 'modules/file_io'
 
-#The main Controller for OSM History
+#=Main Controller for OSM History
+#
+#
 class OSMHistory
 
 	include Questions::Ways
@@ -50,7 +55,6 @@ class OSMHistory
 	end
 
 	def run_node_questions
-
 		node_questions = Questions::Nodes.new(analysis_window: analysis_window)
 
 		aw_config['Node Questions'].each do |node_q|
@@ -83,7 +87,7 @@ class OSMHistory
 	end
 
 	def write_json(args)
-		out_file = FileIO::JSONExporter.new(name: args[:name], data: args[:data], path: aw_config['data_directory']+'/'+aw_config['title']) 
+		out_file = FileIO::JSONExporter.new(name: args[:name], data: args[:data], path: aw_config['write_directory']+'/json') 
 		unless out_file.data.nil? 
 			out_file.write
 		end

@@ -28,7 +28,7 @@ max_lat:  #Not implemented
 
 tags: none
 
-data_directory: _data
+write_directory: 'sample_projects/haiti_earthquake_sample'
 
 #Questions for Analysis
 

@@ -1,9 +1,9 @@
 module Questions
 
-	module Changesets
+	class Changesets < QuestionsRunner
 
 		def number_of_changests
-			analysis_window.changeset_count
+			aw.changeset_count
 		end
 
 	end

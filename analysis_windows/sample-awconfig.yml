@@ -20,3 +20,6 @@ bbox: '-86.354212,12.084238,-86.133199,12.191113'
 #These strings are parsed by Ruby: YYYY-MM-DD works well
 start_date: '2010-01-01'
 end_date:   '2010-12-31'
+
+############    File Export Information   ################################
+write_directory: 'sample_projects/sample_project'

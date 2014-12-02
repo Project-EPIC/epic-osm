@@ -1,4 +1,4 @@
-# This Rakefile defines tasks for setting up Analysis Windows
+#This Rakefile defines tasks for setting up Analysis Windows
 
 #The import_analysis_window script does all the heavy lifting
 require_relative 'import_scripts/import_analysis_window'
