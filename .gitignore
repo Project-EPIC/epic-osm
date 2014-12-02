@@ -1,8 +1,7 @@
 *.lock
 config.yml
 
-haiti_*
-
+haiti_earthquake.yml
 
 *.gml
 

@@ -1,0 +1,59 @@
+#
+# This is a sample configuration file for cutting and importing the Haiti history data
+# 
+
+#User Information
+title: 'Haiti Earthquake 2010 - Sample'
+email: 'test_user@osm-history2.com'
+
+#Database Information
+pbf_file: '/Users/jenningsanderson/Documents/OSM/central-america.osh.pbf'
+database: 'haiti-2'
+
+#Analysis Window Information
+start_date: '2010-01-12'
+end_date:   '2010-01-14'
+
+#Bounding Box:
+bbox: '-74.5532226563,17.8794313865,-71.7297363281,19.9888363024' #Expecting 4 parameters
+
+
+#Or:
+max_lon: 
+min_lat: 
+min_lon: 
+max_lat:  #Not implemented
+
+# Lower left, upper right #
+
+tags: none
+
+data_directory: _data
+
+#Questions for Analysis
+
+Node Questions:
+ - total_nodes_edited
+ - node_added_count
+ - nodes_edited_by_new_mappers
+ - nodes_edited_by_experienced_mappers
+ - mean_nodes_per_mapper
+ - median_nodes_per_mapper
+ - nodes_x_day
+
+Changeset Questions:
+ - total_edits
+ - edit_count_by_day
+ - mean_changesets_per_mapper
+ - median_changesets_per_mapper
+ - changesets_per_new_mapper
+ - changesets_per_experienced_mapper
+ - average_changeset_size
+ - average_changeset_density
+ - median_changeset_density 		# This will need a threshold of 'interested sizes'
+ - average_overlaps_per_changeset
+
+User Questions:
+ - new_user_count
+ - experienced_user_count
+ - total_user_count
