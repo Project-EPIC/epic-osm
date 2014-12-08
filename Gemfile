@@ -16,8 +16,8 @@ gem 'rgeo'
 #Gems required mostly for import abiltiies:
 group :import do
 	gem 'pbf_parser',   '0.2.0'
+	gem 'nokogiri', 	'1.5.0'
 	gem 'nori',			'2.4.0'
-	gem 'nokogiri'  '1.5.0'
 end
 
 #Gems only required for testing and/or development:
