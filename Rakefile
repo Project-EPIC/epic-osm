@@ -115,6 +115,7 @@ namespace :jekyll do
 	task :test do
 
 	end
+	desc "Configuration"
 	task :config do
 		dir = window.config['write_directory']
 		File.open("jekyll/config.yml", 'w') { |file| 
@@ -125,6 +126,7 @@ namespace :jekyll do
 		file.write("data_source : ../#{dir}/json")
 		}
 	end
+	desc "Build it"
 	task :build do
 		dir = window.config['write_directory']
 		system("jekyll build --source jekyll --destination #{dir}")
