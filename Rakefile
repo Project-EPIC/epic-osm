@@ -82,6 +82,14 @@ end
 
 
 namespace :questions do
+	desc "Given a valid configuration file, Cut and Import all of the data"
+	task :all do
+	Rake::Task['questions:nodes'].invoke
+	# Rake::Task['questions:ways'].invoke
+	# Rake::Task['questions:relations'].invoke
+	# Rake::Task['questions:changesets'].invoke
+	# Rake::Task['questions:users'].invoke
+	end
 
 	desc "Run Node Questions"
 	task :nodes do
@@ -104,7 +112,7 @@ namespace :questions do
 	end
 
 	desc "Run User Questions"
-	task :ways do
+	task :users do
 		osmhistory.run_user_questions
 	end
 end
@@ -112,18 +120,17 @@ end
 #Builds Jekyll sites based on analysis windows
 namespace :jekyll do
 	
-	desc "Configuration"
+	desc "Write Configuration File"
 	task :config do
 		dir = window.config['write_directory']
-		File.open("jekyll/config.yml", 'w') { |file| 
+		File.open("jekyll/_config.yml", 'w') { |file| 
 		window.config.each do |key, value| 
-			file.write("#{key} : #{value} \n") 
-			puts "#{key} : #{value}"
+			file.write("#{key}: #{value} \n") 
 		end
 		}
 	end
 	
-	desc "Build it"
+	desc "Build Jekyll Site, Move Files Around"
 	task :build do
 		dir = window.config['write_directory']
 		system("mv #{dir}/json/* jekyll/_data")
@@ -131,5 +138,6 @@ namespace :jekyll do
 		system("jekyll build --source jekyll --destination temp")
 		system("mv -f temp/* #{dir}/")
 		system("mv jekyll/_data #{dir}/json")
+		system("mkdir jekyll/_data")
 	end
 end

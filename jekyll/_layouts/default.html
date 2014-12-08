@@ -9,6 +9,10 @@
 
     <div class="page-content">
       <div class="wrapper">
+      Time Period:     {{ site.start_date | date: "%B %d, %Y" }} - {{ site.end_date | date: "%B %d, %Y" }} <br />
+      Total Nodes Added During Time Period: {{ site.data.node_added_count['node_added_count'] }}  <br />
+      Total Nodes Edited During Time Period: {{ site.data.total_nodes_edited['Total Nodes Edited'] }}  
+
       <ul>
       {% for day in site.data.nodes_x_day %}
         <li>
