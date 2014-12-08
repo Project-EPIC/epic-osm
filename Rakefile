@@ -113,7 +113,7 @@ end
 namespace :jekyll do
 	desc "Builds Jekyll Site"
 	task :test do
-		dir = window.config['write_directory']
+
 	end
 	task :config do
 		dir = window.config['write_directory']
@@ -122,11 +122,11 @@ namespace :jekyll do
 			file.write("#{key} : #{value} \n") 
 			puts "#{key} : #{value}"
 		end
-		file.write("data_source : #{dir}/json")
+		file.write("data_source : ../#{dir}/json")
 		}
 	end
 	task :build do
 		dir = window.config['write_directory']
-		system("jekyll build ")
+		system("jekyll build --source jekyll --destination #{dir}")
 	end
 end
