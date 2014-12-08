@@ -111,10 +111,7 @@ end
 
 #Builds Jekyll sites based on analysis windows
 namespace :jekyll do
-	desc "Builds Jekyll Site"
-	task :test do
-
-	end
+	
 	desc "Configuration"
 	task :config do
 		dir = window.config['write_directory']
@@ -123,12 +120,16 @@ namespace :jekyll do
 			file.write("#{key} : #{value} \n") 
 			puts "#{key} : #{value}"
 		end
-		file.write("data_source : ../#{dir}/json")
 		}
 	end
+	
 	desc "Build it"
 	task :build do
 		dir = window.config['write_directory']
-		system("jekyll build --source jekyll --destination #{dir}")
+		system("mv #{dir}/json/* jekyll/_data")
+		system("rm -rf #{dir}/*")
+		system("jekyll build --source jekyll --destination temp")
+		system("mv -f temp/* #{dir}/")
+		system("mv jekyll/_data #{dir}/json")
 	end
 end
