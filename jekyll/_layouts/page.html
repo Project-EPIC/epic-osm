@@ -1,0 +1,23 @@
+---
+layout: default
+---
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+  </header>
+afdsafsafdafd
+      <ul>
+      {% for day in site.data.nodes_x_day %}
+        <li>
+            {{ day.start_date }} - {{ day.end_date }} : {{ day.objects }} 
+          </a>
+        </li>
+      {% endfor %}
+      </ul>
+
+  <article class="post-content">
+    {{ content }}
+  </article>
+
+</div>
