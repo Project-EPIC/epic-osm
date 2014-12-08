@@ -5,6 +5,8 @@ haiti_earthquake.yml
 
 *.gml
 
+sample_projects/*
+
 *.json
 doc/*
 temp.config
