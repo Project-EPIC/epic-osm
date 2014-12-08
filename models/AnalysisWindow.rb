@@ -31,6 +31,10 @@ class AnalysisWindow
 			step = 1
 		end
 
+		if unit.nil?
+			unit = :all
+		end
+
 		buckets = []
 		
 		case unit

@@ -38,7 +38,7 @@ class Query
 								  '$lt'  => end_time    }
 	end
 
-	def run(args)
+	def run(args = {})
 		# puts "Got to super run function with args #{args}"
 		@buckets = analysis_window.build_buckets( unit = args[:unit], step = args[:step] )
 
@@ -60,26 +60,26 @@ end
 
 #Queries (but they kiiiiind of act like buckets... )
 class Node_Query < Query
-	def run(args)
+	def run(args={})
 		super args.update( {collection: 'nodes', type: Node} )
 	end
 end
 
 class Way_Query < Query
-	def run(args)
+	def run(args={})
 		super args.update( {collection: 'ways', type: Way } )
 	end
 end
 
 class Relation_Query < Query
-	def run(args)
+	def run(args={})
 		super args.update( {collection: 'relations', type: Relation } )
 	end
 end
 
 
 class Changeset_Query < Query
-	def run(args)
+	def run(args={})
 		super args.update( {collection: 'changesets', type: Changeset} )
 	end
 

@@ -32,8 +32,10 @@ module Questions
 					x = instance_eval(command)
 					print "Success\n"
 					return x
-				rescue
+				rescue => e
 					print "FUNCTION NOT FOUND -- SKIPPING\n"
+					puts $!
+					#puts e.backtrace
 				end
 			end
 		end

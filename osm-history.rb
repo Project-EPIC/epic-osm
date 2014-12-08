@@ -1,6 +1,11 @@
 #Add the current directory to the load path to cleanup installs
 $:.unshift File.dirname(__FILE__)
 
+#This is what's required to make it all work
+require 'models/DomainObjects'
+require 'models/Persistence'
+require 'models/Query'
+
 #Load the Questions Base Module
 require 'modules/questions/questions.rb'
 
@@ -13,11 +18,6 @@ require 'modules/questions/changeset_questions'
 require 'modules/questions/network_questions'
 
 #TODO: Load custom questions modules as desired....
-
-#This is what's required to make it all work
-require 'models/DomainObjects'
-require 'models/Persistence'
-require 'models/Query'
 
 #Standard ruby Libraries we need?
 require 'yaml'
