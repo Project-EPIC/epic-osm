@@ -5,14 +5,13 @@
 # Central America OSH PBF file for a test
 #
 #
-#
 
 #User Information
 title: 'Managua'
 email: 'test_user@osm-history2.com'
 
 #Database Information
-pbf_file: '/Users/jenningsanderson/Documents/OSM/central-america.osh.pbf'
+pbf_file: '/Users/robertsoden/Documents/OSM/central-america.osh.pbf'
 database: 'managua-test'
 
 #Analysis Window Information
@@ -31,4 +30,14 @@ max_lat:
 # Lower left, upper right #
 tags: none
 
+#Write Directory
+write_directory: 'sample_projects/nicaragua'
 
+Node Questions:
+ - total_nodes_edited
+ - node_added_count
+ - nodes_edited_by_new_mappers
+ - nodes_edited_by_experienced_mappers
+ - mean_nodes_per_mapper
+ - median_nodes_per_mapper
+ - nodes_x_day
