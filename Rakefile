@@ -133,11 +133,11 @@ namespace :jekyll do
 	desc "Build Jekyll Site, Move Files Around"
 	task :build do
 		dir = window.config['write_directory']
+		system("mkdir jekyll/_data")
 		system("mv #{dir}/json/* jekyll/_data")
 		system("rm -rf #{dir}/*")
 		system("jekyll build --source jekyll --destination temp")
 		system("mv -f temp/* #{dir}/")
 		system("mv jekyll/_data #{dir}/json")
-		system("mkdir jekyll/_data")
 	end
 end
