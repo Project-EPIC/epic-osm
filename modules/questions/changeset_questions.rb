@@ -17,7 +17,7 @@ module Questions
 
 		#Going to need a statistics module
 		def median_changesets_per_mapper
-
+			nil
 		end
 		
 		def number_of_changesets_by_new_mappers
@@ -32,13 +32,35 @@ module Questions
 
 		def changeset_node_density(changeset)
 			nodes_in_changeset = Node_Query.new(analysis_window: aw, constraints: {'changeset'=> changeset.id}).run
-			return nodes_in_changeset.first[:objects].count / ( changeset.area / 100000 )
+			node_count = nodes_in_changeset.first[:objects].count
+			if node_count.zero?
+				return nil
+			elsif changeset.area < 1 or changeset.area == Float::INFINITY #Need a new filter for this part
+				return nil
+			else
+				return node_count / ( changeset.area / 100000 )
+			end
 		end
 
 		def average_changeset_node_density
+			density_sum = 0.0
+			cnt = 0
 			aw.changesets_x_all.first[:objects].each do |changeset|
-				puts changeset_node_density(changeset)
+				density =  changeset_node_density(changeset)
+				density_sum += density unless density.nil?
+				cnt+=1 unless density.nil?
 			end
+			{"Average Changeset Node Density" => density_sum / cnt}
+		end
+
+		def average_changeset_area
+			area_sum = 0
+			cnt = 0
+			aw.changesets_x_all.first[:objects].each do |changeset|
+				area_sum += changeset.area
+				cnt +=1
+			end
+			{"Average Changeset Area" => area_sum / cnt}
 		end
 	end
 
