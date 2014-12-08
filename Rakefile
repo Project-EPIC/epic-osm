@@ -130,12 +130,3 @@ namespace :jekyll do
 		system("jekyll build ")
 	end
 end
-
-
-
-
-
-
-
-
-

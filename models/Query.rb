@@ -51,7 +51,7 @@ class Query
 			selector.update(args[:constraints])
 		end
 
-		puts selector
+		# puts selector
 
 		buckets.each do |bucket|			
 			update_created_at( bucket[:start_date], bucket[:end_date] )

@@ -54,11 +54,21 @@ class OSMHistory
 		@analysis_window ||= AnalysisWindow.new(time_frame: TimeFrame.new(start: aw_config['start_date'], end: aw_config['end_date']), bounding_box: nil)
 	end
 
+
 	def run_node_questions
 		node_questions = Questions::Nodes.new(analysis_window: analysis_window)
 
 		aw_config['Node Questions'].each do |node_q|
 			write_json( data: node_questions.run(node_q), name: "#{node_q}.json")
+		end
+	end
+
+
+	def run_changeset_questions
+		changeset_questions = Questions::Changesets.new(analysis_window: analysis_window)
+
+		aw_config['Changeset Questions'].each do |changeset_q|
+			write_json( data: changeset_questions.run(changeset_q), name: "#{changeset_q}.json")
 		end
 	end
 
