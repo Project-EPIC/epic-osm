@@ -9,7 +9,14 @@
 
     <div class="page-content">
       <div class="wrapper">
-        {{ content }}
+      <ul>
+      {% for day in site.data.nodes_x_day %}
+        <li>
+            {{ day.start_date }} - {{ day.end_date }} : {{ day.objects | size }} 
+          </a>
+        </li>
+      {% endfor %}
+      </ul>
       </div>
     </div>
 
