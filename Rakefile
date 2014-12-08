@@ -87,6 +87,26 @@ namespace :questions do
 	task :nodes do
 		osmhistory.run_node_questions
 	end
+
+	desc "Run Way Questions"
+	task :ways do
+		osmhistory.run_way_questions
+	end
+
+	desc "Run Relation Questions"
+	task :relations do
+		osmhistory.run_relation_questions
+	end
+
+	desc "Run Changeset Questions"
+	task :changesets do
+		osmhistory.run_changeset_questions
+	end
+
+	desc "Run User Questions"
+	task :ways do
+		osmhistory.run_user_questions
+	end
 end
 
 #Builds Jekyll sites based on analysis windows
