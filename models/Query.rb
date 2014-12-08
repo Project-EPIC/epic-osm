@@ -30,6 +30,11 @@ class Query
 			selector[:created_at] = { '$gte' => analysis_window.time_frame.start,
 									  '$lt' => analysis_window.time_frame.end    }
 		end
+
+		#If the query was called with new constraints, then they should get added here
+		unless args[:constraints].nil?
+			selector.update(args[:constraints])
+		end
 	end
 
 	#For when buckets are called
@@ -45,6 +50,8 @@ class Query
 		unless args[:constraints].nil?
 			selector.update(args[:constraints])
 		end
+
+		puts selector
 
 		buckets.each do |bucket|			
 			update_created_at( bucket[:start_date], bucket[:end_date] )

@@ -203,6 +203,10 @@ class AnalysisWindow
 		all_users_data.select{|user| user.account_created > time_frame.start and user.account_created < time_frame.end}.collect{|user| user.user}
 	end
 
+	def experienced_contributors
+		all_users_data.select{|user| user.account_created < time_frame.start}.collect{|user| user.user}
+	end
+
 	def top_contributors_by_changesets(args={limit: 5, unit: :all_time })
 
 		case args[:unit]
