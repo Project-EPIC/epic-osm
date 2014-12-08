@@ -24,7 +24,5 @@ module Questions
       nodes_by_experienced_mappers = Node_Query.new(analysis_window: aw, constraints: {'user' => {'$in' => aw.experienced_contributors}}).run
       {'Nodes Edited by Experienced Mappers' => nodes_by_experienced_mappers.first[:objects].length }
     end
-
-    
 	end
 end
