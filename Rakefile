@@ -82,12 +82,12 @@ end
 
 
 namespace :questions do
-	desc "Given a valid configuration file, Cut and Import all of the data"
+	desc "Run all questions defined in the analysis window"
 	task :all do
 	Rake::Task['questions:nodes'].invoke
 	# Rake::Task['questions:ways'].invoke
 	# Rake::Task['questions:relations'].invoke
-	# Rake::Task['questions:changesets'].invoke
+	Rake::Task['questions:changesets'].invoke
 	# Rake::Task['questions:users'].invoke
 	end
 
@@ -96,13 +96,15 @@ namespace :questions do
 		osmhistory.run_node_questions
 	end
 
-	desc "Run Way Questions"
+	# desc "Run Way Questions"
 	task :ways do
+		# This doesn't exist yet
 		osmhistory.run_way_questions
 	end
 
-	desc "Run Relation Questions"
+	# desc "Run Relation Questions"
 	task :relations do
+		# This doesn't exist yet
 		osmhistory.run_relation_questions
 	end
 
@@ -111,8 +113,9 @@ namespace :questions do
 		osmhistory.run_changeset_questions
 	end
 
-	desc "Run User Questions"
+	# desc "Run User Questions"
 	task :users do
+		# This doesn't exist yet
 		osmhistory.run_user_questions
 	end
 end
