@@ -1,15 +1,15 @@
 module Questions
 
-	#Node Questions
-	class Nodes < QuestionsRunner
+  #Node Questions
+  class Nodes < QuestionsRunner
 
     #Total nodes edited in the analysis window
     def total_nodes_edited
-			{'Total Nodes Edited' => aw.node_edit_count }
-		end
+  		{'Total Nodes Edited' => aw.node_edit_count }
+  	end
 
     #Nodes Added (finds nodes in AW where version==1)
-		def number_of_new_nodes
+  	def number_of_new_nodes
     	{'New Nodes Added' => aw.node_added_count }
   	end
 
@@ -24,5 +24,5 @@ module Questions
       nodes_by_experienced_mappers = Node_Query.new(analysis_window: aw, constraints: {'user' => {'$in' => aw.experienced_contributors}}).run
       {'Nodes Edited by Experienced Mappers' => nodes_by_experienced_mappers.first[:objects].length }
     end
-	end
+  end
 end
