@@ -21,6 +21,7 @@ require 'modules/questions/network_questions'
 
 #Standard ruby Libraries we need?
 require 'yaml'
+require 'descriptive_statistics/safe'
 
 #Autoload FileIO as needed
 autoload :FileIO, 'modules/file_io'

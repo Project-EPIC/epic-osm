@@ -5,19 +5,19 @@ module Questions
 		def total_changesets_created
 			{"Number of Changesets" => aw.changeset_count}
 		end
+
+		def changesets_per_mapper
+			changesets_by_uid = aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.uid}
+		end
 		
 		def mean_changesets_per_mapper
-			changesets_by_uid = aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.uid}
-			sum = 0
-			changesets_by_uid.each do |uid, changesets|
-				sum += changesets.length
-			end
-			{"Mean Changesets Per Mapper" => sum.to_f / changesets_by_uid.keys.length}	  # / changesets_by_uid.count
+			num_changesets = changesets_per_mapper.collect{|uid, changesets| changesets.length}
+			{"Mean Changesets Per Mapper" => DescriptiveStatistics.mean(num_changesets) }	  # / changesets_by_uid.count
 		end
 
-		#Going to need a statistics module
 		def median_changesets_per_mapper
-			nil
+			num_changesets = changesets_per_mapper.collect{|uid, changesets| changesets.length}
+			{"Median Changesets Per Mapper" => DescriptiveStatistics.median(num_changesets) }
 		end
 		
 		def number_of_changesets_by_new_mappers

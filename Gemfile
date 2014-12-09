@@ -13,6 +13,9 @@ gem 'bson_ext',		'1.11.1'
 #Geo:
 gem 'rgeo'
 
+#Statistics
+gem 'descriptive_statistics'
+
 #Gems required mostly for import abiltiies:
 group :import do
 	gem 'pbf_parser',   '0.2.0'
