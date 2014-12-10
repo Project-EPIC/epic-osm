@@ -39,7 +39,6 @@ Node Questions:
  - mean_nodes_per_mapper
  - median_nodes_per_mapper
 
-
 Changeset Questions:
  - total_changesets_created
  - mean_changesets_per_mapper
