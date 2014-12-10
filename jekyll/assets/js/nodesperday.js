@@ -23,7 +23,7 @@ var valueline = d3.svg.line()
     .y(function(d) { return y(d.nodes); });
     
 // Adds the svg canvas
-var svg = d3.select("body")
+var svg = d3.select(".nodes-per-day")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
