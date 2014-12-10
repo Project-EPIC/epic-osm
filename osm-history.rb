@@ -77,6 +77,14 @@ class OSMHistory
 		end
 	end
 
+	def run_user_questions
+		user_questions = Questions::Users.new(analysis_window: analysis_window)
+
+		aw_config['User Questions'].each do |user_q|
+			write_json( data: user_questions.run(user_q), name: "#{user_q}.json")
+		end
+	end
+
 
 	def run_questions
 		# Go through questions in the configuration file and run the appropriate algorithms to get answers

@@ -113,9 +113,8 @@ namespace :questions do
 		osmhistory.run_changeset_questions
 	end
 
-	# desc "Run User Questions"
+	desc "Run User Questions"
 	task :users do
-		# This doesn't exist yet
 		osmhistory.run_user_questions
 	end
 end

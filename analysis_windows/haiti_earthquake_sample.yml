@@ -32,26 +32,25 @@ write_directory: 'sample_projects/haiti_earthquake_sample'
 #Questions for Analysis
 
 Node Questions:
- # - total_nodes_edited
- # - number_of_new_nodes
- # - number_of_nodes_edited_by_new_mappers
- # - number_of_nodes_edited_by_experienced_mappers
- # - mean_nodes_per_mapper
- # - median_nodes_per_mapper
+ - total_nodes_edited
+ - number_of_new_nodes
+ - number_of_nodes_edited_by_new_mappers
+ - number_of_nodes_edited_by_experienced_mappers
+ - mean_nodes_per_mapper
+ - median_nodes_per_mapper
 
 
 Changeset Questions:
- # - total_changesets_created
- # - mean_changesets_per_mapper
- # - median_changesets_per_mapper
- # - number_of_changesets_by_new_mappers
- # - number_of_changesets_by_experienced_mappers
+ - total_changesets_created
+ - mean_changesets_per_mapper
+ - median_changesets_per_mapper
+ - number_of_changesets_by_new_mappers
+ - number_of_changesets_by_experienced_mappers
 
  - average_changeset_area
  - average_changeset_node_density
- 
- # - median_changeset_density 		# This will need a threshold of 'interested sizes'
- # - average_overlaps_per_changeset
+ - median_changeset_node_density 		# This will need a threshold of 'interested sizes'
+ - average_geographic_overlaps_per_changeset
 
 User Questions:
  - new_user_count

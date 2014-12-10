@@ -45,9 +45,17 @@ module Questions
 			end
 		end
 
+		attr_reader :changeset_node_densities
+		def changeset_node_densities
+			@changeset_densities ||= aw.changesets_x_all.first[:objects].collect{ |changeset| changeset_node_density(changeset) }.compact
+		end
+
 		def average_changeset_node_density
-			changeset_densities = aw.changesets_x_all.first[:objects].collect{ |changeset| changeset_node_density(changeset) }.compact
-			{"Average Changeset Node Density" => DescriptiveStatistics.mean(changeset_densities) }
+			{"Average Changeset Node Density" => DescriptiveStatistics.mean(changeset_node_densities) }
+		end
+
+		def median_changeset_node_density
+			{"Median Changeset Node Density" => DescriptiveStatistics.median(changeset_node_densities) }
 		end
 
 		def filtered_changeset_area(changeset)
@@ -65,6 +73,29 @@ module Questions
 		def average_changeset_area
 			areas = aw.changesets_x_all.first[:objects].collect{ |changeset| filtered_changeset_area(changeset) }.compact
 			{"Average Changeset Area" => DescriptiveStatistics.mean(areas) }
+		end
+
+		#Not very efficient, but, well, it works...
+		def average_geographic_overlaps_per_changeset
+			changeset_overlaps = {}
+
+			#Ensure they're sorted
+			changesets = aw.changesets_x_all.first[:objects]
+
+			changesets.select!{|changeset| filtered_changeset_area(changeset)}
+			
+			#Iterate through the changesets
+			changesets.each_with_index do |base_changeset|
+
+				#Initialize this changeset into the Hash
+				changeset_overlaps[base_changeset.id] ||= []
+				
+				changesets.each do |check_changeset|
+					changeset_overlaps[base_changeset.id] << check_changeset.id if base_changeset.bounding_box.intersects? check_changeset.bounding_box
+				end
+			end
+			changeset_overlap_sums = changeset_overlaps.collect{|changeset_id, overlaps| overlaps.length}
+			{"Average Geographic Overlaps Per Changeset" => DescriptiveStatistics.mean(changeset_overlap_sums)}
 		end
 	end
 

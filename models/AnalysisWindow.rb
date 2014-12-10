@@ -13,8 +13,6 @@ class AnalysisWindow
 		@bounding_box = args[:bounding_box] || BoundingBox.new
 		@time_frame   = args[:time_frame]   || TimeFrame.new
 
-		puts args
-
 		@max_area = args[:max_area] || 1000000000000
 		@min_area = args[:min_area] || 1
 
