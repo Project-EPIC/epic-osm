@@ -12,7 +12,7 @@ database: 'haiti-earthquake'
 
 #Analysis Window Information
 start_date: '2010-01-12'
-end_date:   '2010-01-16'
+end_date:   '2010-01-15'
 
 #Bounding Box:
 bbox: '-74.5532226563,17.8794313865,-71.7297363281,19.9888363024' #Expecting 4 parameters
@@ -38,6 +38,7 @@ Node Questions:
  - number_of_nodes_edited_by_experienced_mappers
  - mean_nodes_per_mapper
  - median_nodes_per_mapper
+ - nodes_x_day
 
 Changeset Questions:
  - total_changesets_created

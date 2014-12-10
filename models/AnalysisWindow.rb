@@ -186,7 +186,7 @@ class AnalysisWindow
 	
 	#Users
 	def all_users_data
-		@all_users_data ||= User_Query.new(uids: distinct_users_in_changesets).run
+		User_Query.new(uids: distinct_users_in_changesets).run		
 	end
 
 	def users_editing_per_year
