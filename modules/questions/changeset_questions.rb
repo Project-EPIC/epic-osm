@@ -12,7 +12,7 @@ module Questions
 		
 		def mean_changesets_per_mapper
 			num_changesets = changesets_per_mapper.collect{|uid, changesets| changesets.length}
-			{"Mean Changesets Per Mapper" => DescriptiveStatistics.mean(num_changesets) }	  # / changesets_by_uid.count
+			{"Mean Changesets Per Mapper" => DescriptiveStatistics.mean(num_changesets) }
 		end
 
 		def median_changesets_per_mapper
@@ -35,32 +35,36 @@ module Questions
 			node_count = nodes_in_changeset.first[:objects].count
 			if node_count.zero?
 				return nil
-			elsif changeset.area < 1 or changeset.area == Float::INFINITY #Need a new filter for this part
-				return nil
 			else
-				return node_count / ( changeset.area / 100000 )
+				area = filtered_changeset_area(changeset)
+				unless area.nil?
+					return node_count / ( area / 1000000 )
+				else
+					return nil
+				end
 			end
 		end
 
 		def average_changeset_node_density
-			density_sum = 0.0
-			cnt = 0
-			aw.changesets_x_all.first[:objects].each do |changeset|
-				density =  changeset_node_density(changeset)
-				density_sum += density unless density.nil?
-				cnt+=1 unless density.nil?
+			changeset_densities = aw.changesets_x_all.first[:objects].collect{ |changeset| changeset_node_density(changeset) }.compact
+			{"Average Changeset Node Density" => DescriptiveStatistics.mean(changeset_densities) }
+		end
+
+		def filtered_changeset_area(changeset)
+			#Apply filters
+			a = changeset.area
+			if a.nil?
+				return nil
+			elsif a > aw.min_area and a < aw.max_area
+				return a
+			else
+				return nil
 			end
-			{"Average Changeset Node Density" => density_sum / cnt}
 		end
 
 		def average_changeset_area
-			area_sum = 0
-			cnt = 0
-			aw.changesets_x_all.first[:objects].each do |changeset|
-				area_sum += changeset.area
-				cnt +=1
-			end
-			{"Average Changeset Area" => area_sum / cnt}
+			areas = aw.changesets_x_all.first[:objects].collect{ |changeset| filtered_changeset_area(changeset) }.compact
+			{"Average Changeset Area" => DescriptiveStatistics.mean(areas) }
 		end
 	end
 

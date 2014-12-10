@@ -52,7 +52,11 @@ class OSMHistory
 	end
 
 	def analysis_window
-		@analysis_window ||= AnalysisWindow.new(time_frame: TimeFrame.new(start: aw_config['start_date'], end: aw_config['end_date']), bounding_box: nil)
+		@analysis_window ||= AnalysisWindow.new( time_frame: TimeFrame.new(start: aw_config['start_date'], end: aw_config['end_date']), 
+												 bounding_box: nil, 
+												 min_area: aw_config['min_area'], 
+												 max_area: aw_config['max_area']
+		)
 	end
 
 
