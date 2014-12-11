@@ -40,8 +40,10 @@ module Questions
 			
 										unless edges["#{user_1}-#{user_2}"].nil?
 											edges["#{user_1}-#{user_2}"][:weight] += 1
+											edges["#{user_2}-#{user_1}"][:weight] += 1
 										else
 											edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
+											edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
 										end
 										puts "#{user_1} - #{user_2}"
 									end
@@ -61,7 +63,7 @@ module Questions
 			end
 
 			def make_file(filename, comment="", label="")
-				return FileIO::GMLAuthor.new(filename: "#{directory}/#{filename}.gml", directed: 1, id: 1, comment: comment, label: label)
+				return FileIO::GMLAuthor.new(filename: "#{directory}/#{filename}.gml", directed: 0, id: 1, comment: comment, label: label)
 			end
 
 		end
