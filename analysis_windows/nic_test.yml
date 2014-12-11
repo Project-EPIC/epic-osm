@@ -38,6 +38,6 @@ mongo_only: false
 write_directory: 'sample_projects/nic_test'
 
 temporal_network:
-  files: '/home/share/overlapping_changesets_by_1_hour' 
+  files: 'overlapping_changesets_by_1_hour' 
   unit: 'hour'
   step: 8
