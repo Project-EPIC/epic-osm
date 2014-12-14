@@ -89,6 +89,7 @@ namespace :questions do
 	# Rake::Task['questions:relations'].invoke
 	Rake::Task['questions:changesets'].invoke
 	# Rake::Task['questions:users'].invoke
+	Rake::Task['questions:bbox'].invoke
 	end
 
 	desc "Run Node Questions"
@@ -117,6 +118,11 @@ namespace :questions do
 	task :users do
 		# This doesn't exist yet
 		osmhistory.run_user_questions
+	end
+
+	desc "Run BBox Questions"
+	task :bbox do
+		osmhistory.run_bbox_questions
 	end
 end
 

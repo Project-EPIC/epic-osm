@@ -11,6 +11,12 @@
       <div class="wrapper">
         Time Period: {{ site.start_date | date: "%B %d, %Y" }} - {{ site.end_date | date: "%B %d, %Y" }} <br />
 
+        Study Area:
+        <div id="map" style="width: 600px; height: 400px"></div>
+        <script src="/assets/js/locator-map.js"></script>
+
+        {{ site.bbox }}, {{ site.bbox[1] }}, {{ site.bbox[2] }}, {{ site.bbox[3] }}
+
         <h2>Node Questions</h2>  
         Total Nodes Added During Time Period: {{ site.data.node_added_count['node_added_count'] }}  <br />
         Total Nodes Edited During Time Period: {{ site.data.total_nodes_edited['Total Nodes Edited'] }}  <br />

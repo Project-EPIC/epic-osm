@@ -16,6 +16,8 @@ require 'modules/questions/relation_questions'
 require 'modules/questions/user_questions'
 require 'modules/questions/changeset_questions'
 require 'modules/questions/network_questions'
+require 'modules/questions/bbox_questions'
+
 
 #TODO: Load custom questions modules as desired....
 
@@ -66,10 +68,18 @@ class OSMHistory
 
 
 	def run_changeset_questions
-		changeset_questions = Questions::Changesets.new(analysis_window: analysis_window)
+		changeset_questions = Questions::Changeset.new(analysis_window: analysis_window)
 
 		aw_config['Changeset Questions'].each do |changeset_q|
 			write_json( data: changeset_questions.run(changeset_q), name: "#{changeset_q}.json")
+		end
+	end
+
+	def run_bbox_questions
+		bbox_questions = Questions::Bbox.new(analysis_window: analysis_window)
+
+		aw_config['Bbox Questions'].each do |bbox_q|
+			write_json( data: bbox_questions.run(bbox_q), name: "#{bbox_q}.json")
 		end
 	end
 

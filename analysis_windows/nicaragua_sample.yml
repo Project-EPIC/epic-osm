@@ -58,3 +58,6 @@ User Questions:
  - new_user_count
  - experienced_user_count
  - total_user_count
+
+Bbox Questions:
+- bbox_geometry
