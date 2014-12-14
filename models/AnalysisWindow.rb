@@ -149,15 +149,6 @@ class AnalysisWindow
 		nodes_x_all.first[:objects].select{|node| node.version == 1}.count
 	end
 
-	# def newest_nodes #TODO -- make this prettier
-	# 	distinct_nodes = nodes_x_all.group_by{|node| node.id}
-
-	# 	puts distinct_nodes.keys.count
-	# 	puts distinct_nodes.values.count
-
-	# 	#.values.collect{|nodes| nodes.sort_by{|node| node.version}.last}
-	# end
-
 	#Ways
 	def ways
 		@ways ||= Way_Query.new( analysis_window: self )
@@ -225,14 +216,16 @@ class AnalysisWindow
 	end
 end
 
+#=Geographical Bounding Box
+#
 #A bounding box is a geographical box determined by the configuration file.
 #
-#It is currently not being implemented because the import scripts are cutting the excess data
+#It is currently not being implemented in queries because the import scripts are cutting the excess data
 #away, so there is nothing outside of the bounding box in the database.
 #
 #However, queries are capable of only querying within the bounding box, so it is possible to change
-#the box throughout calculations to get a subset of the data.
-class BoundingBox # :doc:
+#the box throughout calculations to get a subset of the data -- change to @active = true
+class BoundingBox
 
 	attr_reader :bottom_left, :top_right, :active, :bbox_array
 
@@ -258,7 +251,7 @@ class BoundingBox # :doc:
 		unless (bottom_left.is_a? Array) and (top_right.is_a? Array)
 			@active = false
 		else
-			@active = true
+			@active = false #Active is always set to false and not incorporated in current queries
 		end
 	end
 

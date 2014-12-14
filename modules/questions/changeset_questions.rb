@@ -76,7 +76,7 @@ module Questions
 		end
 
 		#Not very efficient, but, well, it works...
-		def average_geographic_overlaps_per_changeset
+		def average_overlaps_per_changeset
 			changeset_overlaps = {}
 
 			#Ensure they're sorted
