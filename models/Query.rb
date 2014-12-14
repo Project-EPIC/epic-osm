@@ -51,8 +51,6 @@ class Query
 			selector.update(args[:constraints])
 		end
 
-		# puts selector
-
 		buckets.each do |bucket|			
 			update_created_at( bucket[:start_date], bucket[:end_date] )
 			results = DatabaseConnection.database[args[:collection]].find( selector )
@@ -105,11 +103,12 @@ end
 
 
 class User_Query < Query
+	attr_reader :selector
 	def initialize(args)
-		selector = args[:constraints] || {} #Empty selector
+		@selector = args[:constraints] || {} #Empty selector
 		
 		if args[:uids]
-			selector[:uid] = {'$in' => args[:user_ids]}
+			selector[:uid] = {'$in' => args[:uids]}
 		end
 	end
 

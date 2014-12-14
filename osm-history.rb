@@ -33,7 +33,6 @@ autoload :FileIO, 'modules/file_io'
 #
 class OSMHistory
 
-	include Questions::Ways
 	include Questions::Network
 
 	attr_reader :aw_config
@@ -54,7 +53,11 @@ class OSMHistory
 	end
 
 	def analysis_window
-		@analysis_window ||= AnalysisWindow.new(time_frame: TimeFrame.new(start: aw_config['start_date'], end: aw_config['end_date']), bounding_box: nil)
+		@analysis_window ||= AnalysisWindow.new( time_frame: TimeFrame.new(start: aw_config['start_date'], end: aw_config['end_date']), 
+												 bounding_box: nil, 
+												 min_area: aw_config['min_area'], 
+												 max_area: aw_config['max_area']
+		)
 	end
 
 
@@ -83,22 +86,12 @@ class OSMHistory
 		end
 	end
 
+	def run_user_questions
+		user_questions = Questions::Users.new(analysis_window: analysis_window)
 
-	def run_questions
-		# Go through questions in the configuration file and run the appropriate algorithms to get answers
-	
-		# puts number_of_nodes_added
-
-		# nodes_by_2_months
-
-  		analysis_window.ways_x_month(step: 3).each do |bucket|
-  			puts "#{bucket[:start_date]} - #{bucket[:end_date]} : #{bucket[:objects].count}"
-  		end
-
-		#Do all the way questions:
-		#Questions::Ways.instance_methods.each do |method|
-			#print method.to_s + ': '; eval "#{method}"
-		#end
+		aw_config['User Questions'].each do |user_q|
+			write_json( data: user_questions.run(user_q), name: "#{user_q}.json")
+		end
 	end
 
 	def run_network_functions

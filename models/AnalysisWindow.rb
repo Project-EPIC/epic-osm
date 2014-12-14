@@ -1,17 +1,23 @@
+#=The Analysis Window
+#
 #The analysis window is defined by an analysis window configuration file.
 #
 #They are aware of the geographical and temporal bounds of the study and handle all of the
 #helper functions for performing calculations.  All Queries happen through the analysis window
-#and the method missing located within defines functions such as nodes_x_month.
+#and the method missing located within defines functions such as _nodes_x_month_.
 class AnalysisWindow
-	attr_reader :time_frame, :bounding_box
+	attr_reader :time_frame, :bounding_box, :min_area, :max_area
 
 	#Can pass in an instance of a timeframe and bounding box, or use defaults
 	def initialize(args={})
 		@bounding_box = args[:bounding_box] || BoundingBox.new
 		@time_frame   = args[:time_frame]   || TimeFrame.new
 
+		@max_area = args[:max_area] || 1000000000000
+		@min_area = args[:min_area] || 1
+
 		post_initialize
+
 	end
 
 	#If the frame failed or doesn't exist, then use all of the data by default
@@ -180,7 +186,7 @@ class AnalysisWindow
 	
 	#Users
 	def all_users_data
-		@all_users_data ||= User_Query.new(uids: distinct_users_in_changesets).run
+		User_Query.new(uids: distinct_users_in_changesets).run		
 	end
 
 	def users_editing_per_year
@@ -251,7 +257,10 @@ class BoundingBox # :doc:
 	def mongo_format
 		h = Hash.new
 		h["$box"] = [bottom_left, top_right]
-		puts h
+	end
+
+	def geometry
+		{bbox: mongo_format["$box"]}
 	end
 end
 

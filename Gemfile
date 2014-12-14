@@ -10,7 +10,7 @@ gem 'mongo',		'1.11.1'
 gem 'bson',			'1.11.1'
 gem 'bson_ext',		'1.11.1'
 
-#Geo:
+#Geo
 gem 'rgeo'
 
 #Statistics
