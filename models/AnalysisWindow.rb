@@ -257,7 +257,10 @@ class BoundingBox # :doc:
 	def mongo_format
 		h = Hash.new
 		h["$box"] = [bottom_left, top_right]
-		puts h
+	end
+
+	def geometry
+		{bbox: mongo_format["$box"]}
 	end
 end
 
