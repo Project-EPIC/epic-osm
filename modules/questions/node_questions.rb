@@ -1,5 +1,4 @@
 module Questions
-
   #Node Questions
   class Nodes < QuestionsRunner
 
@@ -23,6 +22,19 @@ module Questions
     def number_of_nodes_edited_by_experienced_mappers
       nodes_by_experienced_mappers = Node_Query.new(analysis_window: aw, constraints: {'user' => {'$in' => aw.experienced_contributors}}).run
       {'Nodes Edited by Experienced Mappers' => nodes_by_experienced_mappers.first[:objects].length }
+    end
+
+    def nodes_grouped_by_mapper
+      nodes_x_all[:objects].first.group_by{ |node| node.uid }
+    end
+
+    def mean_nodes_per_mapper
+      {"Mean Nodes Per Mapper" => DescriptiveStatistics.mean(nodes_grouped_by_mapper.collect{|uid, nodes| nodes.length}) }
+    end
+
+
+    def median_nodes_per_mapper
+      {"Median Nodes Per Mapper" => DescriptiveStatistics.mediann(nodes_grouped_by_mapper.collect{|uid, nodes| nodes.length}) }
     end
   end
 end
