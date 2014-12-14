@@ -5,6 +5,7 @@ $:.unshift File.dirname(__FILE__)
 require 'models/DomainObjects'
 require 'models/Persistence'
 require 'models/Query'
+require 'models/AnalysisWindow'
 
 #Load the Questions Base Module
 require 'modules/questions/questions.rb'
@@ -54,7 +55,7 @@ class OSMHistory
 
 	def analysis_window
 		@analysis_window ||= AnalysisWindow.new( time_frame: TimeFrame.new(start: aw_config['start_date'], end: aw_config['end_date']), 
-												 bounding_box: nil, 
+												 bounding_box: BoundingBox.new(bbox: aw_config['bbox']), 
 												 min_area: aw_config['min_area'], 
 												 max_area: aw_config['max_area']
 		)
