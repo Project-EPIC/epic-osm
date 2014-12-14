@@ -25,7 +25,7 @@ module Questions
     end
 
     def nodes_grouped_by_mapper
-      nodes_x_all.first[:objects].group_by{ |node| node.uid }
+      aw.nodes_x_all.first[:objects].group_by{ |node| node.uid }
     end
 
     def mean_nodes_per_mapper
