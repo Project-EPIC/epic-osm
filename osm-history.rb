@@ -72,7 +72,7 @@ class OSMHistory
 
 
 	def run_changeset_questions
-		changeset_questions = Questions::Changeset.new(analysis_window: analysis_window)
+		changeset_questions = Questions::Changesets.new(analysis_window: analysis_window)
 
 		aw_config['Changeset Questions'].each do |changeset_q|
 			write_json( data: changeset_questions.run(changeset_q), name: "#{changeset_q}.json")

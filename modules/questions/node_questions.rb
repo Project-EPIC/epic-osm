@@ -32,9 +32,8 @@ module Questions
       {"Mean Nodes Per Mapper" => DescriptiveStatistics.mean(nodes_grouped_by_mapper.collect{|uid, nodes| nodes.length}) }
     end
 
-
     def median_nodes_per_mapper
-      {"Median Nodes Per Mapper" => DescriptiveStatistics.mediann(nodes_grouped_by_mapper.collect{|uid, nodes| nodes.length}) }
+      {"Median Nodes Per Mapper" => DescriptiveStatistics.median(nodes_grouped_by_mapper.collect{|uid, nodes| nodes.length}) }
     end
   end
 end
