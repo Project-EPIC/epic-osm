@@ -31,7 +31,6 @@ autoload :FileIO, 'modules/file_io'
 #
 class OSMHistory
 
-	include Questions::Ways
 	include Questions::Network
 
 	attr_reader :aw_config
@@ -83,24 +82,6 @@ class OSMHistory
 		aw_config['User Questions'].each do |user_q|
 			write_json( data: user_questions.run(user_q), name: "#{user_q}.json")
 		end
-	end
-
-
-	def run_questions
-		# Go through questions in the configuration file and run the appropriate algorithms to get answers
-	
-		# puts number_of_nodes_added
-
-		# nodes_by_2_months
-
-  		analysis_window.ways_x_month(step: 3).each do |bucket|
-  			puts "#{bucket[:start_date]} - #{bucket[:end_date]} : #{bucket[:objects].count}"
-  		end
-
-		#Do all the way questions:
-		#Questions::Ways.instance_methods.each do |method|
-			#print method.to_s + ': '; eval "#{method}"
-		#end
 	end
 
 	def run_network_functions
