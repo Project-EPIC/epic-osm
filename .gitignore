@@ -5,6 +5,8 @@ sample-awconfig.yml
 .sass-cache/
 *.gml
 
+_site/*
+
 sample_projects/*
 _config.yml
 *.json
