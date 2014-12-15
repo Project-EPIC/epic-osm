@@ -11,7 +11,7 @@ describe OSMHistory do
 	end
 
 	it "Parsed time correctly" do
-		expect @osmhistory.analysis_window.time_frame.start.is_a? Time
+		expect @osmhistory.analysis_window.time_frame.start_date.is_a? Time
 	end
 
 	it "can run a simple question" do 

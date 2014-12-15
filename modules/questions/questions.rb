@@ -35,7 +35,7 @@ module Questions # :nodoc: all
 				rescue => e
 					print "FUNCTION NOT FOUND -- SKIPPING\n"
 					puts $!
-					#puts e.backtrace
+					# puts e.backtrace
 				end
 			end
 		end

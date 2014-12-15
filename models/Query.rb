@@ -32,8 +32,8 @@ class Query
 
 		#This should be over-written farther down, but it's here for safety
 		if analysis_window.time_frame.active
-			selector[:created_at] = { '$gte' => analysis_window.time_frame.start,
-									  '$lt' => analysis_window.time_frame.end    }
+			selector[:created_at] = { '$gte' => analysis_window.time_frame.start_date,
+									  '$lt' => analysis_window.time_frame.end_date    }
 		end
 
 		#If the query was called with new constraints, then they should get added here

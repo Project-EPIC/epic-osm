@@ -57,22 +57,22 @@ class AnalysisWindow
 		
 		case unit
 		when :all
-			buckets << {start_date: time_frame.start, end_date: time_frame.end, objects: []}
+			buckets << {start_date: time_frame.start_date, end_date: time_frame.end_date, objects: []}
 		
 		when :year
-			year = time_frame.start.year
+			year = time_frame.start_date.year
 			bucket_start = Time.mktime(year, 1, 1)
-			while bucket_start < time_frame.end
+			while bucket_start < time_frame.end_date
 				bucket_end   = Time.mktime(year+=step, 1, 1)
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
 
 		when :month
-			month = time_frame.start.mon
-			year  = time_frame.start.year
-			bucket_start = time_frame.start
-			while bucket_start < time_frame.end
+			month = time_frame.start_date.mon
+			year  = time_frame.start_date.year
+			bucket_start = time_frame.start_date
+			while bucket_start < time_frame.end_date
 				bucket_start = Time.mktime( year, (month) )
 				
 				month+=step
@@ -86,8 +86,8 @@ class AnalysisWindow
 			end
 
 		when :day
-			bucket_start = Time.mktime(time_frame.start.year, time_frame.start.mon, time_frame.start.day)
-			while bucket_start < time_frame.end
+			bucket_start = Time.mktime(time_frame.start_date.year, time_frame.start_date.mon, time_frame.start_date.day)
+			while bucket_start < time_frame.end_date
 				bucket_end   = Time.at( bucket_start.to_i + step*day )
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
@@ -98,16 +98,16 @@ class AnalysisWindow
 			#We could just add 7 days.
 
 		when :hour
-			bucket_start = Time.mktime(time_frame.start.year, time_frame.start.mon, time_frame.start.day, time_frame.start.hour)
-			while bucket_start < time_frame.end
+			bucket_start = Time.mktime(time_frame.start_date.year, time_frame.start_date.mon, time_frame.start_date.day, time_frame.start_date.hour)
+			while bucket_start < time_frame.end_date
 				bucket_end   = Time.at( bucket_start.to_i + step*hour )
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
 		end
 
-		buckets.first[:start_date] = time_frame.start
-		buckets.last[:end_date]    = time_frame.end
+		buckets.first[:start_date] = time_frame.start_date
+		buckets.last[:end_date]    = time_frame.end_date
 
 		return buckets
 	end
@@ -220,12 +220,12 @@ class AnalysisWindow
 
 	# :category: Users
 	def new_contributors
-		all_users_data.select{|user| user.account_created > time_frame.start and user.account_created < time_frame.end}.collect{|user| user.user}
+		all_users_data.select{|user| user.account_created > time_frame.start_date and user.account_created < time_frame.end_date}.collect{|user| user.user}
 	end
 
 	# :category: Users
 	def experienced_contributors
-		all_users_data.select{|user| user.account_created < time_frame.start}.collect{|user| user.user}
+		all_users_data.select{|user| user.account_created < time_frame.start_date}.collect{|user| user.user}
 	end
 
 	# :category: Users
