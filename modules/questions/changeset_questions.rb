@@ -95,7 +95,7 @@ module Questions
 				end
 			end
 			changeset_overlap_sums = changeset_overlaps.collect{|changeset_id, overlaps| overlaps.length}
-			{"Average Geographic Overlaps Per Changeset" => DescriptiveStatistics.mean(changeset_overlap_sums)}
+			{"Average Overlaps Per Changeset" => DescriptiveStatistics.mean(changeset_overlap_sums)}
 		end
 	end
 
