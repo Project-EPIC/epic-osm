@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>class AnalysisWindow - RDoc Documentation</title>
+
+<link href="./fonts.css" rel="stylesheet">
+<link href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/navigation.js"></script>
+<script src="./js/search_index.js"></script>
+<script src="./js/search.js"></script>
+<script src="./js/searcher.js"></script>
+<script src="./js/darkfish.js"></script>
+
+
+<body id="top" role="document" class="class">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    <div id="sections-section" class="nav-section">
+  <h3>Sections</h3>
+
+  <ul class="link-list" role="directory">
+    
+      <li><a href="#5Buntitled-5D"></a></li>
+    
+      <li><a href="#Changesets">Changesets</a></li>
+    
+      <li><a href="#Nodes">Nodes</a></li>
+    
+      <li><a href="#Relations">Relations</a></li>
+    
+      <li><a href="#Users">Users</a></li>
+    
+      <li><a href="#Ways">Ways</a></li>
+    
+  </ul>
+</div>
+
+    <div id="parent-class-section" class="nav-section">
+  <h3>Parent</h3>
+
+  
+  <p class="link">Object
+  
+</div>
+
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-c-new">::new</a>
+    
+    <li ><a href="#method-i-all_users_data">#all_users_data</a>
+    
+    <li ><a href="#method-i-build_buckets">#build_buckets</a>
+    
+    <li ><a href="#method-i-changeset_count">#changeset_count</a>
+    
+    <li ><a href="#method-i-changesets">#changesets</a>
+    
+    <li ><a href="#method-i-distinct_users_in_changesets">#distinct_users_in_changesets</a>
+    
+    <li ><a href="#method-i-experienced_contributors">#experienced_contributors</a>
+    
+    <li class="calls-super" ><a href="#method-i-method_missing">#method_missing</a>
+    
+    <li ><a href="#method-i-new_contributors">#new_contributors</a>
+    
+    <li ><a href="#method-i-node_added_count">#node_added_count</a>
+    
+    <li ><a href="#method-i-node_edit_count">#node_edit_count</a>
+    
+    <li ><a href="#method-i-nodes">#nodes</a>
+    
+    <li ><a href="#method-i-post_initialize">#post_initialize</a>
+    
+    <li ><a href="#method-i-relation_added_count">#relation_added_count</a>
+    
+    <li ><a href="#method-i-relation_edit_count">#relation_edit_count</a>
+    
+    <li ><a href="#method-i-relations">#relations</a>
+    
+    <li ><a href="#method-i-top_contributors_by_changesets">#top_contributors_by_changesets</a>
+    
+    <li ><a href="#method-i-users_editing_per_year">#users_editing_per_year</a>
+    
+    <li ><a href="#method-i-way_added_count">#way_added_count</a>
+    
+    <li ><a href="#method-i-way_edit_count">#way_edit_count</a>
+    
+    <li ><a href="#method-i-ways">#ways</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="class-AnalysisWindow">
+  <h1 id="class-AnalysisWindow" class="class">
+    class AnalysisWindow
+  </h1>
+
+  <section class="description">
+    
+<h1 id="class-AnalysisWindow-label-The+Analysis+Window">The Analysis Window<span><a href="#class-AnalysisWindow-label-The+Analysis+Window">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p>The analysis window is defined by an analysis window configuration file.</p>
+
+<p>They are aware of the geographical and temporal bounds of the study and
+handle all of the helper functions for performing calculations.  All
+Queries happen through the analysis window and the method missing located
+within defines functions such as <em>nodes_x_month</em>.</p>
+
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+    <section class="attribute-method-details" class="method-section">
+      <header>
+        <h3>Attributes</h3>
+      </header>
+
+      
+      <div id="attribute-i-bounding_box" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">bounding_box</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The <a href="BoundingBox.html">BoundingBox</a> object instance for this
+analysis window</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-max_area" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">max_area</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The maximum area (in square meters) of changesets to be included in
+calculations</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-min_area" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">min_area</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The minimum area (in square meters) of changesets to be included in
+calculations</p>
+        
+        </div>
+      </div>
+      
+      <div id="attribute-i-time_frame" class="method-detail">
+        <div class="method-heading attribute-method-heading">
+          <span class="method-name">time_frame</span><span
+            class="attribute-access-type">[R]</span>
+        </div>
+
+        <div class="method-description">
+        
+        <p>The <a href="TimeFrame.html">TimeFrame</a> object instance for this
+analysis window</p>
+        
+        </div>
+      </div>
+      
+    </section>
+    
+
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Class Methods</h3>
+       </header>
+
+    
+      <div id="method-c-new" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new</span><span
+            class="method-args">(args={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Can pass in an instance of a timeframe and bounding box, or use defaults</p>
+          
+          
+
+          
+          <div class="method-source-code" id="new-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">args</span>={})
+        <span class="ruby-ivar">@bounding_box</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:bounding_box</span>] <span class="ruby-operator">||</span> <span class="ruby-constant">BoundingBox</span>.<span class="ruby-identifier">new</span>
+        <span class="ruby-ivar">@time_frame</span>   = <span class="ruby-identifier">args</span>[<span class="ruby-value">:time_frame</span>]   <span class="ruby-operator">||</span> <span class="ruby-constant">TimeFrame</span>.<span class="ruby-identifier">new</span>
+
+        <span class="ruby-ivar">@max_area</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:max_area</span>] <span class="ruby-operator">||</span> <span class="ruby-value">1000000000000</span>
+        <span class="ruby-ivar">@min_area</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">:min_area</span>] <span class="ruby-operator">||</span> <span class="ruby-value">1</span>
+
+        <span class="ruby-identifier">post_initialize</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-build_buckets" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">build_buckets</span><span
+            class="method-args">(unit=:all, step=1)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Buckets are temporal units which the query results are binned into.</p>
+
+<p>Buckets can be defined with multiple units and steps. Defaults to just one
+bucket, the size of the analysis window.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="build_buckets-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 44</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">build_buckets</span>(<span class="ruby-identifier">unit</span>=<span class="ruby-value">:all</span>, <span class="ruby-identifier">step</span>=<span class="ruby-value">1</span>)
+        <span class="ruby-identifier">hour</span>   = <span class="ruby-value">60</span> <span class="ruby-operator">*</span> <span class="ruby-value">60</span>
+        <span class="ruby-identifier">day</span>    = <span class="ruby-value">24</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">hour</span>
+
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">step</span>.<span class="ruby-identifier">nil?</span>
+                <span class="ruby-identifier">step</span> = <span class="ruby-value">1</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">unit</span>.<span class="ruby-identifier">nil?</span>
+                <span class="ruby-identifier">unit</span> = <span class="ruby-value">:all</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-identifier">buckets</span> = []
+        
+        <span class="ruby-keyword">case</span> <span class="ruby-identifier">unit</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:all</span>
+                <span class="ruby-identifier">buckets</span> <span class="ruby-operator">&lt;&lt;</span> {<span class="ruby-identifier">start_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">end_date</span>, <span class="ruby-identifier">objects</span><span class="ruby-operator">:</span> []}
+        
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:year</span>
+                <span class="ruby-identifier">year</span> = <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">year</span>
+                <span class="ruby-identifier">bucket_start</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">mktime</span>(<span class="ruby-identifier">year</span>, <span class="ruby-value">1</span>, <span class="ruby-value">1</span>)
+                <span class="ruby-keyword">while</span> <span class="ruby-identifier">bucket_start</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">end_date</span>
+                        <span class="ruby-identifier">bucket_end</span>   = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">mktime</span>(<span class="ruby-identifier">year</span><span class="ruby-operator">+=</span><span class="ruby-identifier">step</span>, <span class="ruby-value">1</span>, <span class="ruby-value">1</span>)
+                        <span class="ruby-identifier">buckets</span> <span class="ruby-operator">&lt;&lt;</span> {<span class="ruby-identifier">start_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">bucket_start</span>, <span class="ruby-identifier">end_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">bucket_end</span>, <span class="ruby-identifier">objects</span><span class="ruby-operator">:</span> []}
+                        <span class="ruby-identifier">bucket_start</span> = <span class="ruby-identifier">bucket_end</span>
+                <span class="ruby-keyword">end</span>
+
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:month</span>
+                <span class="ruby-identifier">month</span> = <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">mon</span>
+                <span class="ruby-identifier">year</span>  = <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">year</span>
+                <span class="ruby-identifier">bucket_start</span> = <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>
+                <span class="ruby-keyword">while</span> <span class="ruby-identifier">bucket_start</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">end_date</span>
+                        <span class="ruby-identifier">bucket_start</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">mktime</span>( <span class="ruby-identifier">year</span>, (<span class="ruby-identifier">month</span>) )
+                        
+                        <span class="ruby-identifier">month</span><span class="ruby-operator">+=</span><span class="ruby-identifier">step</span>
+                        <span class="ruby-keyword">if</span> (<span class="ruby-identifier">month</span><span class="ruby-operator">-</span><span class="ruby-value">12</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+                                <span class="ruby-identifier">year</span>  <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+                            <span class="ruby-identifier">month</span> = <span class="ruby-identifier">month</span><span class="ruby-operator">-</span><span class="ruby-value">12</span>
+                        <span class="ruby-keyword">end</span>
+                        
+                        <span class="ruby-identifier">bucket_end</span>   = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">mktime</span>(<span class="ruby-identifier">year</span>, (<span class="ruby-identifier">month</span>) )
+                        <span class="ruby-identifier">buckets</span> <span class="ruby-operator">&lt;&lt;</span> {<span class="ruby-identifier">start_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">bucket_start</span>, <span class="ruby-identifier">end_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">bucket_end</span>, <span class="ruby-identifier">objects</span><span class="ruby-operator">:</span> []}
+                <span class="ruby-keyword">end</span>
+
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:day</span>
+                <span class="ruby-identifier">bucket_start</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">mktime</span>(<span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">year</span>, <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">mon</span>, <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">day</span>)
+                <span class="ruby-keyword">while</span> <span class="ruby-identifier">bucket_start</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">end_date</span>
+                        <span class="ruby-identifier">bucket_end</span>   = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>( <span class="ruby-identifier">bucket_start</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">step</span><span class="ruby-operator">*</span><span class="ruby-identifier">day</span> )
+                        <span class="ruby-identifier">buckets</span> <span class="ruby-operator">&lt;&lt;</span> {<span class="ruby-identifier">start_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">bucket_start</span>, <span class="ruby-identifier">end_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">bucket_end</span>, <span class="ruby-identifier">objects</span><span class="ruby-operator">:</span> []}
+                        <span class="ruby-identifier">bucket_start</span> = <span class="ruby-identifier">bucket_end</span>
+                <span class="ruby-keyword">end</span>
+        
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:week</span>
+                <span class="ruby-comment">#fuck us, this is going to be ugly.  How should we do this? just start from the first week of the analysis window?</span>
+                <span class="ruby-comment">#We could just add 7 days.</span>
+
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:hour</span>
+                <span class="ruby-identifier">bucket_start</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">mktime</span>(<span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">year</span>, <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">mon</span>, <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">day</span>, <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>.<span class="ruby-identifier">hour</span>)
+                <span class="ruby-keyword">while</span> <span class="ruby-identifier">bucket_start</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">end_date</span>
+                        <span class="ruby-identifier">bucket_end</span>   = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">at</span>( <span class="ruby-identifier">bucket_start</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">step</span><span class="ruby-operator">*</span><span class="ruby-identifier">hour</span> )
+                        <span class="ruby-identifier">buckets</span> <span class="ruby-operator">&lt;&lt;</span> {<span class="ruby-identifier">start_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">bucket_start</span>, <span class="ruby-identifier">end_date</span><span class="ruby-operator">:</span> <span class="ruby-identifier">bucket_end</span>, <span class="ruby-identifier">objects</span><span class="ruby-operator">:</span> []}
+                        <span class="ruby-identifier">bucket_start</span> = <span class="ruby-identifier">bucket_end</span>
+                <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-identifier">buckets</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:start_date</span>] = <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>
+        <span class="ruby-identifier">buckets</span>.<span class="ruby-identifier">last</span>[<span class="ruby-value">:end_date</span>]    = <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">end_date</span>
+
+        <span class="ruby-keyword">return</span> <span class="ruby-identifier">buckets</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-method_missing" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">method_missing</span><span
+            class="method-args">(m, *args, &block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <h1 id="method-i-method_missing-label-Method+Missing">Method Missing<span><a href="#method-i-method_missing-label-Method+Missing">&para;</a> <a href="#documentation">&uarr;</a></span></h1>
+
+<p>The Analysis window overrides method-missing to offer new functions such as
+changesets_x_day</p>
+          
+          
+            <div class="method-calls-super">
+              Calls superclass method
+              
+            </div>
+          
+
+          
+          <div class="method-source-code" id="method_missing-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">method_missing</span>(<span class="ruby-identifier">m</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+        <span class="ruby-comment"># puts &quot;Called method missing with this function: #{m} and these args: #{args}&quot;</span>
+        <span class="ruby-keyword">begin</span>
+                <span class="ruby-comment">#Break out the method by snake case</span>
+                <span class="ruby-identifier">pieces</span> = <span class="ruby-identifier">m</span>.<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\_/</span>)
+
+                <span class="ruby-comment">#Find the nodes_x_all, changesets_x_month, ways_x_yearly type of functions</span>
+                <span class="ruby-keyword">if</span> <span class="ruby-identifier">pieces</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&#39;x&#39;</span>
+
+                        <span class="ruby-keyword">unless</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span>
+                                <span class="ruby-identifier">cons</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>][<span class="ruby-value">:constraints</span>] <span class="ruby-comment">#Better pass a hash</span>
+                                <span class="ruby-identifier">step</span> = <span class="ruby-identifier">args</span>[<span class="ruby-value">0</span>][<span class="ruby-value">:step</span>] <span class="ruby-operator">||</span> <span class="ruby-value">1</span>
+                        <span class="ruby-keyword">end</span>
+                        
+                        <span class="ruby-identifier">instance_eval</span> <span class="ruby-node">&quot;@#{pieces[2]}_#{pieces[0]} ||= #{pieces[0]}.run(unit: :#{pieces[2]}, step: step, constraints: cons)&quot;</span>
+                <span class="ruby-keyword">end</span>
+
+        <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+                <span class="ruby-identifier">puts</span> <span class="ruby-identifier">$!</span>
+                <span class="ruby-keyword">super</span>
+        <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-post_initialize" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">post_initialize</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>If the frame failed or doesn&#39;t exist, then use all of the data by
+default</p>
+          
+          
+
+          
+          <div class="method-source-code" id="post_initialize-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">post_initialize</span>
+        <span class="ruby-keyword">unless</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">active?</span>
+                <span class="ruby-ivar">@time_frame</span> = <span class="ruby-constant">TimeFrame</span>.<span class="ruby-identifier">new</span>( <span class="ruby-identifier">start_date</span><span class="ruby-operator">:</span> <span class="ruby-constant">Changeset_Query</span>.<span class="ruby-identifier">earliest_changeset_date</span>, <span class="ruby-identifier">end_date</span><span class="ruby-operator">:</span>   <span class="ruby-constant">Changeset_Query</span>.<span class="ruby-identifier">latest_changeset_date</span> )
+        <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+
+  
+  
+  <section id="Changesets" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Changesets
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-Changesets-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-changeset_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">changeset_count</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Get the number of changesets in the analysis window.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="changeset_count-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 151</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">changeset_count</span>
+        <span class="ruby-identifier">changesets_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-changesets" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">changesets</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Access the changesets query</p>
+          
+          
+
+          
+          <div class="method-source-code" id="changesets-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 144</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">changesets</span>
+        <span class="ruby-ivar">@changesets</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Changeset_Query</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">analysis_window</span><span class="ruby-operator">:</span> <span class="ruby-keyword">self</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-distinct_users_in_changesets" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">distinct_users_in_changesets</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="distinct_users_in_changesets-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 158</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">distinct_users_in_changesets</span>
+        <span class="ruby-identifier">changesets_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">changeset</span><span class="ruby-operator">|</span> <span class="ruby-identifier">changeset</span>.<span class="ruby-identifier">uid</span>}.<span class="ruby-identifier">uniq</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+
+  
+  
+  <section id="Nodes" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Nodes
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-Nodes-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-node_added_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">node_added_count</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="node_added_count-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 173</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">node_added_count</span>
+        <span class="ruby-identifier">nodes_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">select</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">node</span><span class="ruby-operator">|</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">version</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>}.<span class="ruby-identifier">count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-node_edit_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">node_edit_count</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="node_edit_count-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 168</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">node_edit_count</span>
+        <span class="ruby-identifier">nodes_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-nodes" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">nodes</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="nodes-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 163</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">nodes</span>
+        <span class="ruby-ivar">@nodes</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Node_Query</span>.<span class="ruby-identifier">new</span>( <span class="ruby-identifier">analysis_window</span><span class="ruby-operator">:</span> <span class="ruby-keyword">self</span> )
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+
+  
+  
+  <section id="Relations" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Relations
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-Relations-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-relation_added_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relation_added_count</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="relation_added_count-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 203</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relation_added_count</span>
+        <span class="ruby-identifier">relations_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">select</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">relation</span><span class="ruby-operator">|</span> <span class="ruby-identifier">relation</span>.<span class="ruby-identifier">version</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>}.<span class="ruby-identifier">count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-relation_edit_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relation_edit_count</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="relation_edit_count-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 198</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relation_edit_count</span>
+        <span class="ruby-identifier">relations_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-relations" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relations</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="relations-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 193</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relations</span>
+        <span class="ruby-ivar">@relations</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Relation_Query</span>.<span class="ruby-identifier">new</span>( <span class="ruby-identifier">analysis_window</span><span class="ruby-operator">:</span> <span class="ruby-keyword">self</span> )
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+
+  
+  
+  <section id="Users" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Users
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-Users-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-all_users_data" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">all_users_data</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="all_users_data-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 208</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">all_users_data</span>
+        <span class="ruby-constant">User_Query</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">uids</span><span class="ruby-operator">:</span> <span class="ruby-identifier">distinct_users_in_changesets</span>).<span class="ruby-identifier">run</span>                
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-experienced_contributors" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">experienced_contributors</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="experienced_contributors-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 227</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">experienced_contributors</span>
+        <span class="ruby-identifier">all_users_data</span>.<span class="ruby-identifier">select</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">account_created</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span>}.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">user</span>}
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-new_contributors" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new_contributors</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="new_contributors-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 222</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">new_contributors</span>
+        <span class="ruby-identifier">all_users_data</span>.<span class="ruby-identifier">select</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">account_created</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">start_date</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">account_created</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">time_frame</span>.<span class="ruby-identifier">end_date</span>}.<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">user</span>}
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-top_contributors_by_changesets" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">top_contributors_by_changesets</span><span
+            class="method-args">(args={limit: 5, unit: :all_time })</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="top_contributors_by_changesets-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 232</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">top_contributors_by_changesets</span>(<span class="ruby-identifier">args</span>={<span class="ruby-identifier">limit</span><span class="ruby-operator">:</span> <span class="ruby-value">5</span>, <span class="ruby-identifier">unit</span><span class="ruby-operator">:</span> <span class="ruby-value">:all_time</span> })
+
+        <span class="ruby-keyword">case</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">:unit</span>]
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:all_time</span>
+                <span class="ruby-identifier">changesets_per_unit</span> = <span class="ruby-identifier">changesets_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">group_by</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">changeset</span><span class="ruby-operator">|</span> <span class="ruby-identifier">changeset</span>.<span class="ruby-identifier">user</span>}.<span class="ruby-identifier">sort_by</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">k</span>,<span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">length</span>}.<span class="ruby-identifier">reverse</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-value">:month</span>
+                <span class="ruby-identifier">changesets_per_unit</span> = <span class="ruby-identifier">changesets_x_month</span>.<span class="ruby-identifier">group_by</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">changeset</span><span class="ruby-operator">|</span> <span class="ruby-identifier">changeset</span>.<span class="ruby-identifier">created_at</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">/</span> <span class="ruby-value">100000</span>}
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">changesets_per_unit</span>.<span class="ruby-identifier">first</span>(<span class="ruby-identifier">args</span>[<span class="ruby-value">:limit</span>])
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-users_editing_per_year" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">users_editing_per_year</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="users_editing_per_year-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 213</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">users_editing_per_year</span>
+        <span class="ruby-identifier">years</span> = {}
+        <span class="ruby-identifier">changesets_x_year</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">bucket</span><span class="ruby-operator">|</span>
+                <span class="ruby-identifier">years</span>[ <span class="ruby-identifier">bucket</span>[<span class="ruby-value">:start_date</span>] ] = <span class="ruby-identifier">bucket</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">changeset</span><span class="ruby-operator">|</span> <span class="ruby-identifier">changeset</span>.<span class="ruby-identifier">user</span>}.<span class="ruby-identifier">uniq</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">years</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+
+  
+  
+  <section id="Ways" class="documentation-section">
+    
+    <header class="documentation-section-title">
+      <h2>
+        Ways
+      </h2>
+      <span class="section-click-top">
+        <a href="#top">&uarr; top</a>
+      </span>
+    </header>
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-Ways-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-way_added_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">way_added_count</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="way_added_count-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 188</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">way_added_count</span>
+        <span class="ruby-identifier">ways_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">select</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">way</span><span class="ruby-operator">|</span> <span class="ruby-identifier">way</span>.<span class="ruby-identifier">version</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>}.<span class="ruby-identifier">count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-way_edit_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">way_edit_count</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="way_edit_count-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 183</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">way_edit_count</span>
+        <span class="ruby-identifier">ways_x_all</span>.<span class="ruby-identifier">first</span>[<span class="ruby-value">:objects</span>].<span class="ruby-identifier">count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-ways" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ways</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="ways-source">
+            <pre><span class="ruby-comment"># File models/AnalysisWindow.rb, line 178</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ways</span>
+        <span class="ruby-ivar">@ways</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Way_Query</span>.<span class="ruby-identifier">new</span>( <span class="ruby-identifier">analysis_window</span><span class="ruby-operator">:</span> <span class="ruby-keyword">self</span> )
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://rdoc.rubyforge.org">RDoc</a> 4.1.1.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
