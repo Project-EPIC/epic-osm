@@ -2,7 +2,7 @@
 config.yml
 sample-awconfig.yml
 
-.sass*
+.sass-cache/
 *.gml
 
 sample_projects/*
