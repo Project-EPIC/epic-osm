@@ -1,5 +1,3 @@
-#! /usr/bin/bash
-
 rm -r doc/
 rm -r ../doc/
 
