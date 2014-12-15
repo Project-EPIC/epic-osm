@@ -21,7 +21,7 @@ class AnalysisWindowImport
 
 		begin
 			@config = YAML.load_file(args[:config])
-			@time_frame = TimeFrame.new(start: config['start_date'], end: config['end_date'])
+			@time_frame = TimeFrame.new(start_date: config['start_date'], end_date: config['end_date'])
 		rescue
 			raise IOError.new("Error loading the configuration file: #{args[:config]}")
 		end

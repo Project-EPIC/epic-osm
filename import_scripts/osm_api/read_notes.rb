@@ -5,11 +5,11 @@ require 'net/http'
 require_relative 'OSMAPIHitter'
 require_relative 'OSMGeoJSONMongo.rb'
 
-URI_HAITI = ["http://api.openstreetmap.org/api/0.6/notes.json?limit=1500&closed=-1&bbox=-74.5532226563,17.8794313865,-71.7297363281,19.9888363024"]
-URI_PHILIPPINES = [
-	"http://api.openstreetmap.org/api/0.6/notes.json?limit=10000&closed=-1&bbox=120.0805664063,9.3840321096,123.343505859,13.9447299749",
-	"http://api.openstreetmap.org/api/0.6/notes.json?limit=10000&closed=-1&bbox=123.343505859,9.3840321096,126.6064453125,13.9447299749",
-]
+# URI_HAITI = ["http://api.openstreetmap.org/api/0.6/notes.json?limit=1500&closed=-1&bbox=-74.5532226563,17.8794313865,-71.7297363281,19.9888363024"]
+# URI_PHILIPPINES = [
+# 	"http://api.openstreetmap.org/api/0.6/notes.json?limit=10000&closed=-1&bbox=120.0805664063,9.3840321096,123.343505859,13.9447299749",
+# 	"http://api.openstreetmap.org/api/0.6/notes.json?limit=10000&closed=-1&bbox=123.343505859,9.3840321096,126.6064453125,13.9447299749",
+# ]
 
 
 if __FILE__==$0

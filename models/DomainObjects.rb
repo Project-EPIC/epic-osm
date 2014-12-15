@@ -3,7 +3,7 @@ require_relative '../modules/domain_objects/osm_geo'
 
 # = OSM Object
 #
-#
+# A main 
 class OSMObject
 
 	include OSMongoable::OSMObject
@@ -20,7 +20,7 @@ class OSMObject
 	end
 end
 
-class Node < OSMObject
+class Node < OSMObject #:nodoc:
 
 	include OSMongoable::Node
 	include OSMGeo::Node
@@ -37,7 +37,7 @@ class Node < OSMObject
 	end
 end
 
-class Way < OSMObject
+class Way < OSMObject #:nodoc:
 
 	include OSMongoable::Way
 	include OSMGeo::Way
@@ -52,7 +52,7 @@ class Way < OSMObject
 	end
 end
 
-class Relation < OSMObject
+class Relation < OSMObject #:nodoc:
 
 	include OSMongoable::Relation
 
@@ -67,7 +67,7 @@ class Relation < OSMObject
 	end
 end
 
-class Changeset < OSMObject
+class Changeset < OSMObject #:nodoc:
 
 	include OSMongoable::Changeset
 	include OSMGeo::Changeset
@@ -87,7 +87,7 @@ class Changeset < OSMObject
 
 end
 
-class User # => Do we inherit anything here? No... ?
+class User #:nodoc:
 	
 	include OSMongoable::User
 
@@ -103,7 +103,7 @@ class User # => Do we inherit anything here? No... ?
 
 end
 
-class Note # => Lots to learn here: Not sure what it will look like
+class Note #:nodoc:
 
 	attr_reader :uid, :user, :created_at
 

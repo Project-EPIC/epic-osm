@@ -1,4 +1,4 @@
-module Questions
+module Questions # :nodoc: all
 
 	class Changesets < QuestionsRunner
 

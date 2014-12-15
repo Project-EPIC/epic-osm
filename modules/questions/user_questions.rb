@@ -1,4 +1,4 @@
-module Questions
+module Questions # :nodoc: all
 
 	class Users < QuestionsRunner
 
@@ -12,6 +12,14 @@ module Questions
 
 		def experienced_user_count
 			{"Experienced User Count" => aw.experienced_contributors.length}
+		end
+
+		def users_editing_per_month
+			months = {}
+			aw.changesets_x_month.each do |bucket|
+				months[ bucket[:start_date] ] = bucket[:objects].collect{|changeset| changeset.user}.uniq
+			end
+			months
 		end
 	end
 
