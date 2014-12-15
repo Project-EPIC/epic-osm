@@ -58,4 +58,4 @@ User Questions:
  - total_user_count
 
 Bbox Questions:
- - bbox_geometry
+ - bbox_geojson_geometry
