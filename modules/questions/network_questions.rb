@@ -1,5 +1,5 @@
-module Questions
-	module Network
+module Questions # :nodoc: all
+	module Network # :nodoc: all
 
 		class TemporalAnalysis
 

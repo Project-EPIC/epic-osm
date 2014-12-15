@@ -17,10 +17,13 @@ module BSON  #:nodoc:
 	end
 end
 
+# = Creating the OSM History <=> Mongo Link
+#
+#
 module OSMongoable
 
 	#Nodes, Ways, Relations share these features
-	module OSMObject
+	module OSMObject # :nodoc:
 		def to_mongo(hash)
 			hash[:id] 		  ||= id.to_s
 			hash[:uid]		  ||= uid.to_s
@@ -37,7 +40,7 @@ module OSMongoable
 		end
 	end
 	
-	module Node
+	module Node # :nodoc: all
 		def to_mongo
 			hash={}
 			hash[:lat] ||= lat
@@ -53,7 +56,7 @@ module OSMongoable
 		end
 	end
 
-	module Way
+	module Way # :nodoc: all
 		def to_mongo
 			hash = {}
 			hash[:nodes] 	  ||= nodes
@@ -106,7 +109,7 @@ module OSMongoable
 	end
 
 
-	module Relation
+	module Relation # :nodoc: all
 		def to_mongo
 			hash = {}
 			hash[:version]    ||= version
@@ -177,7 +180,7 @@ module OSMongoable
 	end
 
 
-	module User
+	module User # :nodoc: all
 		def to_mongo
 			hash = {}
 			hash[:uid]  = uid.to_s
@@ -192,7 +195,7 @@ module OSMongoable
 	end
 
 
-	module Changeset
+	module Changeset # :nodoc: all
 
 		def to_mongo
 			hash = {}

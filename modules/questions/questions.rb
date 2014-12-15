@@ -1,7 +1,7 @@
-#=Questions Module
+# = Questions Runner
 #
 #
-module Questions
+module Questions # :nodoc: all
 
 	#Abstract Questions Runner Class
 	class QuestionsRunner

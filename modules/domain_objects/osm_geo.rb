@@ -1,4 +1,4 @@
-module OSMGeo
+module OSMGeo #:nodoc: all
 
 	require 'rgeo'
 	Factory = RGeo::Geographic.simple_mercator_factory

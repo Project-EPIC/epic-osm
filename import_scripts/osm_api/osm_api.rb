@@ -27,7 +27,7 @@ class OSMAPI
 	end
 end
 
-class LogFile
+class LogFile # :nodoc: all
 	require 'fileutils'
 	def initialize(dir, filename)
 		@lines = 0

@@ -88,9 +88,9 @@ class Relation_Query < Query #:nodoc:
 	end
 end
 
-#Changeset Query
+# = Changeset Query
 #
-#
+# Returns a bucket of changesets
 class Changeset_Query < Query
 	def run(args={})
 		super args.update( {collection: 'changesets', type: Changeset} )

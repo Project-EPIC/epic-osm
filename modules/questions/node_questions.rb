@@ -1,4 +1,4 @@
-module Questions
+module Questions # :nodoc: all
   #Node Questions
   class Nodes < QuestionsRunner
 
