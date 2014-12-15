@@ -38,7 +38,7 @@ mongo_only: false
 write_directory: 'sample_projects/nic_test'
 
 Bbox Questions:
-- bbox_geometry
+- bbox_geojson_geometry
 
 temporal_network:
   files: 'overlapping_changesets_by_1_hour' 

@@ -1,3 +1,6 @@
+require_relative 'TimeFrame'
+require_relative 'BoundingBox'
+
 #=The Analysis Window
 #
 #The analysis window is defined by an analysis window configuration file.
@@ -8,7 +11,7 @@
 class AnalysisWindow
 	attr_reader :time_frame, :bounding_box, :min_area, :max_area
 
-	#Can pass in an instance of a timeframe and bounding box, or use defaults
+	# Can pass in an instance of a timeframe and bounding box, or use defaults
 	def initialize(args={})
 		@bounding_box = args[:bounding_box] || BoundingBox.new
 		@time_frame   = args[:time_frame]   || TimeFrame.new
@@ -20,7 +23,7 @@ class AnalysisWindow
 
 	end
 
-	#If the frame failed or doesn't exist, then use all of the data by default
+	# If the frame failed or doesn't exist, then use all of the data by default
 	def post_initialize
 		unless time_frame.active?
 			@time_frame = TimeFrame.new( start: Changeset_Query.earliest_changeset_date,
@@ -28,8 +31,11 @@ class AnalysisWindow
 		end
 	end
 
-	#Buckets are temporal units which the query results are binned into.
-	def build_buckets(unit=:all, step=1)
+	# Buckets are temporal units which the query results are binned into.
+	#
+	# Buckets can be defined with multiple units and steps.
+	# Defaults to just one bucket, the size of the analysis window.
+	def build_buckets(unit=:all, step=1) # :doc:
 		hour   = 60 * 60
 		day    = 24 * hour
 
@@ -100,6 +106,9 @@ class AnalysisWindow
 		return buckets
 	end
 
+	#=Method Missing
+	#
+	#The Analysis window overrides method-missing to offer new functions such as changesets_x_day
 	def method_missing(m, *args, &block)
 		# puts "Called method missing with this function: #{m} and these args: #{args}"
 		begin
@@ -124,7 +133,7 @@ class AnalysisWindow
 	end
 
 	# Changesets
-	def changesets
+	def changesets #:doc:
 		@changesets ||= Changeset_Query.new(analysis_window: self)
 	end
 
@@ -213,86 +222,5 @@ class AnalysisWindow
 			changesets_per_unit = changesets_x_month.group_by{|changeset| changeset.created_at.to_i / 100000}
 		end
 		changesets_per_unit.first(args[:limit])
-	end
-end
-
-#=Geographical Bounding Box
-#
-#A bounding box is a geographical box determined by the configuration file.
-#
-#It is currently not being implemented in queries because the import scripts are cutting the excess data
-#away, so there is nothing outside of the bounding box in the database.
-#
-#However, queries are capable of only querying within the bounding box, so it is possible to change
-#the box throughout calculations to get a subset of the data -- change to @active = true
-class BoundingBox
-
-	attr_reader :bottom_left, :top_right, :active, :bbox_array
-
-	def initialize(args=nil)
-		puts args
-		if args.nil?
-			@active = false
-		elsif args[:bbox].is_a? String
-			@bbox_array = args[:bbox].split(',')
-
-			@bottom_left = [ bbox_array[0].to_f, bbox_array[1].to_f ]
-			@top_right   = [ bbox_array[2].to_f, bbox_array[3].to_f ]
-		
-		else
-			@bottom_left = args[:bottom_left]
-			@top_right   = args[:top_right]
-		end
-
-		post_initialize
-	end
-
-	def post_initialize
-		unless (bottom_left.is_a? Array) and (top_right.is_a? Array)
-			@active = false
-		else
-			@active = false #Active is always set to false and not incorporated in current queries
-		end
-	end
-
-	#Going to need some pretty robust methods to pass to Mongo queries, but painless for now
-	def mongo_format
-		h = {}
-		h["$box"] = [bottom_left, top_right]
-		return h
-	end
-
-	def geometry
-		mongo_format["$box"].flatten
-	end
-end
-
-#Timeframes are the temporal bounds of the analysis window.
-class TimeFrame # :doc:
-	require 'time'
-
-	attr_reader :start, :end, :active
-
-	#If the time frame is active, then start and end dates are defined and functioning
-	def active?
-		active
-	end
-
-	def initialize(args=nil)
-		if args.nil?
-			@active = false
-		else
-			@start = validate_time(args[:start])
-			@end   = validate_time(args[:end])
-			@active = true
-		end
-	end
-
-	def validate_time(time)
-		if time.is_a? Time
-			return time
-		else
-			return Time.parse(time)
-		end
 	end
 end

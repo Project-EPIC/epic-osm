@@ -1,9 +1,6 @@
-#
-# The Query Class
-#
+#=Query
 #
 #
-
 class Query
 	require_relative 'AnalysisWindow'
 
@@ -62,38 +59,38 @@ class Query
 	end
 end
 
-
-#Queries (but they kiiiiind of act like buckets... )
-class Node_Query < Query
+class Node_Query < Query #:nodoc:
 	def run(args={})
 		super args.update( {collection: 'nodes', type: Node} )
 	end
 end
 
-class Way_Query < Query
+class Way_Query < Query #:nodoc:
 	def run(args={})
 		super args.update( {collection: 'ways', type: Way } )
 	end
 end
 
-class Relation_Query < Query
+class Relation_Query < Query #:nodoc:
 	def run(args={})
 		super args.update( {collection: 'relations', type: Relation } )
 	end
 end
 
-
+#Changeset Query
 class Changeset_Query < Query
 	def run(args={})
 		super args.update( {collection: 'changesets', type: Changeset} )
 	end
 
+	#Get the date of the earliest changeset in the analysis window
 	def self.earliest_changeset_date
 		DatabaseConnection.database['changesets'].find(
 			selector={}, 
 			opts= {:sort => {'created_at' => :asc} } ).limit(1).first['created_at']
 	end
 
+	#Get the date of the latest changeset in the analysis window
 	def self.latest_changeset_date
 		DatabaseConnection.database['changesets'].find(
 			selector={}, 
@@ -101,7 +98,7 @@ class Changeset_Query < Query
 	end
 end
 
-
+#User Query
 class User_Query < Query
 	attr_reader :selector
 	def initialize(args)
@@ -112,6 +109,7 @@ class User_Query < Query
 		end
 	end
 
+	#
 	def run
 		users = []
 		results = DatabaseConnection.database['users'].find( selector )
