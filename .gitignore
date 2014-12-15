@@ -1,7 +1,7 @@
 *.lock
 config.yml
+sample-awconfig.yml
 
-haiti_earthquake.yml
 .sass*
 *.gml
 
@@ -9,7 +9,5 @@ sample_projects/*
 _config.yml
 *.json
 doc/*
-temp.config
-temp.osm.pbf
-seattle.osm.pbf
 /logs
+/analysis_windows
