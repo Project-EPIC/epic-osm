@@ -88,7 +88,7 @@ namespace :questions do
 	# Rake::Task['questions:ways'].invoke
 	# Rake::Task['questions:relations'].invoke
 	Rake::Task['questions:changesets'].invoke
-	# Rake::Task['questions:users'].invoke
+	Rake::Task['questions:users'].invoke
 	Rake::Task['questions:bbox'].invoke
 	end
 
