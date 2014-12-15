@@ -1,1 +1,1 @@
-git checkout master doc/*
+git checkout master doc/*.*
