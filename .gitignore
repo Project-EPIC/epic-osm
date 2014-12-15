@@ -1,15 +1,2 @@
-*.lock
-config.yml
-
-haiti_earthquake.yml
-.sass*
-*.gml
-
-sample_projects/*
-_config.yml
-*.json
-doc/*
-temp.config
-temp.osm.pbf
-seattle.osm.pbf
-/logs
+_site
+.sass-cache
