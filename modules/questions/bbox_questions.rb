@@ -10,7 +10,7 @@ module Questions
 
   	#Returns the geometry of the bounding box as valid geojson
   	def bbox_geojson_geometry
-  		{ aw.bounding_box.geojson_geometry }
+  		aw.bounding_box.geojson_geometry
   	end
   end
 end
