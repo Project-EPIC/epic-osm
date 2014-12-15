@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<h2><a href="/doc/" _target="blank">Documentation</a></h2>
+<h2><a href="{{site.baseurl}}/doc/" _target="blank">Documentation</a></h2>
 
 <div class="home">
 
