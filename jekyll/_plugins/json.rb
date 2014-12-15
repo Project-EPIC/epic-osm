@@ -1,3 +1,4 @@
+#https://gist.github.com/joelverhagen/1850654
 require "rubygems"
 require "json"
 
