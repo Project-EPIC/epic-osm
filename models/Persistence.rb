@@ -1,7 +1,9 @@
 require 'mongo'
 require 'yaml'
 
-#Using a Singleton Design Pattern to have point of access to the database
+# = Singleton Database Connection
+#
+# There is only one point of access to the database
 class DatabaseConnection
 	attr_reader :host, :port, :database, :mongo_only, :mem_only
 

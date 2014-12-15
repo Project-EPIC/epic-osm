@@ -1,7 +1,6 @@
-#=Time Frame
+# = Time Frame
 #
-#Timeframes are the temporal bounds of the analysis window.
-#
+# Timeframes are the temporal bounds of the analysis window.
 class TimeFrame
 	require 'time'
 

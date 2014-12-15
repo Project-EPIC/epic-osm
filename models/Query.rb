@@ -1,5 +1,9 @@
-#=Query
+# = Query
 #
+# The Query contains a _run_ function which is called by its children (Nodes, Ways, Relations, etc.)
+# with specific arguments which tells the database connection which collection to query.
+#
+# The Query#run function will always return buckets as build by AnalysisWindow#build_buckets
 #
 class Query
 	require_relative 'AnalysisWindow'
@@ -16,6 +20,10 @@ class Query
 		post_initialize(args)
 	end
 
+	# Updates the bounding box, time frame, and constraints for the query to Mongo.
+	#
+	# The bounding_box geographic constriaints are currently unimplemented because
+	# the database doesn't contain any points outside of the bounding box.
 	def post_initialize(args)
 
 		if analysis_window.bounding_box.active
@@ -34,12 +42,15 @@ class Query
 		end
 	end
 
-	#For when buckets are called
-	def update_created_at(start_time, end_time)
+	def update_created_at(start_time, end_time) # :nodoc:
 		selector[:created_at] = { '$gte' => start_time,
 								  '$lt'  => end_time    }
 	end
 
+	# The main run function which is called as super from children.
+	#
+	# Accesses the database through the Singleton DatabaseConnection reference and
+	# queries with the _selector_ that was built.
 	def run(args = {})
 		# puts "Got to super run function with args #{args}"
 		@buckets = analysis_window.build_buckets( unit = args[:unit], step = args[:step] )
@@ -78,6 +89,8 @@ class Relation_Query < Query #:nodoc:
 end
 
 #Changeset Query
+#
+#
 class Changeset_Query < Query
 	def run(args={})
 		super args.update( {collection: 'changesets', type: Changeset} )
@@ -98,18 +111,21 @@ class Changeset_Query < Query
 	end
 end
 
-#User Query
+# User Query
+#
+# Returns an array of users, either all of the users or if _args[:uids] is set, it 
+# will only return users whose uid is in the :uids array argument.
 class User_Query < Query
 	attr_reader :selector
 	def initialize(args)
 		@selector = args[:constraints] || {} #Empty selector
-		
 		if args[:uids]
 			selector[:uid] = {'$in' => args[:uids]}
 		end
 	end
 
-	#
+	# Overrides the parent _run_ function because it does not need to return buckets, 
+	# merely an array of User objects.
 	def run
 		users = []
 		results = DatabaseConnection.database['users'].find( selector )

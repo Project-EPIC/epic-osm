@@ -1,9 +1,11 @@
-
+# = Importing and Outputting Files
+#
+#
 module FileIO
 
 	require 'json'
 
-	#Main File Exporter (Should be VERY simple)
+	#Main File Exporter
 	class JSONExporter
 
 		attr_reader :file_path, :file_name, :data
@@ -16,6 +18,7 @@ module FileIO
 			FileUtils.mkdir_p(file_path) unless Dir.exists? file_path
 		end
 
+		# Writes the actual json files.
 		def write
 			File.open(file_path+'/'+file_name, 'wb') do |file|
 				file.write( data.to_json )

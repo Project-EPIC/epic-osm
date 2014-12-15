@@ -1,6 +1,9 @@
 require_relative '../modules/domain_objects/osm_to_mongo'
 require_relative '../modules/domain_objects/osm_geo'
 
+# = OSM Object
+#
+#
 class OSMObject
 
 	include OSMongoable::OSMObject
