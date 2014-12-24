@@ -11,7 +11,7 @@ Who mapped where, when, and with whom?
 The **setup** directory contains instructions for installing the development environment on both Mac OS X and a specific build of an OpenSUSEx64 Virtual Machine.  The machine is hosted on susestudio.org and the developers are making an effort to support that VM.
 
 ##Running
-Inside the **analysis_window** directory are a series of YAML configuration files.  These files define _analysis windows_, the area that the user is interested in studying.  Defining both temporal and geographical bounds are important.  See ```analysis_windows/sample-awconfig.yml``` for an example.
+Inside the **analysis_window** directory are a series of YAML configuration files.  These files define _analysis windows_, the area that the user is interested in studying.  Defining both temporal and geographical bounds are important.  See ```sample-awconfig.yml``` for an example.
 
 There are a series of rake tasks available, most important is ```rake new```
 
