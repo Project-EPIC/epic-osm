@@ -229,6 +229,43 @@ class AnalysisWindow
 	end
 
 	# :category: Users
+	def all_contributors
+		all_users_data.collect{|user| user.user}
+	end
+
+	# :category: Users
+	def all_contributors_with_count
+		user_data = {}
+		all_users_data.each{ |user|
+			user_data[ user.user ] = {
+				"nodes" => Node_Query.nodes_per_user( user.uid ).count,
+				"ways" => Way_Query.ways_per_user( user.uid ).count,
+				"relations" => Relation_Query.relations_per_user( user.uid ).count,
+				"changesets" => Changeset_Query.changesets_per_user( user.uid ).count
+			}
+		}
+		user_data
+	end
+
+	# :category: Users
+	def all_contributors_with_geometry
+		user_data = {}
+		all_users_data.each{ |user|
+			user_data[ user.user ] = {
+				"type" => "FeatureCollection",
+				"features" => 
+					Way_Query.ways_per_user( user.uid ).collect{|node|  
+						{ "type" => "Feature", "properties"=> node['tags'], "geometry" => node['geometry'] } 
+					} +
+					Node_Query.nodes_tagged_per_user( user.uid ).collect{|node|  
+						{ "type" => "Feature", "properties"=> node['tags'], "geometry" => node['geometry'] } 
+					}
+			}
+		}
+		user_data
+	end
+
+	# :category: Users
 	def top_contributors_by_changesets(args={limit: 5, unit: :all_time })
 
 		case args[:unit]

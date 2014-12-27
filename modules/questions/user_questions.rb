@@ -21,6 +21,14 @@ module Questions # :nodoc: all
 			end
 			months
 		end
+
+		def user_list
+			aw.all_contributors_with_count
+		end
+
+		def user_list_with_geometry
+			aw.all_contributors_with_geometry
+		end
 	end
 
 end

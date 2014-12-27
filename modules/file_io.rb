@@ -11,8 +11,9 @@ module FileIO
 		attr_reader :file_path, :file_name, :data
 
 		def initialize(args)
-			@file_path = args[:path]
-			@file_name = args[:name]
+			full_path = args[:path] + '/' + args[:name]
+			@file_path = File.dirname(full_path)
+			@file_name = File.basename(full_path)
 			@data      = args[:data]
 
 			FileUtils.mkdir_p(file_path) unless Dir.exists? file_path

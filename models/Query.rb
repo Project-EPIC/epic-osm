@@ -74,17 +74,45 @@ class Node_Query < Query #:nodoc:
 	def run(args={})
 		super args.update( {collection: 'nodes', type: Node} )
 	end
+
+	#Get all nodes per user
+	def self.nodes_per_user(uid)
+		DatabaseConnection.database['nodes'].find(
+			selector={:uid => uid}, 
+			opts= {} )
+	end
+
+	def self.nodes_tagged_per_user(uid)
+		DatabaseConnection.database['nodes'].find(
+			selector={:uid => uid, :tags => {:ne => {}} }, 
+			opts= {} )
+	end
+
 end
 
 class Way_Query < Query #:nodoc:
 	def run(args={})
 		super args.update( {collection: 'ways', type: Way } )
 	end
+
+	#Get all ways per user
+	def self.ways_per_user(uid)
+		DatabaseConnection.database['ways'].find(
+			selector={:uid => uid}, 
+			opts= {} )
+	end
 end
 
 class Relation_Query < Query #:nodoc:
 	def run(args={})
 		super args.update( {collection: 'relations', type: Relation } )
+	end
+
+	#Get all relationss per user
+	def self.relations_per_user(uid)
+		DatabaseConnection.database['relations'].find(
+			selector={:uid => uid}, 
+			opts= {} )
 	end
 end
 
@@ -108,6 +136,13 @@ class Changeset_Query < Query
 		DatabaseConnection.database['changesets'].find(
 			selector={}, 
 			opts= {:sort => {'closed_at' => :desc} } ).limit(1).first['closed_at']
+	end
+
+	#Get all changesets per user
+	def self.changesets_per_user(uid)
+		DatabaseConnection.database['changesets'].find(
+			selector={:uid => uid}, 
+			opts= {} )
 	end
 end
 

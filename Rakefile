@@ -119,6 +119,11 @@ namespace :questions do
 		osmhistory.run_user_questions
 	end
 
+	desc "Run Multi-User Questions"
+	task :multi_users do
+		osmhistory.run_multi_user_questions
+	end
+
 	desc "Run BBox Questions"
 	task :bbox do
 		osmhistory.run_bbox_questions
