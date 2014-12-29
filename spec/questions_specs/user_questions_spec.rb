@@ -35,4 +35,14 @@ describe Query do
 		end
 
 	end
+
+	it "Can list users" do
+		@this_analysis_window.all_contributors_with_count
+		puts "List of users"
+	end
+
+	it "Can list users with geometry" do
+		@this_analysis_window.all_contributors_with_geometry
+		puts "List of users with geometry"
+	end
 end

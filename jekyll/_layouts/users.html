@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+  {% include head.html %}
+
+  <body>
+
+    {% include header.html %}
+
+    <div class="page-content">
+      <div class="wrapper">
+        Time Period: {{ site.start_date | date: "%B %d, %Y" }} - {{ site.end_date | date: "%B %d, %Y" }} <br />
+
+        Study Area:
+        <div id="map" style="width: 600px; height: 400px"></div>
+        <script src="/assets/js/locator-map.js"></script>       
+
+				<div id="user-counts">
+<!--					Nodes:<span></span><br/>
+					Ways:<span></span><br/>
+					Relations:<span></span><br/>
+					Changesets:<span></span>
+-->
+				</div>
+				<ul id="users"></ul>
+        <script src="/assets/js/userlist.js"></script>       
+    </div>
+  </div>
+
+    {% include footer.html %}
+
+  </body>
+
+</html>

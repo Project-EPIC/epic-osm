@@ -1,5 +1,5 @@
 require_relative '../models/DomainObjects'
-require_relative '../models/DatabaseConnection'
+require_relative '../models/Persistence'
 require_relative '../models/Query'
 
 require 'debugger'

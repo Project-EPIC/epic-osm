@@ -235,14 +235,15 @@ class AnalysisWindow
 
 	# :category: Users
 	def all_contributors_with_count
-		user_data = {}
+		user_data = []
 		all_users_data.each{ |user|
-			user_data[ user.user ] = {
-				"nodes" => Node_Query.nodes_per_user( user.uid ).count,
-				"ways" => Way_Query.ways_per_user( user.uid ).count,
-				"relations" => Relation_Query.relations_per_user( user.uid ).count,
-				"changesets" => Changeset_Query.changesets_per_user( user.uid ).count
-			}
+			user_data.push({
+				"user" => user.user,
+				"nodes" => nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.count,
+				"ways" => ways_x_all.first[:objects].select{|way| way.uid == user.uid}.count,
+				"relations" => relations_x_all.first[:objects].select{|relation| relation.uid == user.uid}.count,
+				"changesets" => changesets_x_all.first[:objects].select{|changeset| changeset.uid == user.uid}.count,
+			})
 		}
 		user_data
 	end
@@ -253,12 +254,12 @@ class AnalysisWindow
 		all_users_data.each{ |user|
 			user_data[ user.user ] = {
 				"type" => "FeatureCollection",
-				"features" => 
-					Way_Query.ways_per_user( user.uid ).collect{|node|  
-						{ "type" => "Feature", "properties"=> node['tags'], "geometry" => node['geometry'] } 
+				"features" =>
+					ways_x_all.first[:objects].select{|way| way.uid == user.uid}.collect{|way|  
+						{ "type" => "Feature", "properties"=> way.tags, "geometry" => way.geometry } 
 					} +
-					Node_Query.nodes_tagged_per_user( user.uid ).collect{|node|  
-						{ "type" => "Feature", "properties"=> node['tags'], "geometry" => node['geometry'] } 
+					nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.collect{|node|  
+						{ "type" => "Feature", "properties"=> node.tags, "geometry" => node.geometry } 
 					}
 			}
 		}
