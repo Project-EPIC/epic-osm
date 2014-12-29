@@ -4,7 +4,7 @@
 			.text(function(d) { return d.user; })
 			.on("click", function(d) {
 
-				document.getElementById("user-counts").innerHTML = "Nodes: " + d.nodes + "<br/>Ways: " + d.ways + "<br/>Relations: " + d.relations + "<br/>Changesets: " + d.changesets;
+				document.getElementById("user-counts").innerHTML = "<b>" + d.user + "</b> Nodes: " + d.nodes + ", Ways: " + d.ways + ", Relations: " + d.relations + ", Changesets: " + d.changesets;
 /*				d3.select("#user-counts").selectAll("span").data(
 						[{"label": "Nodes", "count": d.nodes}, 
 							{"label": "Ways", "count": d.ways}, 
@@ -13,8 +13,12 @@
 */
 				d3.json('/json/user_list_with_geometry/' + d.user + '.json', function(error, data) {
 					if (typeof geojsonLayer != "undefined") { geojsonLayer.clearLayers(); }
+
 					var myStyle = { "color": "#ff0000" };
-					geojsonLayer = L.geoJson(data, {style: myStyle}).addTo(map);
+					function onEachFeature(feature, layer) {
+ 		      	layer.bindPopup(JSON.stringify(feature.properties, null, 2));
+   			  }
+					geojsonLayer = L.geoJson(data, {style: myStyle, onEachFeature: onEachFeature}).addTo(map);
 				});
 			});
 	});
