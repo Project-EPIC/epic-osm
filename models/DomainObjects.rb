@@ -17,6 +17,7 @@ class OSMObject
 		@user  		||= args[:user]
 		@created_at ||= args[:created_at]
 		@tags       ||= args[:tags]
+		@geometry       ||= args[:geometry]
 	end
 end
 

@@ -229,6 +229,44 @@ class AnalysisWindow
 	end
 
 	# :category: Users
+	def all_contributors
+		all_users_data.collect{|user| user.user}
+	end
+
+	# :category: Users
+	def all_contributors_with_count
+		user_data = []
+		all_users_data.each{ |user|
+			user_data.push({
+				"user" => user.user,
+				"nodes" => nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.count,
+				"ways" => ways_x_all.first[:objects].select{|way| way.uid == user.uid}.count,
+				"relations" => relations_x_all.first[:objects].select{|relation| relation.uid == user.uid}.count,
+				"changesets" => changesets_x_all.first[:objects].select{|changeset| changeset.uid == user.uid}.count,
+			})
+		}
+		user_data
+	end
+
+	# :category: Users
+	def all_contributors_with_geometry
+		user_data = {}
+		all_users_data.each{ |user|
+			user_data[ user.user ] = {
+				"type" => "FeatureCollection",
+				"features" =>
+					ways_x_all.first[:objects].select{|way| way.uid == user.uid}.collect{|way|  
+						{ "type" => "Feature", "properties"=> way.tags, "geometry" => way.geometry } 
+					} +
+					nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.collect{|node|  
+						{ "type" => "Feature", "properties"=> node.tags, "geometry" => node.geometry } 
+					}
+			}
+		}
+		user_data
+	end
+
+	# :category: Users
 	def top_contributors_by_changesets(args={limit: 5, unit: :all_time })
 
 		case args[:unit]

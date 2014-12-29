@@ -13,3 +13,5 @@ _config.yml
 doc/*
 /logs
 /analysis_windows
+
+*~

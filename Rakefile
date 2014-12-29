@@ -89,6 +89,7 @@ namespace :questions do
 	# Rake::Task['questions:relations'].invoke
 	Rake::Task['questions:changesets'].invoke
 	Rake::Task['questions:users'].invoke
+	Rake::Task['questions:multi_users'].invoke
 	Rake::Task['questions:bbox'].invoke
 	end
 
@@ -119,6 +120,11 @@ namespace :questions do
 		osmhistory.run_user_questions
 	end
 
+	desc "Run Multi-User Questions"
+	task :multi_users do
+		osmhistory.run_multi_user_questions
+	end
+
 	desc "Run BBox Questions"
 	task :bbox do
 		osmhistory.run_bbox_questions
@@ -141,11 +147,14 @@ namespace :jekyll do
 	desc "Build Jekyll Site, Move Files Around"
 	task :build do
 		dir = window.config['write_directory']
+		system("rm -rf jekyll/_data")
 		system("mkdir jekyll/_data")
 		system("mv #{dir}/json/* jekyll/_data")
+		system("rm -rf jekyll/json")
+		system("cp -r jekyll/_data jekyll/json")
 		system("rm -rf #{dir}/*")
 		system("jekyll build --source jekyll --destination temp")
 		system("mv -f temp/* #{dir}/")
-		system("mv jekyll/_data #{dir}/json")
+		system("cp -r jekyll/_data #{dir}/json")
 	end
 end

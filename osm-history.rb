@@ -94,6 +94,16 @@ class OSMHistory
 		end
 	end
 
+	def run_multi_user_questions
+		multi_user_questions = Questions::Users.new(analysis_window: analysis_window)
+
+		aw_config['Multi User Questions'].each do |user_q|
+			multi_user_questions.run(user_q).each do |name, data|
+				write_json( data: data, name: "#{user_q}/#{name}.json")
+			end
+		end
+	end
+
 	def run_network_functions
   		network_info = aw_config['temporal_network']
 		temp = TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: network_info['files'])
