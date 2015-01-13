@@ -161,9 +161,10 @@ module OSMongoable
 					elsif mem_ways.length == 1 #If there is only one, use it
 						geometries << mem_ways.first.geometry unless mem_ways.first.geometry.nil?
 					else
-						this_way = mem_ways.select{|way| way.changeset == changeset}
+						mem_ways.sort! { |a,b| a.changeset <=> b.changeset }
+						this_way = mem_ways.select{|way| way.changeset <= changeset}
 						unless this_way.empty?
-							geometries << this_way.first.geometry unless this_way.first.geometry.nil?
+							geometries << this_way.last.geometry unless this_way.last.geometry.nil?
 						else
 							@missing_ways << way_id
 						end
