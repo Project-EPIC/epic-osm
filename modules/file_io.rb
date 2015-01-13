@@ -30,8 +30,9 @@ module FileIO
 
 	#Write a 'gml' file for network analytics
 	class GMLAuthor
+		require 'htmlentities'
 
-		attr_reader :nodes, :edges, :file, :directed, :id, :label, :comment, :filename
+		attr_reader :nodes, :edges, :file, :directed, :id, :label, :comment, :filename, :encoder
 
 		def initialize(args)
 			@filename= args[:filename].to_s || Time.new.to_s + '.gml'
@@ -47,6 +48,8 @@ module FileIO
 			else
 				@directed = 0
 			end
+
+			@encoder = HTMLEntities.new
 
 			@filename = filename.gsub(/[^A-Za-z0-9\.\/]/,'_')
 
@@ -95,7 +98,7 @@ module FileIO
 		def write_nodes
 			nodes.each do |node|
 				file.write %Q{\tnode [\n} 
-				file.write %Q{\t\tid "#{node.delete :id}"\n}
+				file.write %Q{\t\tid "#{encoder.encode( (node.delete :id), :named)}"\n}
 				node.keys.each do |key|
 					file.write %Q{\t\t#{key} }
 					if node[key].is_a? String
@@ -111,8 +114,8 @@ module FileIO
 		def write_edges
 			edges.each do |edge|
 				file.write %Q{\tedge [\n}
-				file.write %Q{\t\tsource "#{edge.delete :source}"\n}
-				file.write %Q{\t\ttarget "#{edge.delete :target}"\n}
+				file.write %Q{\t\tsource "#{encoder.encode( (edge.delete :source), :named)}"\n}
+				file.write %Q{\t\ttarget "#{encoder.encode( (edge.delete :target), :named)}"\n}
 				edge.keys.each do |key|
 					file.write %Q{\t\t#{key} }
 					if edge[key].is_a? String
