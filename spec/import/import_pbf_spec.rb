@@ -24,5 +24,4 @@ describe OSMPBF do
 	it "Can create Relation objects from the PBF" do
 		@conn.parse_to_collection(object_type="relations", lim=nil)
 	end
-	
 end
