@@ -98,7 +98,7 @@ class OSMPBF
 		add_func = method("add_#{object_type[0..-2]}")
 		count = eval("@#{object_type[0]}_count")
 
-		while parser.next
+		while true
 			unless parser.send(object_type).nil?
 				if lim
 					to_parse = parser.send(object_type).first(lim)
@@ -133,6 +133,9 @@ class OSMPBF
 						end
 					end
 				end
+			end
+			unless parser.next
+				break
 			end
 		end
 

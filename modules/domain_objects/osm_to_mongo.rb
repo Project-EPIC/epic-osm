@@ -85,9 +85,10 @@ module OSMongoable
 					if mem_nodes.length == 1 #If there is only one, use it
 						coords << [mem_nodes.first.lon, mem_nodes.first.lat]
 					else
-						this_node = mem_nodes.select{|node| node.changeset == changeset}
+						mem_nodes.sort! { |a,b| a.changeset <=> b.changeset }
+						this_node = mem_nodes.select{|node| node.changeset <= changeset}
 						unless this_node.empty?
-							coords << [this_node.first.lon, this_node.first.lat]
+							coords << [this_node.last.lon, this_node.last.lat]
 						else
 							missing_nodes << node_id
 						end
@@ -138,9 +139,10 @@ module OSMongoable
 					elsif mem_nodes.length == 1 #If there is only one, use it
 						geometries << mem_nodes.first.geometry
 					else
-						this_node = mem_nodes.select{|node| node.changeset == changeset}
+						mem_nodes.sort! { |a,b| a.changeset <=> b.changeset }
+						this_node = mem_nodes.select{|node| node.changeset <= changeset}
 						unless this_node.empty?
-							geometries << this_node.first.geometry
+							geometries << this_node.last.geometry
 						else
 							@missing_nodes << node_id
 						end
@@ -159,9 +161,10 @@ module OSMongoable
 					elsif mem_ways.length == 1 #If there is only one, use it
 						geometries << mem_ways.first.geometry unless mem_ways.first.geometry.nil?
 					else
-						this_way = mem_ways.select{|way| way.changeset == changeset}
+						mem_ways.sort! { |a,b| a.changeset <=> b.changeset }
+						this_way = mem_ways.select{|way| way.changeset <= changeset}
 						unless this_way.empty?
-							geometries << this_way.first.geometry unless this_way.first.geometry.nil?
+							geometries << this_way.last.geometry unless this_way.last.geometry.nil?
 						else
 							@missing_ways << way_id
 						end
