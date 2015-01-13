@@ -1,6 +1,9 @@
-require_relative '../models/DomainObjects'
-require_relative '../models/Persistence'
-require_relative '../models/Query'
+#Add the project root for absolute pathing
+$:.unshift File.expand_path('.') 
+
+require 'models/DomainObjects'
+require 'models/Persistence'
+require 'models/Query'
 
 require 'debugger'
 
