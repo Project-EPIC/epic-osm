@@ -1,10 +1,19 @@
 ---
-layout: default
+layout: splash
 ---
+
+<p>
+<span class="pop">OSM-History</span> is a framework for working with OpenStreetMap history files.
+
+</p>
+<p>
+The project was started by <a target="_blank" href="http://epic.cs.colorado.edu/">Project EPIC at the University of Colorado Boulder</a> 
+</p>
+
 
 <h2><a href="{{site.baseurl}}/doc/" target="_blank">RDoc Documentation</a></h2>
 
-<div class="home">
+<!-- <div class="home">
 
   <h1 class="page-heading">Posts</h1>
 
@@ -20,6 +29,4 @@ layout: default
     {% endfor %}
   </ul>
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-
-</div>
+</div> -->
