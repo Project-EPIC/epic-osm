@@ -6,7 +6,7 @@ sample-awconfig.yml
 *.gml
 
 .ipynb_checkpoints/*
-
+scratch.rb.ipynb
 _site/*
 
 temp.config
