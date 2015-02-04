@@ -5,6 +5,11 @@
 # They are aware of the geographical and temporal bounds of the study and handle all of the
 # helper functions for performing calculations.  All Queries happen through the analysis window
 # and the method missing located within defines functions such as _nodes_x_month_.
+#
+#
+# While the analysis window is capable of asking quesitons of itself, these are strictly helper
+# functions and should be used by the Questions Module
+
 class AnalysisWindow
 	
 	# The TimeFrame object instance for this analysis window
@@ -121,20 +126,20 @@ class AnalysisWindow
 			#Break out the method by snake case
 			pieces = m.to_s.split(/\_/)
 
-			#Find the nodes_x_all, changesets_x_month, ways_x_yearly type of functions
+			#Find the nodes_x_all, changesets_x_month, ways_x_year type of functions
 			if pieces[1] == 'x'
 
 				unless args.empty?
-					cons = args[0][:constraints] #Better pass a hash
+					cons = args[0][:constraints] #Better pass a hash, otherwise it'll explode!
 					step = args[0][:step] || 1
 				end
 				
-				instance_eval "@#{pieces[2]}_#{pieces[0]} ||= #{pieces[0]}.run(unit: :#{pieces[2]}, step: step, constraints: cons)"
+				instance_eval "#{pieces[0]}.run(unit: :#{pieces[2]}, step: step, constraints: cons)"
 			end
 
 		rescue => e
 			puts $!
-			super
+			super(args)
 		end
 	end
 
@@ -210,15 +215,6 @@ class AnalysisWindow
 	end
 
 	# :category: Users
-	def users_editing_per_year
-		years = {}
-		changesets_x_year.each do |bucket|
-			years[ bucket[:start_date] ] = bucket[:objects].collect{|changeset| changeset.user}.uniq
-		end
-		years
-	end
-
-	# :category: Users
 	def new_contributors
 		all_users_data.select{|user| user.account_created > time_frame.start_date and user.account_created < time_frame.end_date}.collect{|user| user.user}
 	end
@@ -231,51 +227,6 @@ class AnalysisWindow
 	# :category: Users
 	def all_contributors
 		all_users_data.collect{|user| user.user}
-	end
-
-	# :category: Users
-	def all_contributors_with_count
-		user_data = []
-		all_users_data.each{ |user|
-			user_data.push({
-				"user" => user.user,
-				"nodes" => nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.count,
-				"ways" => ways_x_all.first[:objects].select{|way| way.uid == user.uid}.count,
-				"relations" => relations_x_all.first[:objects].select{|relation| relation.uid == user.uid}.count,
-				"changesets" => changesets_x_all.first[:objects].select{|changeset| changeset.uid == user.uid}.count,
-			})
-		}
-		user_data
-	end
-
-	# :category: Users
-	def all_contributors_with_geometry
-		user_data = {}
-		all_users_data.each{ |user|
-			user_data[ user.user ] = {
-				"type" => "FeatureCollection",
-				"features" =>
-					ways_x_all.first[:objects].select{|way| way.uid == user.uid}.collect{|way|  
-						{ "type" => "Feature", "properties"=> way.tags, "geometry" => way.geometry } 
-					} +
-					nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.collect{|node|  
-						{ "type" => "Feature", "properties"=> node.tags, "geometry" => node.geometry } 
-					}
-			}
-		}
-		user_data
-	end
-
-	# :category: Users
-	def top_contributors_by_changesets(args={limit: 5, unit: :all_time })
-
-		case args[:unit]
-		when :all_time
-			changesets_per_unit = changesets_x_all.first[:objects].group_by{|changeset| changeset.user}.sort_by{|k,v| v.length}.reverse
-		when :month
-			changesets_per_unit = changesets_x_month.group_by{|changeset| changeset.created_at.to_i / 100000}
-		end
-		changesets_per_unit.first(args[:limit])
 	end
 end
 

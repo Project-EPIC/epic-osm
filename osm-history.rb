@@ -7,19 +7,8 @@ require 'models/Persistence'
 require 'models/Query'
 require 'models/AnalysisWindow'
 
-#Load the Questions Base Module
+#Load the Questions Module, which autoloads all of the questions
 require 'modules/questions/questions.rb'
-
-#Load Individual Questions Modules
-require 'modules/questions/node_questions'
-require 'modules/questions/way_questions'
-require 'modules/questions/relation_questions'
-require 'modules/questions/user_questions'
-require 'modules/questions/changeset_questions'
-require 'modules/questions/network_questions'
-require 'modules/questions/bbox_questions'
-
-#TODO: Load custom questions modules as desired....
 
 #Standard ruby Libraries we need?
 require 'yaml'
@@ -33,7 +22,7 @@ autoload :FileIO, 'modules/file_io'
 #
 class OSMHistory
 
-	include Questions::Network
+	include Questions::Networks
 
 	attr_reader :aw_config
 
@@ -60,45 +49,40 @@ class OSMHistory
 		)
 	end
 
+	def question_asker
+		@question_asker ||= QuestionAsker.new(analysis_window: analysis_window)
+	end
+
 
 	def run_node_questions
-		node_questions = Questions::Nodes.new(analysis_window: analysis_window)
-
 		aw_config['Node Questions'].each do |node_q|
-			write_json( data: node_questions.run(node_q), name: "#{node_q}.json")
+			write_json( data: question_asker.run(node_q), name: "#{node_q}.json")
 		end
 	end
 
 
 	def run_changeset_questions
-		changeset_questions = Questions::Changesets.new(analysis_window: analysis_window)
-
 		aw_config['Changeset Questions'].each do |changeset_q|
-			write_json( data: changeset_questions.run(changeset_q), name: "#{changeset_q}.json")
+			write_json( data: question_asker.run(changeset_q), name: "#{changeset_q}.json")
 		end
 	end
 
 	def run_bbox_questions
-		bbox_questions = Questions::Bbox.new(analysis_window: analysis_window)
-
 		aw_config['Bbox Questions'].each do |bbox_q|
-			write_json( data: bbox_questions.run(bbox_q), name: "#{bbox_q}.json")
+			write_json( data: question_asker.run(bbox_q), name: "#{bbox_q}.json")
 		end
 	end
 
 	def run_user_questions
-		user_questions = Questions::Users.new(analysis_window: analysis_window)
-
 		aw_config['User Questions'].each do |user_q|
-			write_json( data: user_questions.run(user_q), name: "#{user_q}.json")
+			write_json( data: question_asker.run(user_q), name: "#{user_q}.json")
 		end
 	end
 
 	def run_multi_user_questions
-		multi_user_questions = Questions::Users.new(analysis_window: analysis_window)
-
 		aw_config['Multi User Questions'].each do |user_q|
-			multi_user_questions.run(user_q).each do |name, data|
+			puts user_q
+			question_asker.run(user_q).each do |name, data|
 				write_json( data: data, name: "#{user_q}/#{name}.json")
 			end
 		end

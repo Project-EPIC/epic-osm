@@ -1,7 +1,6 @@
 module Questions # :nodoc: all
-  #Node Questions
-  class Nodes < QuestionsRunner
-
+  
+  module Nodes
     #Total nodes edited in the analysis window
     def total_nodes_edited
   		{'Total Nodes Edited' => aw.node_edit_count }

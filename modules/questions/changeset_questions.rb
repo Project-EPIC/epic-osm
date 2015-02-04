@@ -1,6 +1,6 @@
 module Questions # :nodoc: all
 
-	class Changesets < QuestionsRunner
+	module Changesets
 
 		def total_changesets_created
 			{"Number of Changesets" => aw.changeset_count}

@@ -1,7 +1,7 @@
 module Questions # :nodoc: all
 
   #BBox Questions
-  class Bbox < QuestionsRunner
+  module Bbox
 
   	#Bounding Box Geometry
   	def bbox_geometry
