@@ -5,6 +5,7 @@ require 'yaml'
 #Require Import Scripts
 require_relative 'osm_api/import_changesets'
 require_relative 'osm_api/import_users'
+require_relative 'osm_api/import_notes'
 require_relative 'osm_api/osm_api'
 require_relative 'pbf_to_mongo'
 
@@ -92,5 +93,11 @@ class AnalysisWindowImport
 		user_import = UserImport.new
 		puts "Importing user data for #{user_import.distinct_uids.length} users"
 		user_import.import_user_objects
+	end
+
+	def notes_import
+		note_import = NotesImport.new
+		puts "Importing note data"
+		notes_import.import_note_objects
 	end
 end

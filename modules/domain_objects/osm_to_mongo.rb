@@ -197,6 +197,24 @@ module OSMongoable
 		end
 	end
 
+	module Note # :nodoc: all
+		def to_mongo
+			hash = {}
+			hash[:id] 		  	||= id.to_s
+			hash[:url] 		 	||= url
+			hash[:date_created] ||= date_created
+			hash[:status] 		||= status
+			hash[:lon] 		 	||= lon
+			hash[:lat] 		 	||= lat
+			hash[:text] 		||= text
+			hash
+		end
+
+		def save!
+			DatabaseConnection.database['notes'].insert( self.to_mongo )
+		end
+	end
+
 
 	module Changeset # :nodoc: all
 
