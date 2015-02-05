@@ -16,14 +16,8 @@ class NoteImport
 	  	results = note_api.hit_api(args)
 
 	  	results[:osm][:note].each do |result|
-	  		note_obj = Note.new result #convert_note_api_to_domain_object_hash(result)
+	  		note_obj = Note.new result
 	  		note_obj.save!
 	  	end
-	  end
-
-	  def convert_note_api_to_domain_object_hash(note_api_hash)
-	  	data = note_api_hash
-	  	## do stuff
-	  	return data
 	  end
 	end
