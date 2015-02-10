@@ -59,8 +59,10 @@ class Query
 			selector.update(args[:constraints])
 		end
 
-		buckets.each do |bucket|			
+		buckets.each do |bucket|	
+
 			update_created_at( bucket[:start_date], bucket[:end_date] )
+
 			results = DatabaseConnection.database[args[:collection]].find( selector )
 			results.each do |obj|
 				bucket[:objects] << args[:type].new(obj.from_mongo)
@@ -73,6 +75,12 @@ end
 class Node_Query < Query #:nodoc:
 	def run(args={})
 		super args.update( {collection: 'nodes', type: Node} )
+	end
+end
+
+class Note_Query < Query #:nodoc:
+	def run(args={})
+		super args.update( {collection: 'notes', type: Note} )
 	end
 end
 

@@ -38,7 +38,7 @@ class AnalysisWindow
 	# If the frame failed or doesn't exist, then use all of the data by default
 	def post_initialize
 		unless time_frame.active?
-			@time_frame = TimeFrame.new( start_date: Changeset_Query.earliest_changeset_date, end_date:   Changeset_Query.latest_changeset_date )
+			@time_frame = TimeFrame.new( start_date: Changeset_Query.earliest_changeset_date, end_date: Changeset_Query.latest_changeset_date )
 		end
 	end
 
@@ -227,6 +227,16 @@ class AnalysisWindow
 	# :category: Users
 	def all_contributors
 		all_users_data.collect{|user| user.user}
+	end
+
+	# :category: Notes
+	def notes
+		@notes ||= Note_Query.new( analysis_window: self )
+	end
+
+	# :category: Notes
+	def notes_count
+		notes_x_all.first[:objects].count
 	end
 end
 

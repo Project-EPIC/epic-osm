@@ -202,7 +202,7 @@ module OSMongoable
 			hash = {}
 			hash[:id] 		  	||= id.to_s
 			hash[:url] 		 	||= url
-			hash[:date_created] ||= date_created
+			hash[:created_at]	||= created_at
 			hash[:status] 		||= status
 			hash[:lon] 		 	||= lon
 			hash[:lat] 		 	||= lat

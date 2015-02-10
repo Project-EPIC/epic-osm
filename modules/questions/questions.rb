@@ -16,6 +16,7 @@ class QuestionAsker # :nodoc: all
 	include Questions::Changesets
 	include Questions::Networks
 	include Questions::Bbox
+	include Questions::Notes
 
 	attr_reader :aw
 
