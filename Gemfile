@@ -22,7 +22,7 @@ gem 'jekyll',   '2.5.3'
 #Gems required mostly for import abiltiies:
 group :import do
 	gem 'pbf_parser', '0.2.0'
-	gem 'nokogiri', 	'1.5.0'
+	gem 'nokogiri', 	'1.6.6.2'
 	gem 'nori',				'2.4.0'
 end
 
@@ -31,5 +31,5 @@ end
 #Gems only required for testing and/or development:
 group :test do
 	gem 'rspec',		'3.1.0'
-	gem 'debugger'
+	gem 'debugger', '1.6.8'
 end
