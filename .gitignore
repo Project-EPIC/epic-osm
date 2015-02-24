@@ -7,6 +7,7 @@ sample-awconfig.yml
 
 .ipynb_checkpoints/*
 scratch.rb.ipynb
+*.ipynb
 _site/*
 
 temp.config
