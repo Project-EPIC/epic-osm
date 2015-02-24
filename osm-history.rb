@@ -42,9 +42,9 @@ class OSMHistory
 	end
 
 	def analysis_window
-		@analysis_window ||= AnalysisWindow.new( time_frame: TimeFrame.new(start_date: aw_config['start_date'], end_date: aw_config['end_date']), 
-												 bounding_box: BoundingBox.new(bbox: aw_config['bbox']), 
-												 min_area: aw_config['min_area'], 
+		@analysis_window ||= AnalysisWindow.new( time_frame: TimeFrame.new(start_date: aw_config['start_date'], end_date: aw_config['end_date']),
+												 bounding_box: BoundingBox.new(bbox: aw_config['bbox']),
+												 min_area: aw_config['min_area'],
 												 max_area: aw_config['max_area']
 		)
 	end
@@ -55,48 +55,58 @@ class OSMHistory
 
 
 	def run_node_questions
-		aw_config['Node Questions'].each do |node_q|
-			write_json( data: question_asker.run(node_q), name: "#{node_q}.json")
+		unless aw_config['Node Questions'].nil?
+			aw_config['Node Questions'].each do |node_q|
+				write_json( data: question_asker.run(node_q), name: "#{node_q}.json")
+			end
 		end
 	end
 
 
 	def run_changeset_questions
-		aw_config['Changeset Questions'].each do |changeset_q|
-			write_json( data: question_asker.run(changeset_q), name: "#{changeset_q}.json")
+		unless aw_config['Changeset Questions'].nil?
+			aw_config['Changeset Questions'].each do |changeset_q|
+				write_json( data: question_asker.run(changeset_q), name: "#{changeset_q}.json")
+			end
 		end
 	end
 
 	def run_bbox_questions
-		aw_config['Bbox Questions'].each do |bbox_q|
-			write_json( data: question_asker.run(bbox_q), name: "#{bbox_q}.json")
+		unless aw_config['Bbox Questions'].nil?
+			aw_config['Bbox Questions'].each do |bbox_q|
+				write_json( data: question_asker.run(bbox_q), name: "#{bbox_q}.json")
+			end
 		end
 	end
 
 	def run_user_questions
-		aw_config['User Questions'].each do |user_q|
-			write_json( data: question_asker.run(user_q), name: "#{user_q}.json")
+		unless aw_config['User Questions'].nil?
+			aw_config['User Questions'].each do |user_q|
+				write_json( data: question_asker.run(user_q), name: "#{user_q}.json")
+			end
 		end
 	end
 
 	def run_multi_user_questions
-		aw_config['Multi User Questions'].each do |user_q|
-			puts user_q
-			question_asker.run(user_q).each do |name, data|
-				write_json( data: data, name: "#{user_q}/#{name}.json")
+		unless aw_config['Multi User Quesions'].nil?
+			aw_config['Multi User Questions'].each do |user_q|
+				puts user_q
+				question_asker.run(user_q).each do |name, data|
+					write_json( data: data, name: "#{user_q}/#{name}.json")
+				end
 			end
 		end
 	end
 
 	def run_network_functions
-  		network_info = aw_config['temporal_network']
+  	network_info = aw_config['temporal_network']
 		temp = TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: network_info['files'])
 		temp.run_overlapping_changesets
 	end
 
 	def write_json(args)
-		out_file = FileIO::JSONExporter.new(name: args[:name], data: args[:data], path: aw_config['write_directory']+'/json') 
-		unless out_file.data.nil? 
+		out_file = FileIO::JSONExporter.new(name: args[:name], data: args[:data], path: aw_config['write_directory']+'/json')
+		unless out_file.data.nil?
 			out_file.write
 		end
 	end
