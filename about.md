@@ -3,9 +3,27 @@ layout: page
 title: About
 permalink: /about/
 ---
+OpenStreetMap, often called the 'Wikipedia of Maps', is a volunteer project founded in the UK in 2004 to collaboratively create a free and open map of the world.  In the 10 years since it's founding it has grown to a global community with nearly 2 million registered users and active local groups in around 100 countries.
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+As noted in Haklay’s call for an “OpenStreetMap Studies[1],” OSM has received a great deal of attention from scholars in recent years.  One reason for this is the relative accessibility of the data, as compared
+to similar projects.  We agree that this openness is unique and believe that, despite significant work already conducted, there remains a tremendous amount of as yet untapped potential.  This is especially true in regards to OSM history data, which is freely downloadable and contains a near-complete record of every edit ever made to the database.
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
+Previous efforts to understand the social practices surrounding OpenStreetMap have largely ignored the database itself and instead focused on participant observation of OSM’s annual State of the Map Conference [2] or surveys of OSM contributors [3,4].  The few studies that do  OSM using the database either rely on extremely limited understandings of sociality [5] or focus their attention on overall trends in the global community [for example: 6].  Neither of these approaches effectively captures the rich interaction that occurs in and around the map in active local OSM communities.
 
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+This project is an attempt to create a suite of descriptive analytics that shed light into the varied ways in which geographically local OSM communities organize themselves and cooperate to create free
+and open map data.  The tools developed use OSM history data to identify patterns of contribution, assess cooperative behavior, and generate locally useful statistics that can help OSM communities coordinate their mapping
+activities.  
+
+
+1.	[http://povesham.wordpress.com/2014/08/14/openstreetmap-studies-and-why-vgi-not-equal-osm/](http://povesham.wordpress.com/2014/08/14/openstreetmap-studies-and-why-vgi-not-equal-osm/)
+2.  [http://www.tandfonline.com/doi/abs/10.1080/13614568.2011.552647#.VFFAX_TF-Yw](http://www.tandfonline.com/doi/abs/10.1080/13614568.2011.552647#.VFFAX_TF-Yw
+)
+3.  [http://abs.sagepub.com/content/57/5/548.short](http://abs.sagepub.com/content/57/5/548.short)
+4.  [http://publik.tuwien.ac.at/files/PubDat_218905.pdf](http://publik.tuwien.ac.at/files/PubDat_218905.pdf)
+5.  [http://www.agile-online.org/conference_paper/cds/agile_2012/proceedings/papers/paper_mooney_how_social_is_openstreetmap_2012.pdf](http://www.agile-online.org/conference_paper/cds/agile_2012/proceedings/papers/paper_mooney_how_social_is_openstreetmap_2012.pdf)
+6.  [http://www.mdpi.com/2220-9964/1/2/146](http://www.mdpi.com/2220-9964/1/2/146)
+
+
+<h2>Resources</h2>
+<a href="http://github.com/rsoden">Github Repo</a><br />
+<a href="{{site.baseurl}}/doc/" target="_blank">RDoc Documentation</a>
