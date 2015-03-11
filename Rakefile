@@ -144,7 +144,7 @@ namespace :jekyll do
 		}
 	end
 
-	desc "Build Jekyll Site, Move Files Around"
+	desc "Build Jekyll Site, Move Files Around -- Jekyll needs files to live locally to access... grr"
 	task :build do
 		dir = window.config['write_directory']
 		puts "Deleting previous _data directory"
