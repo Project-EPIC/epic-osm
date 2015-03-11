@@ -75,7 +75,7 @@ task :cleanup do
 end
 
 desc "Network Writers"
-task :network do 
+task :network do
 	osmhistory = OSMHistory.new(analysis_window: ARGV[1])
 	osmhistory.run_network_functions #This will need to be pulled out eventually...
 end
@@ -133,22 +133,26 @@ end
 
 #Builds Jekyll sites based on analysis windows
 namespace :jekyll do
-	
+
 	desc "Write Configuration File"
 	task :config do
 		dir = window.config['write_directory']
-		File.open("jekyll/_config.yml", 'w') { |file| 
-		window.config.each do |key, value| 
-			file.write("#{key}: #{value} \n") 
+		File.open("jekyll/_config.yml", 'w') { |file|
+		window.config.each do |key, value|
+			file.write("#{key}: #{value} \n")
 		end
 		}
 	end
-	
+
 	desc "Build Jekyll Site, Move Files Around"
 	task :build do
 		dir = window.config['write_directory']
+		puts "Deleting previous _data directory"
 		system("rm -rf jekyll/_data")
+		puts "Creating new jekyll _data directory"
 		system("mkdir jekyll/_data")
+
+		puts "Copying all json data to jekyll directory"
 		system("mv #{dir}/json/* jekyll/_data")
 		system("rm -rf jekyll/json")
 		system("cp -r jekyll/_data jekyll/json")
