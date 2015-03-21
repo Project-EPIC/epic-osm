@@ -62,6 +62,15 @@ namespace :import do
 	task :users do
 		window.user_import
 	end
+
+  desc "Import Realtime"
+  task :realtime do
+    window.run_live_replication_import
+  end
+
+  desc "Import Features"
+  task :features do
+  end
 end
 
 desc "Clean up all temp files"

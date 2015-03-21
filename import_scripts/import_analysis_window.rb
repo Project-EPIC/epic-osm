@@ -93,4 +93,14 @@ class AnalysisWindowImport
 		puts "Importing user data for #{user_import.distinct_uids.length} users"
 		user_import.import_user_objects
 	end
+
+	#Runs a system shell script to call osm-meta-util
+	def run_live_replication_import
+		begin
+		  system "#{global_config['osm-meta-util']} \"" + config['changeset_tags'] + "\" &"
+		rescue
+			raise Error.new("osm-meta-util failed")
+			puts $!
+		end
+	end
 end
