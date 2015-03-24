@@ -31,10 +31,10 @@ module Questions # :nodoc: all
 		end
 
     def number_of_changesets_per_tag
-      changesets_per_tag = {}
+      changesets_per_tag = []
       tags = aw.changeset_tags.split(" ")
       tags.each do |tag|
-        changesets_per_tag[ tag ] = Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].length
+        changesets_per_tag.push({"tag"=> tag, "count"=> Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].length })
       end
       changesets_per_tag
     end
