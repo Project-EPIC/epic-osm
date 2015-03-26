@@ -19,6 +19,8 @@
  		      	layer.bindPopup(JSON.stringify(feature.properties, null, 2));
    			  }
 					geojsonLayer = L.geoJson(data, {style: myStyle, onEachFeature: onEachFeature}).addTo(map);
+          var bounds = geojsonLayer.getBounds();
+          map.fitBounds(bounds);
 				});
 			});
 	});

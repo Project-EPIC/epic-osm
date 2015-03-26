@@ -33,8 +33,13 @@ class UserImport
   end
 
   def import_user_objects
-    distinct_uids.each_with_index do |changeset_id, index|
-      this_user = user_api.hit_api(changeset_id)
+    distinct_uids.each_with_index do |user_id, index|
+		  user_count =  DatabaseConnection.database["users"].find({"uid" =>  user_id}).count()
+      if user_count > 0
+        next
+      end
+      #check if user exists first
+      this_user = user_api.hit_api(user_id)
 
       user_obj = User.new convert_osm_api_to_domain_object_hash this_user
       user_obj.save!
