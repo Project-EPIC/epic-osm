@@ -4,6 +4,7 @@ require 'yaml'
 
 #Require Import Scripts
 require_relative 'osm_api/import_changesets'
+require_relative 'osm_api/import_nodeways'
 require_relative 'osm_api/import_users'
 require_relative 'osm_api/osm_api'
 require_relative 'pbf_to_mongo'
@@ -87,6 +88,12 @@ class AnalysisWindowImport
 		changeset_import.import_changeset_objects
 		changeset_import.add_indexes
 	end
+
+  def nodeways_import
+    nodeways_import = NodeWaysImport.new
+    nodeways_import.import_nodeways_objects
+    #puts nodeways_import.new_changeset_ids
+  end
 
 	def user_import
 		user_import = UserImport.new

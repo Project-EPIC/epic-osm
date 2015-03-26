@@ -24,6 +24,7 @@ class UserImport
     uids = DatabaseConnection.database["nodes"].distinct("uid")
     uids += DatabaseConnection.database["ways"].distinct("uid")
     uids += DatabaseConnection.database["relations"].distinct("uid")
+    uids += DatabaseConnection.database["changesets"].distinct("uid")
     if @limit.nil? 
       return uids.uniq!
     else 

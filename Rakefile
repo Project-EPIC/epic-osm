@@ -58,6 +58,11 @@ namespace :import do
 		window.changeset_import
 	end
 
+  desc "Import NodeWays"
+  task :nodeways do
+    window.nodeways_import
+  end
+
 	desc "Import Users"
 	task :users do
 		window.user_import
