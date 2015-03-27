@@ -38,13 +38,11 @@ class NodeWaysImport
   def import_nodeways_objects
     # get changesets that haven't been downloaded
     new_changeset_ids.each_with_index do |changeset_id, index|
-
       begin
         this_changeset = changeset_download_api.hit_api(changeset_id + "/download")
         if this_changeset
           convert_osm_api_to_domain_object_hash this_changeset
-#          changeset_obj = Changeset.new convert_osm_api_to_domain_object_hash this_changeset
-#          changeset_obj.save!
+          DatabaseConnection.database["changesets"].update({:id => changeset_id}, {"$set" => {:complete => true}})
         end
 
         if (index%10).zero?
@@ -52,9 +50,9 @@ class NodeWaysImport
         elsif (index%101).zero?
           print index
         end
-      #rescue => e
-      #  puts "Error on Changeset: #{changeset_id}, continuing"
-      #  puts $!
+      rescue => e
+        puts "Error on Changeset: #{changeset_id}, continuing"
+        puts $!
       end
 
     end
@@ -67,61 +65,76 @@ class NodeWaysImport
   end
 
   def convert_osm_api_to_domain_object_hash(osm_api_hash)
-    osm_api_hash.first[1].each do |change|
-      if change[0] == :create or change[0] == :modify
-        change[1].each do |c|
-          if c.has_key?(:node)
-            d = c[:node]
-          elsif c.has_key?(:way)
-            d = c[:way]
-          else
-            next
-          end
-          
-          d[:created_at] = Time.parse d[:timestamp]
-          if d[:tag].is_a? Array
-            d[:tags] = d[:tag].collect{|h| {h[:k]=>h[:v]}}
-          elsif d[:tag].nil?
-            d[:tags] = []
-          else
-            d[:tags] = [ { d[:tag][:k] => d[:tag][:v] }]
-          end
-          d.delete :tag
+    [:create, :modify].each do |action|
+      if ! osm_api_hash[:osm_change][action].is_a? Array
+        features = [ osm_api_hash[:osm_change][action] ]
+      else
+        features = osm_api_hash[:osm_change][action]
+      end
 
-          if c.has_key?(:node)
-            node_obj = Node.new d
-            node_obj.save!
-          elsif d.has_key?(:way)
-            puts d[:nd].values
-            way_obj = Way.new d
-            way_obj.save!
-          end
+      features.each do |feature_hash|
+        if ! feature_hash.is_a? Hash
+          return
+        end
+        if feature_hash.has_key?(:node)
+          feature = feature_hash[:node]
+        elsif feature_hash.has_key?(:way)
+          feature = feature_hash[:way]
+        else
+          return
+        end
+
+        feature[:created_at] = Time.parse feature[:timestamp]
+        if feature[:tag].is_a? Array
+          feature[:tags] = feature[:tag].collect{|h| {h[:k]=>h[:v]}}
+        elsif feature[:tag].nil?
+          feature[:tags] = []
+        else
+          feature[:tags] = [ { feature[:tag][:k] => feature[:tag][:v] }]
+        end
+        feature.delete :tag
+
+        if feature_hash.has_key?(:node)
+          node_obj = Node.new feature
+          node_obj.save!
+        elsif feature_hash.has_key?(:way)
+          feature[:nodes] = feature[:nd].map{ |n| n[:ref] }
+          way_obj = Way.new feature
+          get_missing_nodes(way_obj.get_missing_nodes())
+
+          way_obj.save!
         end
       end
     end
-    return        
-    data = osm_api_hash[:osm][:changeset]
-
-    if data[:tag].is_a? Array
-      data[:tags] = data[:tag].collect{|h| {h[:k]=>h[:v]}}
-    elsif data[:tag].nil?
-      data[:tags] = []
-      return data
-    else
-      data[:tags] = [ { data[:tag][:k] => data[:tag][:v] }]
-    end
-    data.delete :tag
-
-    #Only have data[:tag], and it's an ARRAY! Look for a key of comment
-    comment_index = data[:tags].index{|h| h.has_key? "comment" }
-
-    unless comment_index.nil?
-      data[:comment] = data[:tags].delete_at(comment_index)["comment"]
-    else
-      data[:comment] = ""
-    end
-    return data
+  
   end
 
+  def get_missing_nodes(nodes)
+    if nodes.length() > 0
+      missing_nodes = nodes_download_api.hit_api(nodes.join(','))
+      if missing_nodes and missing_nodes.has_key?(:osm) and missing_nodes[:osm].has_key?(:node)
+        if ! missing_nodes[:osm][:node].is_a? Array
+          features = [ missing_nodes[:osm][:node] ]
+        else
+          features = missing_nodes[:osm][:node]
+        end
+
+        features.each do |node|
+          node[:created_at] = Time.parse node[:timestamp]
+          if node[:tag].is_a? Array
+            node[:tags] = node[:tag].collect{|h| {h[:k]=>h[:v]}}
+          elsif node[:tag].nil?
+            node[:tags] = []
+          else
+            node[:tags] = [ { node[:tag][:k] => node[:tag][:v] }]
+          end
+          node.delete :tag
+
+          node_obj = Node.new node
+          node_obj.save!
+        end
+      end
+    end
+  end
 end
 

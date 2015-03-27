@@ -238,7 +238,7 @@ class AnalysisWindow
 	# :category: Users
 	def all_contributors_with_count
 		user_data = []
-		all_users_data.each{ |user|
+    all_users_data.sort { |x,y| x.user.downcase <=> y.user.downcase }.each { |user|
 			user_data.push({
 				"user" => user.user,
 				"nodes" => nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.count,
