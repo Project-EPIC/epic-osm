@@ -1,5 +1,5 @@
-+---
-+---
+---
+---
  (function(){
   d3.json("{{site.baseurl}}/json/user_list.json", function(error, data) {
 		d3.select("#users").selectAll("li").data(data).enter().append("li")
