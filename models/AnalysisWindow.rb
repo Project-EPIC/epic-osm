@@ -241,11 +241,15 @@ class AnalysisWindow
 
 	# :category: Notes
 	def notes_geo
+		var result = {}
 		notes_x_all.first[:objects].each do | object |
-			puts object.url
-			puts object.lat
-			puts object.lon			
+			result[object.id] = {
+				url: object.url,
+				lat: object.lat,
+				lon: object.lon	
+			}
 		end
+		return result
 	end
 end
 
