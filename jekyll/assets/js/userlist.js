@@ -6,9 +6,9 @@
 
 				document.getElementById("user-counts").innerHTML = "<b>" + d.user + "</b> Nodes: " + d.nodes + ", Ways: " + d.ways + ", Relations: " + d.relations + ", Changesets: " + d.changesets;
 /*				d3.select("#user-counts").selectAll("span").data(
-						[{"label": "Nodes", "count": d.nodes}, 
-							{"label": "Ways", "count": d.ways}, 
-							{"label": "Relations", "count": d.relations}, 
+						[{"label": "Nodes", "count": d.nodes},
+							{"label": "Ways", "count": d.ways},
+							{"label": "Relations", "count": d.relations},
 							{"label": "Changesets", "count": d.changesets}]).enter().append("span").text(function(d) { return d.label + ": " + d.count.toString() + "<br/>"; });
 */
 				d3.json('/json/user_list_with_geometry/' + d.user + '.json', function(error, data) {
