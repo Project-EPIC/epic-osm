@@ -246,7 +246,8 @@ class AnalysisWindow
 			result[object.id] = {
 				url: object.url,
 				lat: object.lat,
-				lon: object.lon	
+				lon: object.lon,
+				comments: object.comments	
 			}
 		end
 		return result

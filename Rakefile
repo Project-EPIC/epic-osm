@@ -35,6 +35,7 @@ task :new do
 	Rake::Task['import:pbf'].invoke
 	Rake::Task['import:changesets'].invoke
 	Rake::Task['import:users'].invoke
+	Rake::Task['import:notes'].invoke
 end
 
 desc "Write appropriate configuration file and cut the file to create temp.osm.pbf file"
@@ -61,6 +62,11 @@ namespace :import do
 	desc "Import Users"
 	task :users do
 		window.user_import
+	end
+
+	desc "Import Notes"
+	task :notes do
+		window.note_import
 	end
 end
 
@@ -131,7 +137,7 @@ namespace :questions do
 		osmhistory.run_bbox_questions
 	end
 
-	desc "Run Note Questions"
+	desc "Run Notes Questions"
 	task :notes do
 		osmhistory.run_note_questions
 	end
