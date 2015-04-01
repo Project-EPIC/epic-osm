@@ -11,5 +11,5 @@ var map = L.map('map').setView([51.505, -0.09], 13);
         var bbox = {{ site.data.bbox_geojson_geometry | jsonify }};
         L.geoJson(bbox).addTo(map);
         var bounds = L.geoJson(bbox).getBounds();
-        map.fitBounds(bounds);
+        map.fitBounds(bounds, {padding: [50,50]});
 var geojsonLayer;

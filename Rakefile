@@ -91,6 +91,7 @@ namespace :questions do
 	Rake::Task['questions:users'].invoke
 	Rake::Task['questions:multi_users'].invoke
 	Rake::Task['questions:bbox'].invoke
+	Rake::Task['questions:notes'].invoke
 	end
 
 	desc "Run Node Questions"
@@ -128,6 +129,11 @@ namespace :questions do
 	desc "Run BBox Questions"
 	task :bbox do
 		osmhistory.run_bbox_questions
+	end
+
+	desc "Run Note Questions"
+	task :notes do
+		osmhistory.run_note_questions
 	end
 end
 

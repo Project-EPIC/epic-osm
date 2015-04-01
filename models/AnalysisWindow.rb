@@ -238,6 +238,15 @@ class AnalysisWindow
 	def notes_count
 		notes_x_all.first[:objects].count
 	end
+
+	# :category: Notes
+	def notes_geo
+		notes_x_all.first[:objects].each do | object |
+			puts object.url
+			puts object.lat
+			puts object.lon			
+		end
+	end
 end
 
 #=Geographical Bounding Box
