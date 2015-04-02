@@ -105,6 +105,14 @@ class OSMHistory
 		temp.run_overlapping_changesets
 	end
 
+	def run_note_questions
+		unless aw_config['Note Questions'].nil?
+			aw_config['Note Questions'].each do |note_q|
+				write_json( data: question_asker.run(note_q), name: "#{note_q}.json")
+			end
+		end
+	end
+
 	def write_json(args)
 		out_file = FileIO::JSONExporter.new(name: args[:name], data: args[:data], path: aw_config['write_directory']+'/json')
 		unless out_file.data.nil?

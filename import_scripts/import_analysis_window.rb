@@ -95,9 +95,9 @@ class AnalysisWindowImport
 		user_import.import_user_objects
 	end
 
-	def notes_import
-		note_import = NotesImport.new
+	def note_import
+		note_import = NoteImport.new(@config['bbox'])
 		puts "Importing note data"
-		notes_import.import_note_objects
+		note_import.import_note_objects
 	end
 end

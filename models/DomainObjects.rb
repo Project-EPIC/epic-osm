@@ -108,16 +108,16 @@ class Note #:nodoc:
 
 	include OSMongoable::Note
 
-	attr_reader :id, :url, :created_at, :status, :lon, :lat, :text
+	attr_reader :id, :url, :created_at, :status, :lon, :lat, :comments
 
-	def initialize(args)
-		@id = args[:id]
-		@url = args[:url]
-		@created_at = args[:created_at]
-		@status = args[:status]
-		@lon = args[:lon]
-		@lat = args[:lat]
-		@test = args[:text]
+	def initialize(args)	
+		@id = args[:id] 		  	
+		@url = args[:url] 		 	
+		@created_at = args[:created_at] 
+		@status = args[:status] 		
+		@lon = args[:lon] 		 
+		@lat = args[:lat] 			
+		@comments = args[:comments] 		
 	end
 
 end

@@ -35,6 +35,7 @@ task :new do
 	Rake::Task['import:pbf'].invoke
 	Rake::Task['import:changesets'].invoke
 	Rake::Task['import:users'].invoke
+	Rake::Task['import:notes'].invoke
 end
 
 desc "Write appropriate configuration file and cut the file to create temp.osm.pbf file"
@@ -61,6 +62,11 @@ namespace :import do
 	desc "Import Users"
 	task :users do
 		window.user_import
+	end
+
+	desc "Import Notes"
+	task :notes do
+		window.note_import
 	end
 end
 
@@ -91,6 +97,7 @@ namespace :questions do
 	Rake::Task['questions:users'].invoke
 	Rake::Task['questions:multi_users'].invoke
 	Rake::Task['questions:bbox'].invoke
+	Rake::Task['questions:notes'].invoke
 	end
 
 	desc "Run Node Questions"
@@ -129,36 +136,9 @@ namespace :questions do
 	task :bbox do
 		osmhistory.run_bbox_questions
 	end
-end
 
-#Builds Jekyll sites based on analysis windows
-namespace :jekyll do
-
-	desc "Write Configuration File"
-	task :config do
-		dir = window.config['write_directory']
-		File.open("jekyll/_config.yml", 'w') { |file|
-		window.config.each do |key, value|
-			file.write("#{key}: #{value} \n")
-		end
-		}
-	end
-
-	desc "Build Jekyll Site, Move Files Around -- Jekyll needs files to live locally to access... grr"
-	task :build do
-		dir = window.config['write_directory']
-		puts "Deleting previous _data directory"
-		system("rm -rf jekyll/_data")
-		puts "Creating new jekyll _data directory"
-		system("mkdir jekyll/_data")
-
-		puts "Copying all json data to jekyll directory"
-		system("mv #{dir}/json/* jekyll/_data")
-		system("rm -rf jekyll/json")
-		system("cp -r jekyll/_data jekyll/json")
-		system("rm -rf #{dir}/*")
-		system("jekyll build --source jekyll --destination temp")
-		system("mv -f temp/* #{dir}/")
-		system("cp -r jekyll/_data #{dir}/json")
+	desc "Run Notes Questions"
+	task :notes do
+		osmhistory.run_note_questions
 	end
 end

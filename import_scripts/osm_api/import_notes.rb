@@ -2,12 +2,10 @@ class NoteImport
 	  require_relative 'osm_api'
 	  require_relative '../../osm-history'
 
-
 	  attr_reader :note_api, :bbox, :args, :success_log, :fail_log
 
-	  def initialize(bbox, limit=nil)
+	  def initialize(bbox,limit=nil)
 	  	    @note_api = OSMAPI.new("http://api.openstreetmap.org/api/0.6/notes")
-	  	    #TODO: Logs	
 	  	    @limit = limit || 10
 	  	    @args = "?bbox=" + bbox + "&limit=" + @limit.to_s 
 	  end

@@ -206,7 +206,7 @@ module OSMongoable
 			hash[:status] 		||= status
 			hash[:lon] 		 	||= lon
 			hash[:lat] 		 	||= lat
-			hash[:text] 		||= text
+			hash[:comments] 	||= comments
 			hash
 		end
 
