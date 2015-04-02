@@ -3,7 +3,7 @@ require_relative '../modules/domain_objects/osm_geo'
 
 # = OSM Object
 #
-# A main 
+# A main
 class OSMObject
 
 	include OSMongoable::OSMObject
@@ -28,7 +28,7 @@ class Node < OSMObject #:nodoc:
 
 	attr_reader :lat, :lon, :version, :changeset
 
-	def initialize(args)  # Should this be post_initialize? What's the 
+	def initialize(args)  # Should this be post_initialize? What's the
 		@lon = args[:lon] #  benefits/cons of super vs. post_initialize?
 		@lat = args[:lat]
 		@version	||= args[:version]
@@ -58,7 +58,7 @@ class Relation < OSMObject #:nodoc:
 	include OSMongoable::Relation
 
 	attr_reader :nodes, :ways, :version, :changeset, :missing_nodes, :missing_ways
-	
+
 	def initialize(args)
 		@nodes = args[:nodes]
 		@ways  = args[:ways]
@@ -89,7 +89,7 @@ class Changeset < OSMObject #:nodoc:
 end
 
 class User #:nodoc:
-	
+
 	include OSMongoable::User
 
 	attr_reader :user, :uid, :account_created
@@ -97,7 +97,7 @@ class User #:nodoc:
 	def initialize(args)
 		@uid   = args[:uid]
 		@user  = args[:user]
-		
+
 		#Note that this is again just for silly v1 database
 		@account_created = args[:account_created]
 	end
@@ -110,14 +110,14 @@ class Note #:nodoc:
 
 	attr_reader :id, :url, :created_at, :status, :lon, :lat, :text
 
-	def initialize(args)	
-		@id = args[:id] 		  	
-		@url = args[:url] 		 	
-		@created_at = args[:created_at] 
-		@status = args[:status] 		
-		@lon = args[:lon] 		 
-		@lat = args[:lat] 			
-		@test = args[:text] 		
+	def initialize(args)
+		@id = args[:id]
+		@url = args[:url]
+		@created_at = args[:created_at]
+		@status = args[:status]
+		@lon = args[:lon]
+		@lat = args[:lat]
+		@test = args[:text]
 	end
-	
+
 end

@@ -36,16 +36,17 @@ class OSMHistory
 		#Set Database Connection
 		DatabaseConnection.new(database: aw_config['database'], host: aw_config['host'], port: aw_config['port'])
 
-		analysis_window
+		# analysis_window
 
 		puts "Successfully initialized Analysis Window: #{aw_config['title']}"
 	end
 
 	def analysis_window
-		@analysis_window ||= AnalysisWindow.new( time_frame: TimeFrame.new(start_date: aw_config['start_date'], end_date: aw_config['end_date']),
-												 bounding_box: BoundingBox.new(bbox: aw_config['bbox']),
-												 min_area: aw_config['min_area'],
-												 max_area: aw_config['max_area']
+		@analysis_window ||= AnalysisWindow.new(
+						time_frame: TimeFrame.new(start_date: aw_config['start_date'], end_date: aw_config['end_date']),
+						bounding_box: BoundingBox.new(bbox: aw_config['bbox']),
+						min_area: aw_config['min_area'],
+						max_area: aw_config['max_area']
 		)
 	end
 

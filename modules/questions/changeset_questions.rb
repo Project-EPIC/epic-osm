@@ -9,7 +9,7 @@ module Questions # :nodoc: all
 		def changesets_per_mapper
 			changesets_by_uid = aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.uid}
 		end
-		
+
 		def mean_changesets_per_mapper
 			num_changesets = changesets_per_mapper.collect{|uid, changesets| changesets.length}
 			{"Mean Changesets Per Mapper" => DescriptiveStatistics.mean(num_changesets) }
@@ -19,7 +19,7 @@ module Questions # :nodoc: all
 			num_changesets = changesets_per_mapper.collect{|uid, changesets| changesets.length}
 			{"Median Changesets Per Mapper" => DescriptiveStatistics.median(num_changesets) }
 		end
-		
+
 		def number_of_changesets_by_new_mappers
 			changesets_by_new_mappers = Changeset_Query.new(analysis_window: aw, constraints: {'user' => {'$in' => aw.new_contributors}}).run
 			{'Number of Changesets by New Mappers' => changesets_by_new_mappers.first[:objects].length }
@@ -83,13 +83,13 @@ module Questions # :nodoc: all
 			changesets = aw.changesets_x_all.first[:objects]
 
 			changesets.select!{|changeset| filtered_changeset_area(changeset)}
-			
+
 			#Iterate through the changesets
 			changesets.each_with_index do |base_changeset|
 
 				#Initialize this changeset into the Hash
 				changeset_overlaps[base_changeset.id] ||= []
-				
+
 				changesets.each do |check_changeset|
 					changeset_overlaps[base_changeset.id] << check_changeset.id if base_changeset.bounding_box.intersects? check_changeset.bounding_box
 				end

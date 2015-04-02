@@ -11,16 +11,16 @@
 # functions and should be used by the Questions Module
 
 class AnalysisWindow
-	
+
 	# The TimeFrame object instance for this analysis window
-	attr_reader :time_frame 
+	attr_reader :time_frame
 
 	#The BoundingBox object instance for this analysis window
 	attr_reader :bounding_box
-	
+
 	# The minimum area (in square meters) of changesets to be included in calculations
 	attr_reader :min_area
-	
+
 	# The maximum area (in square meters) of changesets to be included in calculations
 	attr_reader :max_area
 
@@ -59,11 +59,11 @@ class AnalysisWindow
 		end
 
 		buckets = []
-		
+
 		case unit
 		when :all
 			buckets << {start_date: time_frame.start_date, end_date: time_frame.end_date, objects: []}
-		
+
 		when :year
 			year = time_frame.start_date.year
 			bucket_start = Time.mktime(year, 1, 1)
@@ -79,13 +79,13 @@ class AnalysisWindow
 			bucket_start = time_frame.start_date
 			while bucket_start < time_frame.end_date
 				bucket_start = Time.mktime( year, (month) )
-				
+
 				month+=step
 				if (month-12) > 0
 					year  += 1
 				    month = month-12
 				end
-				
+
 				bucket_end   = Time.mktime(year, (month) )
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 			end
@@ -97,7 +97,7 @@ class AnalysisWindow
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
-		
+
 		when :week
 			#fuck us, this is going to be ugly.  How should we do this? just start from the first week of the analysis window?
 			#We could just add 7 days.
@@ -133,7 +133,7 @@ class AnalysisWindow
 					cons = args[0][:constraints] #Better pass a hash, otherwise it'll explode!
 					step = args[0][:step] || 1
 				end
-				
+
 				instance_eval "#{pieces[0]}.run(unit: :#{pieces[2]}, step: step, constraints: cons)"
 			end
 
@@ -159,7 +159,7 @@ class AnalysisWindow
 
 	# :category: Changesets
 	#
-	# 
+	#
 	def distinct_users_in_changesets
 		changesets_x_all.first[:objects].collect{|changeset| changeset.uid}.uniq
 	end
@@ -208,10 +208,10 @@ class AnalysisWindow
 	def relation_added_count
 		relations_x_all.first[:objects].select{|relation| relation.version == 1}.count
 	end
-	
+
 	# :category: Users
 	def all_users_data
-		User_Query.new(uids: distinct_users_in_changesets).run		
+		User_Query.new(uids: distinct_users_in_changesets).run
 	end
 
 	# :category: Users
@@ -261,7 +261,7 @@ class BoundingBox
 
 			@bottom_left = [ bbox_array[0].to_f, bbox_array[1].to_f ]
 			@top_right   = [ bbox_array[2].to_f, bbox_array[3].to_f ]
-		
+
 		else
 			@bottom_left = args[:bottom_left]
 			@top_right   = args[:top_right]
@@ -291,7 +291,7 @@ class BoundingBox
 	end
 
 	def geojson_geometry
-		return {type: "Polygon", 
+		return {type: "Polygon",
 				coordinates:[[  bottom_left,
 							   [bottom_left[0], top_right[1]],
 							    top_right,

@@ -1,5 +1,5 @@
 module Questions # :nodoc: all
-	
+
 	module Networks # :nodoc: all
 
 		class TemporalAnalysis
@@ -11,7 +11,7 @@ module Questions # :nodoc: all
 
 				#make the directory
 				Dir.mkdir(directory) unless Dir.exists? directory
-			
+
 				@buckets = instance_eval "aw.changesets_x_#{unit}(step: #{step})"
 			end
 
@@ -35,10 +35,10 @@ module Questions # :nodoc: all
 							unless user_1 == user_2
 								if (changeset_1.area < 100000000) and (changeset_2.area < 100000000)
 									if changeset_1.bounding_box.intersects? changeset_2.bounding_box
-										
+
 										users[user_1] ||= {id: user_1}
 										users[user_2] ||= {id: user_2}
-			
+
 										unless edges["#{user_1}-#{user_2}"].nil?
 											edges["#{user_1}-#{user_2}"][:weight] += 1
 											edges["#{user_2}-#{user_1}"][:weight] += 1

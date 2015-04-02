@@ -1,5 +1,5 @@
 #Add the project root for absolute pathing
-$:.unshift File.expand_path('.') 
+$:.unshift File.expand_path('.')
 
 require 'models/DomainObjects'
 require 'models/Persistence'
@@ -9,4 +9,4 @@ require 'debugger'
 
 #Open connection to a test database:
 #DatabaseConnection.new(database: 'philippines', host: 'epic-analytics.cs.colorado.edu', port: 27018)
-DatabaseConnection.new(database: 'nic-test')
+# DatabaseConnection.new(database: 'boulder-history')
