@@ -5,16 +5,16 @@ module OSMGeo #:nodoc: all
 
 	module OSMObject
 
-		def geojson_geometry
-			@geometry ||= get_geojson_geometry
-		end
-
 	end
 
 	module Node
 
 		def point
 			@point ||= Factory.point(lat, lon)
+		end
+
+		def geojson_geometry
+			"{type: \"Point\", \"coordinates\": [#{lon},#{lat}]}"
 		end
 
 	end
@@ -66,6 +66,12 @@ module OSMGeo #:nodoc: all
 
 		def bounding_box
 			nil #geometry.convex_hull
+		end
+	end
+
+	module Note
+		def geojson_geometry
+			"{type: \"Point\", \"coordinates\": [#{lon},#{lat}]}"
 		end
 	end
 end

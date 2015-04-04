@@ -52,7 +52,7 @@ module OSMongoable
 		end
 
 		def get_geojson_geometry
-			@geometry ||= "{\"type\": \"Point\", coordinates: [#{lon},#{lat}]}"
+			@geometry ||= {type: "Point", coordinates: [lon,lat]}
 		end
 	end
 

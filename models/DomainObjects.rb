@@ -107,6 +107,7 @@ end
 class Note #:nodoc:
 
 	include OSMongoable::Note
+	include OSMGeo::Note
 
 	attr_reader :id, :url, :created_at, :status, :lon, :lat, :comments
 
