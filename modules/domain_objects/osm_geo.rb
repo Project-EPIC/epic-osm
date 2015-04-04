@@ -71,7 +71,13 @@ module OSMGeo #:nodoc: all
 
 	module Note
 		def geojson_geometry
-			"{type: \"Point\", \"coordinates\": [#{lon},#{lat}]}"
+			{
+				type: "Point", 
+				coordinates: [
+					lon.to_f, 
+					lat.to_f
+				]
+			}
 		end
 	end
 end

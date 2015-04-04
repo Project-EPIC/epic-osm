@@ -243,12 +243,15 @@ class AnalysisWindow
 	def notes_geo
 		var result = {}
 		notes_x_all.first[:objects].each do | object |
-			result[object.id] = {
-				url: object.url,
-				lat: object.lat,
-				lon: object.lon,
-				comments: object.comments	
-			}
+			result = [
+				'type' => 'Feature',
+				'geometry' => object.geojson_geometry,
+				'properties' => {
+					id: object.id,
+					url: object.url,
+					comments: object.comments
+				}
+			]
 		end
 		return result
 	end
