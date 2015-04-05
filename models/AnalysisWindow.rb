@@ -241,9 +241,9 @@ class AnalysisWindow
 
 	# :category: Notes
 	def notes_geo
-		var result = {}
+		var features = []
 		notes_x_all.first[:objects].each do | object |
-			result = [
+			feature = {
 				'type' => 'Feature',
 				'geometry' => object.geojson_geometry,
 				'properties' => {
@@ -251,9 +251,10 @@ class AnalysisWindow
 					url: object.url,
 					comments: object.comments
 				}
-			]
+			}	
+			features << feature
 		end
-		return result
+		return features
 	end
 end
 
