@@ -5,6 +5,10 @@ module OSMGeo #:nodoc: all
 
 	module OSMObject
 
+		def geojson_geometry
+			@geojson_geometry || get_geojson_geometry
+		end
+
 	end
 
 	module Node

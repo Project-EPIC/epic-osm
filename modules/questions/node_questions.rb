@@ -11,6 +11,16 @@ module Questions # :nodoc: all
     	{'New Nodes Added' => aw.node_added_count }
   	end
 
+    def new_nodes_per_day
+      nodes_added_per_day = []
+      new_nodes_cumulative = 0
+      aw.nodes_x_day(constraints: {"version" => 1}).each do |bucket|
+        new_nodes_cumulative += bucket[:objects].length
+        nodes_added_per_day << {start_date: bucket[:start_date], end_date: bucket[:end_date], new_node_count: bucket[:objects].length, cumulative_nodes: new_nodes_cumulative}
+      end
+      nodes_added_per_day
+    end
+
   	#Count the number of nodes edited by new mappers (those who created account during the aw)
   	def number_of_nodes_edited_by_new_mappers
   		nodes_by_new_mappers = Node_Query.new(analysis_window: aw, constraints: {'user' => {'$in' => aw.new_contributors}}).run
