@@ -240,21 +240,41 @@ class AnalysisWindow
 	end
 
 	# :category: Notes
-	def notes_geo
-		var result = {}
-		notes_x_all.first[:objects].each do | object |
-			result[object.id] = {
-				url: object.url,
-				lat: object.lat,
-				lon: object.lon,
-				comments: object.comments	
-			}
+	def notes_open_time
+		t = 0		
+		notes_x_all.first[:objects].each do | note | 
+			t = t + ((Time.now - note.created_at))
 		end
+		average_time = (t/notes_count)
+		
+		mm, ss = average_time.divmod(60)           
+		hh, mm = mm.divmod(60)           
+		dd, hh = hh.divmod(24)           
+		result = "%d days, %d hours" % [dd, hh]
+
 		return result
+	end
+
+	# :category: Notes
+	def notes_geo
+		var features = []
+		notes_x_all.first[:objects].each do | note |
+			feature = {
+				'type' => 'Feature',
+				'geometry' => note.geojson_geometry,
+				'properties' => {
+					id: note.id,
+					url: note.url,
+					comments: note.comments
+				}
+			}	
+			features << feature
+		end
+		return features
 	end
 end
 
-#=Geographical Bounding Box
+#=Geographic Bounding Box
 #
 #A bounding box is a geographical box determined by the configuration file.
 #
