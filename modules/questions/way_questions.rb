@@ -32,5 +32,41 @@ module Questions # :nodoc: all
 			end
 		end
 
+      def number_of_ways_per_tag
+        ways_per_tag = []
+        tags = aw.changeset_tags.split(" ")
+        tags.each do |tag|
+            changesets = Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].map do |changeset|
+              changeset.id.to_s
+            end
+            ways_per_tag.push({"tag"=> tag, "count"=> Way_Query.new(analysis_window: aw, constraints: {'changeset' => {'$in' => changesets}}).run.first[:objects].length })
+        end
+        ways_per_tag
+      end
+
+      def number_of_highways_per_tag
+        ways_per_tag = []
+        tags = aw.changeset_tags.split(" ")
+        tags.each do |tag|
+            changesets = Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].map do |changeset|
+              changeset.id.to_s
+            end
+            ways_per_tag.push({"tag"=> tag, "count"=> Way_Query.new(analysis_window: aw, constraints: {'changeset' => {'$in' => changesets}, "tags.highway" => {'$exists' => true} }).run.first[:objects].length })
+        end
+        ways_per_tag
+      end
+
+      def number_of_buildings_per_tag
+        ways_per_tag = []
+        tags = aw.changeset_tags.split(" ")
+        tags.each do |tag|
+            changesets = Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].map do |changeset|
+              changeset.id.to_s
+            end
+            ways_per_tag.push({"tag"=> tag, "count"=> Way_Query.new(analysis_window: aw, constraints: {'changeset' => {'$in' => changesets}, "tags.building" => {'$exists' => true} }).run.first[:objects].length })
+        end
+        ways_per_tag
+      end
+
 	end
 end

@@ -30,6 +30,15 @@ module Questions # :nodoc: all
 			{'Number of Changesets by Experienced Mappers' => changesets_by_experienced_mappers.first[:objects].length }
 		end
 
+    def number_of_changesets_per_tag
+      changesets_per_tag = []
+      tags = aw.changeset_tags.split(" ")
+      tags.each do |tag|
+        changesets_per_tag.push({"tag"=> tag, "count"=> Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].length })
+      end
+      changesets_per_tag
+    end
+
 		def changeset_node_density(changeset)
 			nodes_in_changeset = Node_Query.new(analysis_window: aw, constraints: {'changeset'=> changeset.id}).run
 			node_count = nodes_in_changeset.first[:objects].count

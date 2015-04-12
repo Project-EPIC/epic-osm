@@ -4,6 +4,7 @@ require 'yaml'
 
 #Require Import Scripts
 require_relative 'osm_api/import_changesets'
+require_relative 'osm_api/import_nodeways'
 require_relative 'osm_api/import_users'
 require_relative 'osm_api/import_notes'
 require_relative 'osm_api/osm_api'
@@ -89,10 +90,26 @@ class AnalysisWindowImport
 		changeset_import.add_indexes
 	end
 
+  def nodeways_import
+    nodeways_import = NodeWaysImport.new
+    nodeways_import.import_nodeways_objects
+    #puts nodeways_import.new_changeset_ids
+  end
+
 	def user_import
 		user_import = UserImport.new
 		puts "Importing user data for #{user_import.distinct_uids.length} users"
 		user_import.import_user_objects
+	end
+
+	#Runs a system shell script to call osm-meta-util
+	def run_live_replication_import
+		begin
+		  system "#{global_config['osm-meta-util']} \"" + config['changeset_tags'] + "\" &"
+		rescue
+			raise Error.new("osm-meta-util failed")
+			puts $!
+		end
 	end
 
 	def note_import
@@ -101,3 +118,4 @@ class AnalysisWindowImport
 		note_import.import_note_objects
 	end
 end
+

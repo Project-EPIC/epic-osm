@@ -51,6 +51,34 @@ class Way < OSMObject #:nodoc:
 		@changeset  ||= args[:changeset]
 		super(args)
 	end
+
+		def get_missing_nodes
+			return nil if nodes.nil?
+			return nil if nodes.empty?
+
+			missing_nodes = []
+			
+			#Iterate over this way's nodes
+			nodes.each do |node_id| #The id of the node needed
+				mem_nodes = DatabaseConnection.persistent_nodes(node_id)
+				
+				if mem_nodes.nil?	#Look for this node in memory
+					missing_nodes << node_id     #Add it to missing and skip
+				else
+					if mem_nodes.length > 1 #If there is only one, use it
+						mem_nodes.sort! { |a,b| a.changeset <=> b.changeset }
+						this_node = mem_nodes.select{|node| node.changeset <= changeset}
+						if this_node.empty?
+							missing_nodes << node_id
+						end
+					end
+				end
+			end
+
+			@missing_nodes = missing_nodes
+			return missing_nodes
+	end
+
 end
 
 class Relation < OSMObject #:nodoc:

@@ -24,6 +24,7 @@ class AnalysisWindow
 	# The maximum area (in square meters) of changesets to be included in calculations
 	attr_reader :max_area
 
+	attr_reader :changeset_tags
 	# Can pass in an instance of a timeframe and bounding box, or use defaults
 	def initialize(args={})
 		@bounding_box = args[:bounding_box] || BoundingBox.new
@@ -32,6 +33,7 @@ class AnalysisWindow
 		@max_area = args[:max_area] || 1000000000000
 		@min_area = args[:min_area] || 1
 
+		@changeset_tags = args[:changeset_tags]
 		post_initialize
 	end
 
@@ -229,6 +231,39 @@ class AnalysisWindow
 		all_users_data.collect{|user| user.user}
 	end
 
+	# :category: Users
+	def all_contributors_with_count
+		user_data = []
+    all_users_data.sort { |x,y| x.user.downcase <=> y.user.downcase }.each { |user|
+			user_data.push({
+				"user" => user.user,
+				"nodes" => nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.count,
+				"ways" => ways_x_all.first[:objects].select{|way| way.uid == user.uid}.count,
+				"relations" => relations_x_all.first[:objects].select{|relation| relation.uid == user.uid}.count,
+				"changesets" => changesets_x_all.first[:objects].select{|changeset| changeset.uid == user.uid}.count,
+			})
+		}
+		user_data
+  end
+
+	# :category: Users
+	def all_contributors_with_geometry
+		user_data = {}
+		all_users_data.each{ |user|
+			user_data[ user.user ] = {
+				"type" => "FeatureCollection",
+				"features" =>
+					ways_x_all.first[:objects].select{|way| way.uid == user.uid}.collect{|way|  
+						{ "type" => "Feature", "properties"=> way.tags, "geometry" => way.geometry } 
+					} +
+					nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.collect{|node|
+						{ "type" => "Feature", "properties"=> node.tags, "geometry" => node.geometry } 
+					}
+			}
+		}
+		user_data
+	end
+						
 	# :category: Notes
 	def notes
 		@notes ||= Note_Query.new( analysis_window: self )
