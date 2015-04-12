@@ -6,6 +6,7 @@ require 'yaml'
 require_relative 'osm_api/import_changesets'
 require_relative 'osm_api/import_nodeways'
 require_relative 'osm_api/import_users'
+require_relative 'osm_api/import_notes'
 require_relative 'osm_api/osm_api'
 require_relative 'pbf_to_mongo'
 
@@ -110,4 +111,11 @@ class AnalysisWindowImport
 			puts $!
 		end
 	end
+
+	def note_import
+		note_import = NoteImport.new(@config['bbox'])
+		puts "Importing note data"
+		note_import.import_note_objects
+	end
 end
+

@@ -5,17 +5,22 @@
 # They are aware of the geographical and temporal bounds of the study and handle all of the
 # helper functions for performing calculations.  All Queries happen through the analysis window
 # and the method missing located within defines functions such as _nodes_x_month_.
+#
+#
+# While the analysis window is capable of asking quesitons of itself, these are strictly helper
+# functions and should be used by the Questions Module
+
 class AnalysisWindow
-	
+
 	# The TimeFrame object instance for this analysis window
-	attr_reader :time_frame 
+	attr_reader :time_frame
 
 	#The BoundingBox object instance for this analysis window
 	attr_reader :bounding_box
-	
+
 	# The minimum area (in square meters) of changesets to be included in calculations
 	attr_reader :min_area
-	
+
 	# The maximum area (in square meters) of changesets to be included in calculations
 	attr_reader :max_area
 
@@ -35,7 +40,7 @@ class AnalysisWindow
 	# If the frame failed or doesn't exist, then use all of the data by default
 	def post_initialize
 		unless time_frame.active?
-			@time_frame = TimeFrame.new( start_date: Changeset_Query.earliest_changeset_date, end_date:   Changeset_Query.latest_changeset_date )
+			@time_frame = TimeFrame.new( start_date: Changeset_Query.earliest_changeset_date, end_date: Changeset_Query.latest_changeset_date )
 		end
 	end
 
@@ -56,11 +61,11 @@ class AnalysisWindow
 		end
 
 		buckets = []
-		
+
 		case unit
 		when :all
 			buckets << {start_date: time_frame.start_date, end_date: time_frame.end_date, objects: []}
-		
+
 		when :year
 			year = time_frame.start_date.year
 			bucket_start = Time.mktime(year, 1, 1)
@@ -76,13 +81,13 @@ class AnalysisWindow
 			bucket_start = time_frame.start_date
 			while bucket_start < time_frame.end_date
 				bucket_start = Time.mktime( year, (month) )
-				
+
 				month+=step
 				if (month-12) > 0
 					year  += 1
 				    month = month-12
 				end
-				
+
 				bucket_end   = Time.mktime(year, (month) )
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 			end
@@ -94,7 +99,7 @@ class AnalysisWindow
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
-		
+
 		when :week
 			#fuck us, this is going to be ugly.  How should we do this? just start from the first week of the analysis window?
 			#We could just add 7 days.
@@ -123,20 +128,20 @@ class AnalysisWindow
 			#Break out the method by snake case
 			pieces = m.to_s.split(/\_/)
 
-			#Find the nodes_x_all, changesets_x_month, ways_x_yearly type of functions
+			#Find the nodes_x_all, changesets_x_month, ways_x_year type of functions
 			if pieces[1] == 'x'
 
 				unless args.empty?
-					cons = args[0][:constraints] #Better pass a hash
+					cons = args[0][:constraints] #Better pass a hash, otherwise it'll explode!
 					step = args[0][:step] || 1
 				end
-				
-				instance_eval "@#{pieces[2]}_#{pieces[0]} ||= #{pieces[0]}.run(unit: :#{pieces[2]}, step: step, constraints: cons)"
+
+				instance_eval "#{pieces[0]}.run(unit: :#{pieces[2]}, step: step, constraints: cons)"
 			end
 
 		rescue => e
 			puts $!
-			super
+			super(args)
 		end
 	end
 
@@ -156,7 +161,7 @@ class AnalysisWindow
 
 	# :category: Changesets
 	#
-	# 
+	#
 	def distinct_users_in_changesets
 		changesets_x_all.first[:objects].collect{|changeset| changeset.uid}.uniq
 	end
@@ -205,19 +210,10 @@ class AnalysisWindow
 	def relation_added_count
 		relations_x_all.first[:objects].select{|relation| relation.version == 1}.count
 	end
-	
-	# :category: Users
-	def all_users_data
-		User_Query.new(uids: distinct_users_in_changesets).run		
-	end
 
 	# :category: Users
-	def users_editing_per_year
-		years = {}
-		changesets_x_year.each do |bucket|
-			years[ bucket[:start_date] ] = bucket[:objects].collect{|changeset| changeset.user}.uniq
-		end
-		years
+	def all_users_data
+		User_Query.new(uids: distinct_users_in_changesets).run
 	end
 
 	# :category: Users
@@ -248,7 +244,7 @@ class AnalysisWindow
 			})
 		}
 		user_data
-	end
+  end
 
 	# :category: Users
 	def all_contributors_with_geometry
@@ -260,28 +256,60 @@ class AnalysisWindow
 					ways_x_all.first[:objects].select{|way| way.uid == user.uid}.collect{|way|  
 						{ "type" => "Feature", "properties"=> way.tags, "geometry" => way.geometry } 
 					} +
-					nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.collect{|node|  
+					nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.collec
 						{ "type" => "Feature", "properties"=> node.tags, "geometry" => node.geometry } 
 					}
 			}
 		}
 		user_data
 	end
+						
+	# :category: Notes
+	def notes
+		@notes ||= Note_Query.new( analysis_window: self )
+	end
 
-	# :category: Users
-	def top_contributors_by_changesets(args={limit: 5, unit: :all_time })
+	# :category: Notes
+	def notes_count
+		notes_x_all.first[:objects].count
+	end
 
-		case args[:unit]
-		when :all_time
-			changesets_per_unit = changesets_x_all.first[:objects].group_by{|changeset| changeset.user}.sort_by{|k,v| v.length}.reverse
-		when :month
-			changesets_per_unit = changesets_x_month.group_by{|changeset| changeset.created_at.to_i / 100000}
+	# :category: Notes
+	def notes_open_time
+		t = 0		
+		notes_x_all.first[:objects].each do | note | 
+			t = t + ((Time.now - note.created_at))
 		end
-		changesets_per_unit.first(args[:limit])
+		average_time = (t/notes_count)
+		
+		mm, ss = average_time.divmod(60)           
+		hh, mm = mm.divmod(60)           
+		dd, hh = hh.divmod(24)           
+		result = "%d days, %d hours" % [dd, hh]
+
+		return result
+	end
+
+	# :category: Notes
+	def notes_geo
+		var features = []
+		notes_x_all.first[:objects].each do | note |
+			feature = {
+				'type' => 'Feature',
+				'geometry' => note.geojson_geometry,
+				'properties' => {
+					id: note.id,
+					url: note.url,
+					comments: note.comments
+				}
+			}	
+			features << feature
+		end
+		return features
 	end
 end
 
-#=Geographical Bounding Box
+#=Geographic Bounding Box
 #
 #A bounding box is a geographical box determined by the configuration file.
 #
@@ -302,7 +330,7 @@ class BoundingBox
 
 			@bottom_left = [ bbox_array[0].to_f, bbox_array[1].to_f ]
 			@top_right   = [ bbox_array[2].to_f, bbox_array[3].to_f ]
-		
+
 		else
 			@bottom_left = args[:bottom_left]
 			@top_right   = args[:top_right]
@@ -332,7 +360,7 @@ class BoundingBox
 	end
 
 	def geojson_geometry
-		return {type: "Polygon", 
+		return {type: "Polygon",
 				coordinates:[[  bottom_left,
 							   [bottom_left[0], top_right[1]],
 							    top_right,

@@ -30,7 +30,7 @@ Some of the questions we aim to be able to answer:
 ###V1 Questions:
 1. Top contributors (per analysis window)
 	a. 	What's the metric here?  nodes, changesets, what makes an active user?
-	
+
 2. Recent edits
 	a. Again, what's the metric? Nodes, changesets, etc?
 	b. Returns geometries for visualization
@@ -48,3 +48,8 @@ Some of the questions we aim to be able to answer:
 	b. Weekly/Monthly buckets
 
 6. Within temporally adjacent / overlapping changesets, identify users that worked in close geographic proximity
+
+
+#License
+Distributed Under the MIT License
+Copyright (c) 2015 The Regents of the University of Colorado

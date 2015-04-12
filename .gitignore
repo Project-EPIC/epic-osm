@@ -5,7 +5,13 @@ sample-awconfig.yml
 .sass-cache/
 *.gml
 
+.ipynb_checkpoints/*
+scratch.rb.ipynb
+*.ipynb
 _site/*
+
+temp.config
+temp.osm.pbf
 
 sample_projects/*
 _config.yml

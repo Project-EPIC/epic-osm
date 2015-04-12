@@ -1,7 +1,6 @@
 module Questions # :nodoc: all
-  #Node Questions
-  class Nodes < QuestionsRunner
-
+  
+  module Nodes
     #Total nodes edited in the analysis window
     def total_nodes_edited
   		{'Total Nodes Edited' => aw.node_edit_count }
@@ -11,6 +10,16 @@ module Questions # :nodoc: all
   	def number_of_new_nodes
     	{'New Nodes Added' => aw.node_added_count }
   	end
+
+    def new_nodes_per_day
+      nodes_added_per_day = []
+      new_nodes_cumulative = 0
+      aw.nodes_x_day(constraints: {"version" => 1}).each do |bucket|
+        new_nodes_cumulative += bucket[:objects].length
+        nodes_added_per_day << {start_date: bucket[:start_date], end_date: bucket[:end_date], new_node_count: bucket[:objects].length, cumulative_nodes: new_nodes_cumulative}
+      end
+      nodes_added_per_day
+    end
 
   	#Count the number of nodes edited by new mappers (those who created account during the aw)
   	def number_of_nodes_edited_by_new_mappers

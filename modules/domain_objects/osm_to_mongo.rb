@@ -197,6 +197,24 @@ module OSMongoable
 		end
 	end
 
+	module Note # :nodoc: all
+		def to_mongo
+			hash = {}
+			hash[:id] 		  	||= id.to_s
+			hash[:url] 		 	||= url
+			hash[:created_at]	||= created_at
+			hash[:status] 		||= status
+			hash[:lon] 		 	||= lon
+			hash[:lat] 		 	||= lat
+			hash[:comments] 	||= comments
+			hash
+		end
+
+		def save!
+			DatabaseConnection.database['notes'].insert( self.to_mongo )
+		end
+	end
+
 
 	module Changeset # :nodoc: all
 
@@ -218,7 +236,7 @@ module OSMongoable
 			if min_lon < -180 or max_lon > 180 or min_lat < -90 or max_lat > 90
 				return nil
 			#Check if it's just a point
-			elsif (min_lon - max_lon < 0.000000001) and (min_lat - max_lat < 0.000000001)
+			elsif ( (min_lon - max_lon).abs < 0.000000001) or ( (min_lat - max_lat).abs < 0.000000001)
 				return {type: "Point", coordinates: [min_lon, max_lat]}
 			else
 				return {type: "Polygon",

@@ -6,7 +6,7 @@ module OSMGeo #:nodoc: all
 	module OSMObject
 
 		def geojson_geometry
-			@geometry ||= get_geojson_geometry
+			@geojson_geometry || get_geojson_geometry
 		end
 
 	end
@@ -17,14 +17,28 @@ module OSMGeo #:nodoc: all
 			@point ||= Factory.point(lat, lon)
 		end
 
+		def geojson_geometry
+			@geojson_geometry ||= {
+				type: "Point", 
+				coordinates: [
+					lon.to_f, 
+					lat.to_f
+				]
+			}
+		end
+
 	end
 
 	module Way
 
 		#TODO
 		def line_string
-			nil
-			#This needs to parse the GeoJSON in Mongo
+
+			points = geometry["coordinates"].collect{|p| Factory.point(p.first, p.last)}
+
+			return Factory.line_string(points)
+
+			#This needs to parse the GeoJSON in Mongo #but, should it?
 
 			#Needs to be aware of the case where it's a point, not a line.
 		end
@@ -39,13 +53,13 @@ module OSMGeo #:nodoc: all
 
 		#Returns a square polygon for the bounding box
 		def bounding_box
-			bounds = [   
+			bounds = [
 				Factory.point(min_lon, min_lat),
 				Factory.point(min_lon, max_lat),
 				Factory.point(max_lon, max_lat),
 				Factory.point(max_lon, min_lat),
 				Factory.point(min_lon, min_lat) ]
-			
+
 			@bounding_box ||= Factory.polygon( Factory.linear_ring( bounds ) )
 		end
 
@@ -62,6 +76,18 @@ module OSMGeo #:nodoc: all
 
 		def bounding_box
 			nil #geometry.convex_hull
+		end
+	end
+
+	module Note
+		def geojson_geometry
+			{
+				type: "Point", 
+				coordinates: [
+					lon.to_f, 
+					lat.to_f
+				]
+			}
 		end
 	end
 end
