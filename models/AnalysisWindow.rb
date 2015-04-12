@@ -256,7 +256,7 @@ class AnalysisWindow
 					ways_x_all.first[:objects].select{|way| way.uid == user.uid}.collect{|way|  
 						{ "type" => "Feature", "properties"=> way.tags, "geometry" => way.geometry } 
 					} +
-					nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.collec
+					nodes_x_all.first[:objects].select{|node| node.uid == user.uid && ! node.tags.empty?}.collect{|node|
 						{ "type" => "Feature", "properties"=> node.tags, "geometry" => node.geometry } 
 					}
 			}

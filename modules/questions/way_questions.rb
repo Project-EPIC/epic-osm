@@ -1,6 +1,6 @@
 module Questions # :nodoc: all
 
-	class Ways < QuestionsRunner
+	module Ways
 
 		def buildings_by_month
 			return aw.ways_x_month(constraints: {"tags.building" => "yes"})
