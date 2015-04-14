@@ -72,14 +72,6 @@ class OSMHistory
 		end
 	end
 
-	def run_way_questions
-		way_questions = Questions::Ways.new(analysis_window: analysis_window)
-
-		aw_config['Way Questions'].each do |way_q|
-			write_json( data: way_questions.run(way_q), name: "#{way_q}.json")
-		end
-	end
-
 	def run_changeset_questions
 		unless aw_config['Changeset Questions'].nil?
 			aw_config['Changeset Questions'].each do |changeset_q|
