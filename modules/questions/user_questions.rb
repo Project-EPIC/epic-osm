@@ -2,7 +2,7 @@ module Questions # :nodoc: all
 
 	module Users
 
-		def user_time_frame(time, args={})
+		def user_time_frame(time='month', args={})
 			begin
 				#The Users editing case: users_editing_per_year
 				unless args.empty?
@@ -65,7 +65,11 @@ module Questions # :nodoc: all
 			when :all_time
 				changesets_per_unit = aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.user}.sort_by{|k,v| v.length}.reverse
 			when :month
-				changesets_per_unit = aw.changesets_x_month.group_by{|changeset| changeset.created_at.to_i / 100000}
+				changesets_per_unit = aw.changesets_x_month.group_by{ |changeset| 
+					if defined? changeset.created_at 
+						changeset.created_at.to_i / 100000
+					end			
+				}
 			end
 			changesets_per_unit.first(args[:limit])
 		end
