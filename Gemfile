@@ -5,31 +5,27 @@ source 'http://rubygems.org/'
 #Mongo
 gem 'mongo',		'1.11.1'
 gem 'bson',			'1.11.1'
-gem 'bson_ext',	'1.11.1'
+gem 'bson_ext',		'1.11.1'
 
 #Geo
-gem 'rgeo', '0.3.20'
+gem 'rgeo',			'0.3.20'
 
 #Statistics
-gem 'descriptive_statistics', '2.5.1'
+gem 'descriptive_statistics',	'2.5.1'
 
-#FileIO + Display
-gem 'htmlentities', '4.3.3'
-gem 'jekyll',   '2.5.3'
-
+#FileIO
+gem 'htmlentities',	'4.3.3'
 
 
 #Gems required mostly for import abiltiies:
 group :import do
-	gem 'pbf_parser', '0.2.0'
-	gem 'nokogiri', 	'1.6.6.2'
-	gem 'nori',				'2.4.0'
+	gem 'pbf_parser',	'0.2.0'
+	gem 'nokogiri',		'1.6.6.2'
+	gem 'nori',			'2.4.0'
 end
-
-
 
 #Gems only required for testing and/or development:
 group :test do
 	gem 'rspec',		'3.1.0'
-	gem 'debugger', '1.6.8'
+	gem 'debugger',		'1.6.8'
 end
