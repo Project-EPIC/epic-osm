@@ -88,7 +88,6 @@ class AnalysisWindowImport
 
 	def changeset_import
 		changeset_import = ChangesetImport.new
-		puts "Importing #{changeset_import.distinct_changeset_ids.length} changesets"
 		changeset_import.import_changeset_objects
 		changeset_import.add_indexes
 	end

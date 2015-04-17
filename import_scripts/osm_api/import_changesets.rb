@@ -32,8 +32,10 @@ class ChangesetImport
   end
 
   def import_changeset_objects
+    distinct_changeset_count = distinct_changeset_ids.length
+    puts "Importing #{distinct_changeset_count} changesets: "
+    error_changesets = []
     distinct_changeset_ids.each_with_index do |changeset_id, index|
-
       begin
         this_changeset = changeset_api.hit_api(changeset_id)
         if this_changeset
@@ -41,16 +43,17 @@ class ChangesetImport
           changeset_obj.save!
         end
 
-        if (index%10).zero?
-          print '.'
-        elsif (index%101).zero?
-          print index
+        percent_done = ((index.to_f / distinct_changeset_count)*50).round
+        if (percent_done)%2==0 and percent_done > 0 and percent_done < 50
+          print "[#{(['*']*percent_done).join('')}#{(['.']*(50-percent_done)).join('')}] #{percent_done*2}%\r"
+          $stdout.flush
         end
       rescue => e
-        puts "Error on Changeset: #{changeset_id}, continuing"
-        puts $!
+        error_changesets << changeset_id
       end
-
+    end
+    if error_changesets.length > 0
+      puts "\nError with #{error_changesets.length} Changesets.  IDS: #{error_changesets.join("\n")}"
     end
   end
 
