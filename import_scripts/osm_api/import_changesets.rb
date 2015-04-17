@@ -44,7 +44,7 @@ class ChangesetImport
           $stdout.flush
         end
       rescue => e
-        print "X"
+        puts "X: #{changeset_id}"
         print e
         error_changesets << changeset_id
       end

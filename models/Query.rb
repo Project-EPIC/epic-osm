@@ -6,6 +6,7 @@
 # The Query#run function will always return buckets as build by AnalysisWindow#build_buckets
 #
 class Query
+	include DomainObject
 	require_relative 'AnalysisWindow'
 
 	attr_reader :analysis_window, :buckets
