@@ -37,7 +37,7 @@ class ChangesetImport
       begin
         this_changeset = changeset_api.hit_api(changeset_id)
         if this_changeset
-          changeset_obj = Changeset.new convert_osm_api_to_domain_object_hash this_changeset
+          changeset_obj = DomainObject::Changeset.new convert_osm_api_to_domain_object_hash this_changeset
           changeset_obj.save!
         end
 

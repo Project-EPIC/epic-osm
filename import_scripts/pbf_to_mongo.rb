@@ -1,6 +1,7 @@
 require 'pbf_parser'
 
 class OSMPBF
+	include DomainObject
 	require 'date'
 
 	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date
@@ -97,6 +98,7 @@ class OSMPBF
 		index = 0
 		add_func = method("add_#{object_type[0..-2]}")
 		count = eval("@#{object_type[0]}_count")
+		time_then = Time.now()
 
 		while true
 			unless parser.send(object_type).nil?
@@ -124,26 +126,29 @@ class OSMPBF
 						end
 					end
 					if index%5000==0
-						puts "Processed #{index} of #{count} #{object_type}"
-						if index%1000==0
-        			rate = index/(Time.now() - start_time) #Tweets processed / seconds elapsed
-        			mins = (count-index) / rate / 60         #minutes left = tweets left * seconds/tweet / 60
-        			hours = mins / 60
-        			puts "Status: #{'%.2f' % rate} #{object_type}/Second. #{'%.2f' % mins} minutes left or #{'%.2f' % hours} hours."
-						end
+						time = Time.now()
+						current_rate = (5000/(time - time_then))
+						time_then = time
+						avg_rate = index/(time - start_time)
+						
+						print "Processed #{index} #{object_type} at Avg: #{'%d' % avg_rate} Current: #{'%d' % current_rate} #{object_type}/second. \r"
+						$stdout.flush
 					end
 				end
 			end
 			unless parser.next
+				#We need to force the bulk insert to write.
+				eval "DatabaseConnection.bulk_#{object_type}.execute()"
 				break
 			end
 		end
 
-		puts "Adding the appropriate indexes: id, changeset, geometry\n"
+		puts "\nAdding the appropriate indexes: id, changeset, created_at, geometry\n"
 		puts "=======================================================\n\n"
 		begin
 			DatabaseConnection.database[object_type.to_sym].ensure_index( id: 1 )
 			DatabaseConnection.database[object_type.to_sym].ensure_index( changeset: 1 )
+			DatabaseConnection.database[object_type.to_sym].ensure_index( created_at: 1)
 			DatabaseConnection.database[object_type.to_sym].ensure_index( geometry: "2dsphere")
 		rescue => e
 			puts "Error creating index"

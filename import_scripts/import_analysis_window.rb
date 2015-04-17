@@ -18,6 +18,8 @@ require_relative '../models/Query'
 
 class AnalysisWindowImport
 
+	include DomainObject
+
 	attr_reader :config, :global_config, :time_frame
 	def initialize(args = {})
 
@@ -74,7 +76,7 @@ class AnalysisWindowImport
 	def run_mongo_import
 		conn = OSMPBF.new(end_date: time_frame.end_date, memory_only: config['memory_only'])
 		conn.open_parser("import_scripts/temp.osm.pbf")
-		puts conn.file_stats
+		# puts conn.file_stats
 	
 		#Import Nodes, Ways, Relations
 		conn.parse_to_collection(object_type="nodes", lim=nil)

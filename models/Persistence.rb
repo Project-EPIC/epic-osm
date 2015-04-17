@@ -6,7 +6,7 @@ require 'yaml'
 # There is only one point of access to the database
 class DatabaseConnection
 	attr_reader :host, :port, :database, :mongo_only, :mem_only
-
+	
 	def initialize(args={})
 
 		@host = args[:host] || 'localhost'
@@ -22,6 +22,23 @@ class DatabaseConnection
 			@@memory_nodes = {}
 			@@memory_ways  = {}
 		end
+
+		@@bulk_nodes = @@database['nodes'].initialize_unordered_bulk_op
+		@@bulk_ways = @@database['ways'].initialize_unordered_bulk_op
+		@@bulk_relations = @@database['relations'].initialize_unordered_bulk_op
+		@@counter = 0
+	end
+
+	def self.bulk_nodes
+		@@bulk_nodes
+	end
+
+	def self.bulk_ways
+		@@bulk_ways
+	end
+
+	def self.bulk_relations
+		@@bulk_relations
 	end
 
 	def self.database
@@ -36,6 +53,18 @@ class DatabaseConnection
 		@@mem_only
 	end
 
+	def self.nodes_for_bulk_insert
+		@@nodes_for_bulk_insert
+	end
+
+	def self.ways_for_bulk_insert
+		@@ways_for_bulk_insert
+	end
+
+	def self.relations_for_bulk_insert
+		@@relations_for_bulk_insert
+	end
+
 	def connect_to_mongo
 		begin
 	    	conn = Mongo::MongoClient.new host, port
@@ -46,23 +75,50 @@ class DatabaseConnection
 	end
 
 	def self.insert(osm_object)
-		
+
 		#If configured to use memory, then write to memory first.
 		case osm_object.class.to_s
-		when "Node"
+		when "DomainObject::Node"
 			unless mongo_only
 				@@memory_nodes[osm_object.id] ||= []
-				@@memory_nodes[osm_object.id] << osm_object
+				@@memory_nodes[osm_object.id] << osm_object.to_mongo
 			end
-			database['nodes'].insert( osm_object.to_mongo ) unless mem_only
-		when "Way"
+
+			unless mem_only
+				@@bulk_nodes.insert ( osm_object.to_mongo )
+				@@counter += 1
+
+				if @@counter == 5000
+					@@bulk_nodes.execute()
+					@@counter = 0
+				end
+			end
+
+		when "DomainObject::Way"
 			unless mongo_only
 				@@memory_ways[osm_object.id] ||= []
-				@@memory_ways[osm_object.id] << osm_object
+				@@memory_ways[osm_object.id] << osm_object.to_mongo
 			end
-			database['ways'].insert( osm_object.to_mongo ) unless mem_only
-		when "Relation"
-			database['relations'].insert( osm_object.to_mongo ) unless mem_only
+
+			unless mem_only
+				@@bulk_ways.insert ( osm_object.to_mongo )
+				@@counter += 1
+
+				if @@counter == 5000
+					@@bulk_ways.execute()
+					@@counter = 0
+				end
+			end
+		when "DomainObject::Relation"
+			unless mem_only
+				@@bulk_relations.insert ( osm_object.to_mongo )
+				@@counter += 1
+
+				if @@counter == 5000
+					@@bulk_relations.execute()
+					@@counter = 0
+				end
+			end
 		end
 	end
 

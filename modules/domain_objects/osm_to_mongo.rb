@@ -17,7 +17,7 @@ module BSON  #:nodoc:
 	end
 end
 
-# = Creating the OSM History <=> Mongo Link
+# = Creating the EPIC OSM <=> Mongo Link
 #
 #
 module OSMongoable
@@ -83,10 +83,12 @@ module OSMongoable
 					next
 				else
 					if mem_nodes.length == 1 #If there is only one, use it
-						coords << [mem_nodes.first.lon, mem_nodes.first.lat]
+						this_node = DomainObject::Node.new(mem_nodes.first)
+						coords << [this_node.lon, this_node.lat]
 					else
+						mem_nodes = mem_nodes.collect{|n| DomainObject::Node.new(n)}
 						mem_nodes.sort! { |a,b| a.changeset <=> b.changeset }
-						this_node = mem_nodes.select{|node| node.changeset <= changeset}
+						this_node = mem_nodes.select{|node| node.changeset.to_i <= changeset}
 						unless this_node.empty?
 							coords << [this_node.last.lon, this_node.last.lat]
 						else
@@ -137,10 +139,12 @@ module OSMongoable
 						@missing_nodes << node_id    	#Add it to missing and skip
 						next
 					elsif mem_nodes.length == 1 #If there is only one, use it
-						geometries << mem_nodes.first.geometry
+						geometries << DomainObject::Node.new(mem_nodes.first).geometry
+
 					else
+						mem_nodes = mem_nodes.collect{|n| DomainObject::Node.new(n)}
 						mem_nodes.sort! { |a,b| a.changeset <=> b.changeset }
-						this_node = mem_nodes.select{|node| node.changeset <= changeset}
+						this_node = mem_nodes.select{|node| node.changeset.to_i <= changeset}
 						unless this_node.empty?
 							geometries << this_node.last.geometry
 						else
@@ -159,10 +163,12 @@ module OSMongoable
 						@missing_ways << way_id    	#Add it to missing and skip
 						next
 					elsif mem_ways.length == 1 #If there is only one, use it
-						geometries << mem_ways.first.geometry unless mem_ways.first.geometry.nil?
+						this_way = DomainObject::Way.new(mem_ways.first)
+						geometries << this_way.geometry unless this_way.geometry.nil?
 					else
+						mem_ways = mem_ways.collect{|w| DomainObject::Way.new(n)}
 						mem_ways.sort! { |a,b| a.changeset <=> b.changeset }
-						this_way = mem_ways.select{|way| way.changeset <= changeset}
+						this_way = mem_ways.select{|way| way.changeset.to_i <= changeset}
 						unless this_way.empty?
 							geometries << this_way.last.geometry unless this_way.last.geometry.nil?
 						else
