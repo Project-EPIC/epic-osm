@@ -40,7 +40,7 @@ class AnalysisWindowImport
 	def connect_to_database
 		#Open Database Connection
 		puts "Connecting to: #{config['database']} Mongo Database\n"
-		DatabaseConnection.new(database: config['database'], mongo_only: config[:mongo_only], mem_only: config[:mem_only])
+		DatabaseConnection.new(database: config['database'], mongo_only: config['mongo_only'], mem_only: config['mem_only'])
 	end
 
 	def write_configuration_file
