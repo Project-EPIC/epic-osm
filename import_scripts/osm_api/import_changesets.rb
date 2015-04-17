@@ -2,15 +2,10 @@ class ChangesetImport
 
   require_relative 'osm_api'
 
-  attr_reader :changeset_api, :success_log, :fail_log, :changeset_ids
+  attr_reader :changeset_api, :success_log, :fail_log, :changeset_ids, :limit
 
   def initialize(limit=nil)
     @changeset_api = OSMAPI.new("http://api.openstreetmap.org/api/0.6/changeset/")
-
-    # #Open Log files
-    # @success_log = LogFile.new("logs/changesets","successful")
-    # @fail_log    = LogFile.new("logs/changesets","failed")
-
     @limit = limit
   end
 
@@ -24,10 +19,10 @@ class ChangesetImport
     changesets = DatabaseConnection.database["nodes"].distinct("changeset")
     changesets += DatabaseConnection.database["ways"].distinct("changeset")
     changesets += DatabaseConnection.database["relations"].distinct("changeset")
-    if @limit.nil? 
+    if limit.nil? 
       return changesets.uniq!
     else 
-      return changesets.uniq!.first(@limit)
+      return changesets.uniq!.first(limit)
     end
   end
 
@@ -43,12 +38,14 @@ class ChangesetImport
           changeset_obj.save!
         end
 
-        percent_done = ((index.to_f / distinct_changeset_count)*50).round
-        if (percent_done)%2==0 and percent_done > 0 and percent_done < 50
-          print "[#{(['*']*percent_done).join('')}#{(['.']*(50-percent_done)).join('')}] #{percent_done*2}%\r"
+        percent_done = ((index.to_f / distinct_changeset_count)*100).round
+        if (percent_done)%2==0 and percent_done > 0 and percent_done < 100
+          print "[#{(['*']*(percent_done/2)).join('')}#{(['.']*(50-percent_done/2)).join('')}] #{percent_done}%\r"
           $stdout.flush
         end
       rescue => e
+        print "X"
+        print e
         error_changesets << changeset_id
       end
     end
@@ -58,8 +55,12 @@ class ChangesetImport
   end
 
   def add_indexes
+    print "Adding Appropriate Indexes: id, uid, user, created_at, closed_at, geometry"
     DatabaseConnection.database['changesets'].ensure_index( id: 1 )
+    DatabaseConnection.database['changesets'].ensure_index( uid: 1 )
     DatabaseConnection.database['changesets'].ensure_index( user: 1 )
+    DatabaseConnection.database['changesets'].ensure_index( created_at: 1)
+    DatabaseConnection.database['changesets'].ensure_index( closed_at: 1 )
     DatabaseConnection.database['changesets'].ensure_index( geometry: "2dsphere")
   end
 

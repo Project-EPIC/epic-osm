@@ -65,6 +65,13 @@ class UserImport
     end
   end
 
+  def add_indexes
+    print "Adding Appropriate Indexes: uid, user, account_created"
+    DatabaseConnection.database['users'].ensure_index( uid: 1 )
+    DatabaseConnection.database['users'].ensure_index( user: 1 )
+    DatabaseConnection.database['users'].ensure_index( account_created: 1)
+  end
+
   def convert_osm_api_to_domain_object_hash(osm_api_hash)
     data = osm_api_hash[:osm][:user]
     data[:user] = data[:display_name]

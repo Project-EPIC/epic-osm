@@ -18,9 +18,9 @@ def window
 	return @this_window
 end
 
-def osmhistory
+def epicosm
 	unless ARGV[1].nil?
-		@epic_osm ||= OSMHistory.new( analysis_window: ARGV[1]) #Pass the configuration in
+		@epic_osm ||= EpicOSM.new( analysis_window: ARGV[1]) #Pass the configuration in
 	else
 		raise ArgumentError.new("A valid configuration file must be defined")
 	end
@@ -60,7 +60,7 @@ namespace :import do
 	end
 
 	desc "Import NodeWays"
-		task :nodeways do
+	task :nodeways do
 		window.nodeways_import
 	end
 
@@ -70,7 +70,7 @@ namespace :import do
 	end
 
 	desc "Import Realtime"
-		task :realtime do
+	task :realtime do
 		window.run_live_replication_import
 	end
 
@@ -78,7 +78,21 @@ namespace :import do
 	task :notes do
 		window.note_import
 	end
+end
 
+desc "Indexes"
+namespace :index do
+	desc "Rebuild Changeset Indexes"
+	task :changesets do
+		window
+		ChangesetImport.new.add_indexes
+	end
+
+	desc "Rebuild User Indexes"
+	task :users do
+		window
+		UserImport.new.add_indexes
+	end
 end
 
 desc "Clean up all temp files"
@@ -93,8 +107,8 @@ end
 
 desc "Network Writers"
 task :network do
-	osmhistory = OSMHistory.new(analysis_window: ARGV[1])
-	osmhistory.run_network_functions #This will need to be pulled out eventually...
+	epicosm = EpicOSM.new(analysis_window: ARGV[1])
+	epicosm.run_network_functions #This will need to be pulled out eventually...
 end
 
 
@@ -113,42 +127,42 @@ namespace :questions do
 
 	desc "Run Node Questions"
 	task :nodes do
-		osmhistory.run_node_questions
+		epicosm.run_node_questions
 	end
 
 	desc "Run Way Questions"
 	task :ways do
-		osmhistory.run_way_questions
+		epicosm.run_way_questions
 	end
 
 	# desc "Run Relation Questions"
 	task :relations do
 		# This doesn't exist yet
-		osmhistory.run_relation_questions
+		epicosm.run_relation_questions
 	end
 
 	desc "Run Changeset Questions"
 	task :changesets do
-		osmhistory.run_changeset_questions
+		epicosm.run_changeset_questions
 	end
 
 	desc "Run User Questions"
 	task :users do
-		osmhistory.run_user_questions
+		epicosm.run_user_questions
 	end
 
 	desc "Run Multi-User Questions"
 	task :multi_users do
-		osmhistory.run_multi_user_questions
+		epicosm.run_multi_user_questions
 	end
 
 	desc "Run BBox Questions"
 	task :bbox do
-		osmhistory.run_bbox_questions
+		epicosm.run_bbox_questions
 	end
 
 	desc "Run Notes Questions"
 	task :notes do
-		osmhistory.run_note_questions
+		epicosm.run_note_questions
 	end
 end

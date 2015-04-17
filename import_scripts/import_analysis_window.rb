@@ -101,6 +101,7 @@ class AnalysisWindowImport
 	def user_import
 		user_import = UserImport.new
 		user_import.import_user_objects
+		user_import.add_indexes
 	end
 
 	#Runs a system shell script to call osm-meta-util
