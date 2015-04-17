@@ -1,6 +1,6 @@
 class NoteImport
 	  require_relative 'osm_api'
-	  require_relative '../../osm-history'
+	  require_relative '../../epic-osm'
 
 	  attr_reader :note_api, :bbox, :args, :success_log, :fail_log
 

@@ -1,5 +1,5 @@
 *.lock
-config.yml
+sample-config.yml
 sample-awconfig.yml
 
 .sass-cache/

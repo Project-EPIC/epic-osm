@@ -24,13 +24,14 @@ class AnalysisWindowImport
 		begin
 			@config = YAML.load_file(args[:config])
 			@time_frame = TimeFrame.new(start_date: config['start_date'], end_date: config['end_date'])
-		rescue
+		rescue => e
 			raise IOError.new("Error loading the configuration file: #{args[:config]}")
 		end
 
 		begin
 			@global_config = YAML.load_file('config.yml')
-		rescue
+		rescue => e
+			puts e
 			raise IOError.new("Error loading global configuration file")
 		end
 		connect_to_database
