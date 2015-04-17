@@ -6,7 +6,7 @@ require "modules/questions/questions"
 describe QuestionAsker do
 
 	before :all do
-		o = OSMHistory.new(analysis_window: 'spec/test_config_file.yml')
+		o = EpicOSM.new(analysis_window: 'spec/test_config_file.yml')
     @aw = o.analysis_window
     @q  = QuestionAsker.new(analysis_window: @aw)
   end

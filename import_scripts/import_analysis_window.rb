@@ -57,7 +57,7 @@ class AnalysisWindowImport
 	end
 
 	#Runs a system shell script to call the osm-history-splitter
-	def run_osm_history_splitter
+	def run_epic_osm_splitter
 		begin
 			unless config['soft-cut']
 				system "#{global_config['osm-history-splitter']} --hardcut #{config['pbf_file']} import_scripts/temp.config"

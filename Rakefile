@@ -3,7 +3,7 @@
 #The import_analysis_window script does all the heavy lifting
 require_relative 'import_scripts/import_analysis_window'
 
-require_relative 'osm-history'
+require_relative 'epic-osm'
 
 #This function will ensure that we create the proper analysis window
 def window
@@ -20,12 +20,12 @@ end
 
 def osmhistory
 	unless ARGV[1].nil?
-		@osm_history ||= OSMHistory.new( analysis_window: ARGV[1]) #Pass the configuration in
+		@epic_osm ||= OSMHistory.new( analysis_window: ARGV[1]) #Pass the configuration in
 	else
 		raise ArgumentError.new("A valid configuration file must be defined")
 	end
 
-	return @osm_history
+	return @epic_osm
 end
 
 desc "Given a valid configuration file, Cut and Import all of the data"
@@ -43,7 +43,7 @@ task :cut do
 	puts "Writing Configuration File for Cut"
 	window.write_configuration_file
 	puts "Running osm history splitter"
-	window.run_osm_history_splitter
+	window.run_epic_osm_splitter
 end
 
 desc "Import Scripts"
@@ -59,20 +59,20 @@ namespace :import do
 		window.changeset_import
 	end
 
-  desc "Import NodeWays"
-  task :nodeways do
-    window.nodeways_import
-  end
+	desc "Import NodeWays"
+		task :nodeways do
+		window.nodeways_import
+	end
 
 	desc "Import Users"
 	task :users do
 		window.user_import
 	end
 
-  desc "Import Realtime"
-  task :realtime do
-    window.run_live_replication_import
-  end
+	desc "Import Realtime"
+		task :realtime do
+		window.run_live_replication_import
+	end
 
 	desc "Import Notes"
 	task :notes do

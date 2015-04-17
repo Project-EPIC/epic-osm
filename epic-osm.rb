@@ -17,12 +17,10 @@ require 'descriptive_statistics/safe'
 #Autoload FileIO as needed
 autoload :FileIO, 'modules/file_io'
 
-#=Main Controller for OSM History
+#=Main Controller for EPIC-OSM
 #
 #
-class OSMHistory
-
-	include Questions::Networks
+class EpicOSM
 
 	attr_reader :aw_config
 
@@ -35,8 +33,6 @@ class OSMHistory
 
 		#Set Database Connection
 		DatabaseConnection.new(database: aw_config['database'], host: aw_config['host'], port: aw_config['port'])
-
-		# analysis_window
 
 		puts "Successfully initialized Analysis Window: #{aw_config['title']}"
 	end
@@ -108,9 +104,9 @@ class OSMHistory
 	end
 
 	def run_network_functions
-  	network_info = aw_config['temporal_network']
-		temp = TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: network_info['files'])
-		temp.run_overlapping_changesets
+		network_info = aw_config['temporal_network']
+			temp = TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: network_info['files'])
+			temp.run_overlapping_changesets
 	end
 
 	def run_note_questions
