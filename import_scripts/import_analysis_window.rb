@@ -93,15 +93,14 @@ class AnalysisWindowImport
 		changeset_import.add_indexes
 	end
 
-  def nodeways_import
-    nodeways_import = NodeWaysImport.new
-    nodeways_import.import_nodeways_objects
-    #puts nodeways_import.new_changeset_ids
-  end
+	def nodeways_import
+		nodeways_import = NodeWaysImport.new
+		nodeways_import.import_nodeways_objects
+    	#puts nodeways_import.new_changeset_ids
+	end
 
 	def user_import
 		user_import = UserImport.new
-		puts "Importing user data for #{user_import.distinct_uids.length} users"
 		user_import.import_user_objects
 	end
 

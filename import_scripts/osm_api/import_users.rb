@@ -33,24 +33,36 @@ class UserImport
   end
 
   def import_user_objects
+    total_user_count = distinct_uids.length
+    error_ids = []
+    print "\n======================================\n"
+    print "Importing #{total_user_count} Users: \n"
     distinct_uids.each_with_index do |user_id, index|
-		  user_count =  DatabaseConnection.database["users"].find({"uid" =>  user_id}).count()
+      #check if user exists first (Shouldn't happen...)
+      user_count =  DatabaseConnection.database["users"].find({"uid" =>  user_id}).count()
       if user_count > 0
         next
       end
-      #check if user exists first
-      this_user = user_api.hit_api(user_id)
+        
+      begin
+        this_user = user_api.hit_api(user_id)
 
-      user_obj = DomainObject::User.new convert_osm_api_to_domain_object_hash this_user
-      user_obj.save!
-   
+        user_obj = DomainObject::User.new convert_osm_api_to_domain_object_hash this_user
+        user_obj.save!
+      rescue => e
+        error_ids << user_id
+        next
+      end
 
-    if (index%10).zero?
-      print '.'
-    elsif (index%101).zero?
-      print index
+      percent_done = ((index.to_f / total_user_count)*50).round
+      if (percent_done)%2==0 and percent_done > 0 and percent_done < 50
+        print "[#{(['*']*percent_done).join('')}#{(['.']*(50-percent_done)).join('')}] #{percent_done*2}%\r"
+        $stdout.flush
+      end
     end
-   end
+    if error_ids.length > 0
+      puts "\nError with #{error_ids.length} users.  IDS: #{error_ids.join("\n")}"
+    end
   end
 
   def convert_osm_api_to_domain_object_hash(osm_api_hash)
