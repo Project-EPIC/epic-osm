@@ -166,7 +166,7 @@ module OSMongoable
 						this_way = DomainObject::Way.new(mem_ways.first)
 						geometries << this_way.geometry unless this_way.geometry.nil?
 					else
-						mem_ways = mem_ways.collect{|w| DomainObject::Way.new(n)}
+						mem_ways = mem_ways.collect{|w| DomainObject::Way.new(w)}
 						mem_ways.sort! { |a,b| a.changeset <=> b.changeset }
 						this_way = mem_ways.select{|way| way.changeset.to_i <= changeset}
 						unless this_way.empty?

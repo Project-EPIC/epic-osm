@@ -41,7 +41,7 @@ class UserImport
       #check if user exists first
       this_user = user_api.hit_api(user_id)
 
-      user_obj = User.new convert_osm_api_to_domain_object_hash this_user
+      user_obj = DomainObject::User.new convert_osm_api_to_domain_object_hash this_user
       user_obj.save!
    
 
