@@ -105,25 +105,6 @@ The final command created the JSON file: ```number_of_experienced_users.json``` 
 	
 
 
-##Running
-Inside the **analysis_window** directory are a series of YAML configuration files.  These files define _analysis windows_, the area that the user is interested in studying.  Defining both temporal and geographical bounds are important.  See ```sample-awconfig.yml``` for an example.
-
-There are a series of rake tasks available, most important is ```rake new```
-
-	rake cleanup            # Clean up all temp files
-	rake cut                # Write appropriate configuration file and 	cut the file to c...
-	rake import:changesets  # Import Changesets
-	rake import:pbf         # Import PBF File (Nodes, Ways, Relations)
-	rake import:users       # Import Users
-	rake network            # Network Writers
-	rake new                # Given a valid configuration file, Cut and Import all of th...
-	rake questions:nodes    # Run Node Questions
-
-
-
-
-
-
 
 
 
