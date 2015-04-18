@@ -33,24 +33,26 @@ module Questions # :nodoc: all
       {'Nodes Edited by Experienced Mappers' => nodes_by_experienced_mappers.first[:objects].length }
     end
 
-    def top_node_tags(limit=10, step='day')
+    def top_new_node_tags(limit=25, step='day')
       keys = {}
-      buckets = eval "aw.nodes_x_#{step}"
+      buckets = eval "aw.nodes_x_#{step}(constraints: {version:1})"
       buckets.each do |bucket|
         unless bucket[:objects].empty?
           bucket[:objects].each do |node|
             node.tags.each do |key, value|
-              keys[key] ||= {dates: [], values: []}
-              keys[key][:dates] << bucket[:start_date]
-              keys[key][:values] << value
+              keys[key] ||= {dates: {}, values: {}}
+              keys[key][:dates][bucket[:start_date]] ||= 0
+              keys[key][:dates][bucket[:start_date]] += 1
+              keys[key][:values][value] ||= 0
+              keys[key][:values][value] += 1
             end
           end
         end
       end
 
-      keys.sort{|x| -key[x][:dates].length}
+      sorted_keys = keys.sort_by{ |key, value| -value[:values].collect{|val, count| count}.inject(:+) }.first(limit)
 
-      puts keys
+      return {"Top #{limit} New Node Tags"=> sorted_keys}
 
     end
 
