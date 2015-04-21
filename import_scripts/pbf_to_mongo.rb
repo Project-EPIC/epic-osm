@@ -4,11 +4,13 @@ class OSMPBF
 	include DomainObject
 	require 'date'
 
-	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date
+	attr_reader :parser, :missing_nodes, :n_count, :w_count, :r_count, :file, :nodes, :ways, :end_date, :start_date, :use_start_date
 
 	def initialize(args={})
 
 		@end_date = args[:end_date] || Time.now
+		@start_date = args[:start_date]
+		@use_start_date = args[:not_complete]
 		@missing_nodes		= 0
 		@empty_lines 		= 0
 		@empty_geometries 	= 0
@@ -20,8 +22,14 @@ class OSMPBF
 		@nodes = {}
 		@ways  = {}
 
+
 		puts "---------------------------------------"
-		puts "Only parsing data up to #{end_date}"
+
+		if use_start_date
+			puts "Only importing data after #{start_date}"
+		end
+		
+		puts "Parsing data up to #{end_date}"
 		puts "---------------------------------------"
 	end
 
@@ -108,7 +116,12 @@ class OSMPBF
 					to_parse = parser.send(object_type)
 				end
 				to_parse.each do |obj|
-					unless timestamp_to_date(obj[:timestamp]) > end_date
+					this_date = timestamp_to_date(obj[:timestamp])
+					
+					#Check if we're using start date
+					next if (use_start_date) and (this_date < start_date)
+
+					if (this_date < end_date)
 						begin
 							add_func.call(obj)
 							index += 1

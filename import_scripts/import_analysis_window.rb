@@ -74,7 +74,7 @@ class AnalysisWindowImport
 	end
 
 	def run_mongo_import
-		conn = OSMPBF.new(end_date: time_frame.end_date, memory_only: config['memory_only'])
+		conn = OSMPBF.new(end_date: time_frame.end_date, start_date: time_frame.start_date, not_complete: config['not_complete'])
 		conn.open_parser("import_scripts/temp.osm.pbf")
 		# puts conn.file_stats
 	
