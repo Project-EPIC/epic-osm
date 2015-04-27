@@ -37,13 +37,13 @@ module Questions # :nodoc: all
 							unique_users << user_1
 							unique_users << user_2
 
+							users[user_1] ||= {id: user_1}
+							users[user_2] ||= {id: user_2}
+
 
 							unless user_1 == user_2
 								if (changeset_1.area < 100000000) and (changeset_2.area < 100000000)
 									if changeset_1.bounding_box.intersects? changeset_2.bounding_box
-
-										users[user_1] ||= {id: user_1}
-										users[user_2] ||= {id: user_2}
 
 										unless edges["#{user_1}-#{user_2}"].nil?
 											edges["#{user_1}-#{user_2}"][:weight] += 1
