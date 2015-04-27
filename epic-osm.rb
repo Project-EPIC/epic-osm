@@ -105,7 +105,7 @@ class EpicOSM
 
 	def run_network_functions
 		network_info = aw_config['temporal_network']
-			temp = Questions::Networks::TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: aw_config['write_directory']+'/'+network_info['files'])
+			temp = Questions::Networks::TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: aw_config['write_directory']+'/networks/'+network_info['files'])
 			temp.run_overlapping_changesets
 	end
 
