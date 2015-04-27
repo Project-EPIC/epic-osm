@@ -13,6 +13,7 @@ module Questions # :nodoc: all
 				Dir.mkdir(directory) unless Dir.exists? directory
 
 				@buckets = instance_eval "aw.changesets_x_#{unit}(step: #{step})"
+				puts "Found #{buckets.first[:objects].length} changesets"
 			end
 
 			def run_overlapping_changesets
@@ -46,7 +47,7 @@ module Questions # :nodoc: all
 											edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
 											edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
 										end
-										puts "#{user_1} - #{user_2}"
+										# puts "#{user_1} - #{user_2}"
 									end
 								end
 							end
