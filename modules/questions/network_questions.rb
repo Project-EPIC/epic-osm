@@ -34,6 +34,10 @@ module Questions # :nodoc: all
 							user_1 = bucket[:objects][i].user
 							user_2 = bucket[:objects][j].user
 
+							unique_users << user_1
+							unique_users << user_2
+
+
 							unless user_1 == user_2
 								if (changeset_1.area < 100000000) and (changeset_2.area < 100000000)
 									if changeset_1.bounding_box.intersects? changeset_2.bounding_box
@@ -54,8 +58,9 @@ module Questions # :nodoc: all
 							end
 						end
 					end
-					puts "Found #{users.values.length} users"
+					puts "Found #{users.values.length} users during #{bucket[:start_date]}"
 					users.values.each do |node|
+						unique_users << node
 						this_file.add_node(node)
 					end
 
@@ -64,6 +69,7 @@ module Questions # :nodoc: all
 					end
 					this_file.write
 				end
+				puts "Found #{unique_users.uniq.count} users"
 			end
 
 			def make_file(filename, comment="", label="")
