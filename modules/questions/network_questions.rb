@@ -17,6 +17,7 @@ module Questions # :nodoc: all
 			end
 
 			def run_overlapping_changesets
+				unique_users = []
 				buckets.each do |bucket|
 					this_file = make_file(filename="#{bucket[:start_date]}-#{bucket[:end_date]}")
 
@@ -53,6 +54,7 @@ module Questions # :nodoc: all
 							end
 						end
 					end
+					puts "Found #{users.values.length} users"
 					users.values.each do |node|
 						this_file.add_node(node)
 					end
