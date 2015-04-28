@@ -16,7 +16,8 @@ class OSMTMTagsImport
 
     def hit_api
   		begin
-	  		uri = URI.parse(@base_url)
+				puts base_url
+	  		uri = URI.parse(base_url)
 	  		response = Net::HTTP.get(uri)
 	  		return JSON.parse(response)
 	  	rescue

@@ -116,7 +116,9 @@ class AnalysisWindowImport
       else
         tags_arg = "\"" + config['changeset_tags'] + "\""
       end
-        system "#{global_config['osm-meta-util']} --db " + config['database'] + " " + tags_arg + " &"
+				string = "#{global_config['osm-meta-util']} --db " + config['database'] + " " + tags_arg + " &"
+        puts "Executing: #{string}"
+				system string
     rescue
 			puts $!
     	raise StandardError.new("osm-meta-util failed")
