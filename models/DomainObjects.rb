@@ -66,6 +66,7 @@ module DomainObject
 				if mem_nodes.nil?	#Look for this node in memory
 					missing_nodes << node_id     #Add it to missing and skip
 				else
+					mem_nodes = mem_nodes.collect{|n| Node.new n}
 					if mem_nodes.length > 1 #If there is only one, use it
 						mem_nodes.sort! { |a,b| a.changeset <=> b.changeset }
 						this_node = mem_nodes.select{|node| node.changeset <= changeset}

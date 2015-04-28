@@ -88,7 +88,7 @@ module OSMongoable
 					else
 						mem_nodes = mem_nodes.collect{|n| DomainObject::Node.new(n)}
 						mem_nodes.sort! { |a,b| a.changeset <=> b.changeset }
-						this_node = mem_nodes.select{|node| node.changeset.to_i <= changeset}
+						this_node = mem_nodes.select{|node| node.changeset.to_i <= changeset.to_i}
 						unless this_node.empty?
 							coords << [this_node.last.lon, this_node.last.lat]
 						else
@@ -277,5 +277,5 @@ module OSMongoable
       DatabaseConnection.database['changeset_tags'].remove({:status => {:$gt => 1}})
     end
   end
-	
+
 end

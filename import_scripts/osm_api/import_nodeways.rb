@@ -33,6 +33,7 @@ class NodeWaysImport
 
   def import_nodeways_objects
     # get changesets that haven't been downloaded
+    new_changeset_count = new_changeset_ids.length
     new_changeset_ids.each_with_index do |changeset_id, index|
       begin
         this_changeset = changeset_download_api.hit_api(changeset_id + "/download")
@@ -41,16 +42,22 @@ class NodeWaysImport
           DatabaseConnection.database["changesets"].update({:id => changeset_id}, {"$set" => {:complete => true}})
         end
 
-        if (index%10).zero?
-          print '.'
-        elsif (index%101).zero?
-          print index
+        percent_done = ((index.to_f / new_changeset_count)*100).round
+        if (percent_done)%2==0 and percent_done > 0 and percent_done < 100
+          print "[#{(['*']*(percent_done/2)).join('')}#{(['.']*(50-percent_done/2)).join('')}] #{percent_done}%\r"
+          $stdout.flush
         end
       rescue => e
         puts "Error on Changeset: #{changeset_id}, continuing"
         puts $!
+        # puts e.backtrace
       end
-
+      begin
+        DatabaseConnection.bulk_ways.execute()
+        DatabaseConnection.bulk_nodes.execute()
+      rescue => e
+        puts "Batch empty, moving on"
+      end
     end
   end
 
@@ -97,7 +104,6 @@ class NodeWaysImport
           feature[:nodes] = feature[:nd].map{ |n| n[:ref] }
           way_obj = DomainObject::Way.new feature
           get_missing_nodes(way_obj.get_missing_nodes())
-
           way_obj.save!
         end
       end
