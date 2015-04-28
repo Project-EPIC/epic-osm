@@ -56,7 +56,7 @@ class NodeWaysImport
         DatabaseConnection.bulk_ways.execute()
         DatabaseConnection.bulk_nodes.execute()
       rescue => e
-        puts "Batch empty, moving on"
+        print "!"
       end
     end
   end
