@@ -2,17 +2,14 @@ class NodeWaysImport
 
   require_relative 'osm_api'
 
-  attr_reader :changeset_download_api, :nodes_download_api, :success_log, :fail_log, :changeset_ids
+  attr_reader :changeset_download_api, :nodes_download_api, :changeset_ids, :limit
 
   def initialize(limit=nil)
     @changeset_download_api = OSMAPI.new("http://www.openstreetmap.org/api/0.6/changeset/")
     @nodes_download_api = OSMAPI.new("http://www.openstreetmap.org/api/0.6/nodes?nodes=")
-  
+
 #http://www.openstreetmap.org/api/0.6/changeset/29682572/download
 #http://www.openstreetmap.org/api/0.6/nodes?nodes=3145564995,3145564994
-    # #Open Log files
-    # @success_log = LogFile.new("logs/changesets","successful")
-    # @fail_log    = LogFile.new("logs/changesets","failed")
 
     @limit = limit
   end
@@ -27,11 +24,10 @@ class NodeWaysImport
     selector = {:complete => { '$ne' => true }}
 	  opts= {:fields => {'_id' => 0, 'id' => 1 }}
     changesets = DatabaseConnection.database["changesets"].find(selector, opts).map { |changeset| changeset['id'] }
-    return changesets
-    if @limit.nil? 
-      return changesets.uniq!
-    else 
-      return changesets.uniq!.first(@limit)
+    if limit.nil?
+      return changesets.uniq
+    else
+      return changesets.uniq.first(limit)
     end
   end
 
@@ -106,7 +102,7 @@ class NodeWaysImport
         end
       end
     end
-  
+
   end
 
   def get_missing_nodes(nodes)
@@ -137,4 +133,3 @@ class NodeWaysImport
     end
   end
 end
-

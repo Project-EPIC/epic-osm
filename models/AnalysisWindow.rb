@@ -99,11 +99,7 @@ class AnalysisWindow
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
-
-		when :week
-			#fuck us, this is going to be ugly.  How should we do this? just start from the first week of the analysis window?
-			#We could just add 7 days.
-
+			
 		when :hour
 			bucket_start = Time.mktime(time_frame.start_date.year, time_frame.start_date.mon, time_frame.start_date.day, time_frame.start_date.hour)
 			while bucket_start < time_frame.end_date
@@ -230,7 +226,7 @@ class AnalysisWindow
 	def all_contributors
 		all_users_data.collect{|user| user.user}
 	end
-						
+
 	# :category: Notes
 	def notes
 		@notes ||= Note_Query.new( analysis_window: self )
@@ -243,15 +239,15 @@ class AnalysisWindow
 
 	# :category: Notes
 	def notes_open_time
-		t = 0		
-		notes_x_all.first[:objects].each do | note | 
+		t = 0
+		notes_x_all.first[:objects].each do | note |
 			t = t + ((Time.now - note.created_at))
 		end
 		average_time = (t/notes_count)
-		
-		mm, ss = average_time.divmod(60)           
-		hh, mm = mm.divmod(60)           
-		dd, hh = hh.divmod(24)           
+
+		mm, ss = average_time.divmod(60)
+		hh, mm = mm.divmod(60)
+		dd, hh = hh.divmod(24)
 		result = "%d days, %d hours" % [dd, hh]
 
 		return result
@@ -269,7 +265,7 @@ class AnalysisWindow
 					url: note.url,
 					comments: note.comments
 				}
-			}	
+			}
 			features << feature
 		end
 		return features
