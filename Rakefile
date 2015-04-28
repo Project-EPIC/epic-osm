@@ -69,6 +69,11 @@ namespace :import do
 		window.user_import
 	end
 
+	desc "Import OSMTM Tags"
+  task :osmtm_tags do
+    window.osmtm_tags_import
+  end
+
 	desc "Import Realtime"
 	task :realtime do
 		window.run_live_replication_import

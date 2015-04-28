@@ -8,6 +8,7 @@ require_relative 'osm_api/import_nodeways'
 require_relative 'osm_api/import_users'
 require_relative 'osm_api/import_notes'
 require_relative 'osm_api/osm_api'
+require_relative 'osm_api/import_osmtm_tags'
 require_relative 'pbf_to_mongo'
 
 #Require Domain Objects
@@ -25,8 +26,10 @@ class AnalysisWindowImport
 
 		begin
 			@config = YAML.load_file(args[:config])
-			@time_frame = TimeFrame.new(start_date: config['start_date'], end_date: config['end_date'])
+			end_date = config['end_date'] || Time.now
+			@time_frame = TimeFrame.new(start_date: config['start_date'], end_date: end_date)
 		rescue => e
+			puts $!
 			raise IOError.new("Error loading the configuration file: #{args[:config]}")
 		end
 
@@ -77,7 +80,7 @@ class AnalysisWindowImport
 		conn = OSMPBF.new(end_date: time_frame.end_date, start_date: time_frame.start_date, not_complete: config['not_complete'])
 		conn.open_parser("import_scripts/temp.osm.pbf")
 		# puts conn.file_stats
-	
+
 		#Import Nodes, Ways, Relations
 		conn.parse_to_collection(object_type="nodes", lim=nil)
 
@@ -104,15 +107,26 @@ class AnalysisWindowImport
 		user_import.add_indexes
 	end
 
+
 	#Runs a system shell script to call osm-meta-util
-	def run_live_replication_import
-		begin
-		  system "#{global_config['osm-meta-util']} \"" + config['changeset_tags'] + "\" &"
-		rescue
-			raise Error.new("osm-meta-util failed")
+  def run_live_replication_import
+    begin
+      if config['changeset_tags_collection']
+        tags_arg = "--tags_collection changeset_tags "
+      else
+        tags_arg = "\"" + config['changeset_tags'] + "\""
+      end
+        system "#{global_config['osm-meta-util']} --db " + config['database'] + " " + tags_arg + " &"
+    rescue
 			puts $!
-		end
-	end
+    	raise StandardError.new("osm-meta-util failed")
+    end
+  end
+
+	def osmtm_tags_import
+    osmtm_tags_import = OSMTMTagsImport.new(config['tag_search_term'])
+    osmtm_tags_import.import_osmtm_tags
+  end
 
 	def note_import
 		note_import = NoteImport.new(@config['bbox'])
@@ -120,4 +134,3 @@ class AnalysisWindowImport
 		note_import.import_note_objects
 	end
 end
-

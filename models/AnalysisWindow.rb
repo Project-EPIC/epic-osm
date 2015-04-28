@@ -99,7 +99,7 @@ class AnalysisWindow
 				buckets << {start_date: bucket_start, end_date: bucket_end, objects: []}
 				bucket_start = bucket_end
 			end
-			
+
 		when :hour
 			bucket_start = Time.mktime(time_frame.start_date.year, time_frame.start_date.mon, time_frame.start_date.day, time_frame.start_date.hour)
 			while bucket_start < time_frame.end_date

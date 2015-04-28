@@ -58,11 +58,11 @@ module DomainObject
 			return nil if nodes.empty?
 
 			missing_nodes = []
-			
+
 			#Iterate over this way's nodes
 			nodes.each do |node_id| #The id of the node needed
 				mem_nodes = DatabaseConnection.persistent_nodes(node_id)
-				
+
 				if mem_nodes.nil?	#Look for this node in memory
 					missing_nodes << node_id     #Add it to missing and skip
 				else
@@ -140,15 +140,26 @@ module DomainObject
 
 		attr_reader :id, :url, :created_at, :status, :lon, :lat, :comments
 
-		def initialize(args)	
-			@id = args[:id] 		  	
-			@url = args[:url] 		 	
-			@created_at = args[:created_at] 
-			@status = args[:status] 		
-			@lon = args[:lon] 		 
-			@lat = args[:lat] 			
-			@comments = args[:comments] 		
+		def initialize(args)
+			@id = args[:id]
+			@url = args[:url]
+			@created_at = args[:created_at]
+			@status = args[:status]
+			@lon = args[:lon]
+			@lat = args[:lat]
+			@comments = args[:comments]
 		end
 
 	end
+
+	class ChangesetTags #:nodoc:
+		include OSMongoable::ChangesetTags
+	  attr_reader :tag, :name
+
+    def initialize(args)
+      @tag = args[:tag]
+      @name = args[:name]
+    end
+	end
+
 end

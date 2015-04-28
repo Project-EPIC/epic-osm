@@ -1,13 +1,17 @@
+#
+# OSMTM Tags Import by Mikel Maron
+#
+#
 class OSMTMTagsImport
 		require 'net/http'
 		require 'uri'
 		require 'json'
-	  require_relative '../../osm-history'
+	  require_relative '../../epic-osm'
 
 	  attr_reader :base_url
 
-	  def initialize()
-	      @base_url = "http://0.0.0.0:6543/projects.json"
+	  def initialize(tag_search_term)
+			  @base_url = "http://tasks.hotosm.org/projects.json?sort_by=priority&direction=asc&search=#{tag_search_term}"
 	  end
 
     def hit_api
@@ -39,14 +43,14 @@ class OSMTMTagsImport
 
         if changeset_tag_obj[:tag]
           changeset_tag_obj[:name] = feature['properties']['name']
-          changeset_tag = ChangesetTags.new changeset_tag_obj
+          changeset_tag = DomainObject::ChangesetTags.new changeset_tag_obj
           changeset_tag.save!
         end
 
       end
-      
+
       #lazily not implementing atomic_update as Class method
-      ChangesetTags.new( {} ).atomic_update
+      DomainObject::ChangesetTags.new( {} ).atomic_update
 
 	  end
 

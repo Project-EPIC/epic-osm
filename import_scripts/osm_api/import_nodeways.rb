@@ -91,11 +91,11 @@ class NodeWaysImport
         feature.delete :tag
 
         if feature_hash.has_key?(:node)
-          node_obj = Node.new feature
+          node_obj = DomainObject::Node.new feature
           node_obj.save!
         elsif feature_hash.has_key?(:way)
           feature[:nodes] = feature[:nd].map{ |n| n[:ref] }
-          way_obj = Way.new feature
+          way_obj = DomainObject::Way.new feature
           get_missing_nodes(way_obj.get_missing_nodes())
 
           way_obj.save!
@@ -126,7 +126,7 @@ class NodeWaysImport
           end
           node.delete :tag
 
-          node_obj = Node.new node
+          node_obj = DomainObject::Node.new node
           node_obj.save!
         end
       end

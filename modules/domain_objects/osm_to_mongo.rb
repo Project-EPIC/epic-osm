@@ -39,7 +39,7 @@ module OSMongoable
 			DatabaseConnection.insert(self)
 		end
 	end
-	
+
 	module Node # :nodoc: all
 		def to_mongo
 			hash={}
@@ -73,11 +73,11 @@ module OSMongoable
 
 			missing_nodes = []
 			coords = []
-			
+
 			#Iterate over this way's nodes
 			nodes.each do |node_id| #The id of the node needed
 				mem_nodes = DatabaseConnection.persistent_nodes(node_id)
-				
+
 				if mem_nodes.nil?	#Look for this node in memory
 					missing_nodes << node_id     #Add it to missing and skip
 					next
@@ -99,11 +99,11 @@ module OSMongoable
 			end
 
 			@missing_nodes = missing_nodes
-			
+
 			case coords.length
-			when 0 
+			when 0
 				return nil
-			when 1 
+			when 1
 				return {"type" => "Point", "coordinates" => coords.first}
 			else
 				return {"type" => "LineString", "coordinates" => coords}
@@ -132,9 +132,9 @@ module OSMongoable
 
 			unless nodes.nil? or nodes.empty?
 				nodes.each do |node_id|
-					
+
 					mem_nodes = DatabaseConnection.persistent_nodes(node_id)
-					
+
 					if mem_nodes.nil?	#Look for this node in memory
 						@missing_nodes << node_id    	#Add it to missing and skip
 						next
@@ -255,7 +255,27 @@ module OSMongoable
 		end
 
 		def save!
-  			DatabaseConnection.database['changesets'].insert( self.to_mongo )
-  		end
+  		DatabaseConnection.database['changesets'].insert( self.to_mongo )
   	end
+	end
+
+	module ChangesetTags # :nodoc: all
+  	def to_mongo
+    	hash = {}
+      hash[:tag]  = tag
+      hash[:name] = name
+      hash[:status] = 0 # new documents are flagged, for atomicity of update
+      hash
+    end
+
+    def save!
+      DatabaseConnection.database['changeset_tags'].insert( self.to_mongo )
+    end
+
+    def atomic_update
+      DatabaseConnection.database['changeset_tags'].update({},{:$inc => {:status => 1}}, {:$isolated =>  1, :multi => true})
+      DatabaseConnection.database['changeset_tags'].remove({:status => {:$gt => 1}})
+    end
+  end
+	
 end
