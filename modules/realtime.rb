@@ -6,7 +6,7 @@
 require 'yaml'
 
 module Realtime
-  def updateYAML(file)
+  def updateYAML(yaml_file)
     config = YAML.load(File.read(yaml_file))
 
     step = config['realtime_step']
@@ -22,9 +22,12 @@ module Realtime
     config['start_date'] = new_start
     config['end_date']   = new_end
 
-    config['write_directory'] += 
+    dir = config['write_directory'].split('/')
+    dir.pop
 
-    File.open(file, 'wb') do |out|
+    config['write_directory'] = dir.join('/') +"/#{time_now.year}_#{time_now.mon}_#{time_now.day}_#{time_now.hour}"
+
+    File.open(yaml_file, 'wb') do |out|
       out.write(config.to_yaml)
     end
   end

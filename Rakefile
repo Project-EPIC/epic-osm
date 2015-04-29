@@ -102,6 +102,7 @@ end
 
 desc "Realtime"
 task :realtime do
+	include Realtime
 	Realtime::updateYAML(ARGV[1])
 end
 
