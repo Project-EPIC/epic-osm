@@ -2,8 +2,8 @@
 
 #The import_analysis_window script does all the heavy lifting
 require_relative 'import_scripts/import_analysis_window'
-
 require_relative 'epic-osm'
+require_relative 'modules/realtime'
 
 #This function will ensure that we create the proper analysis window
 def window
@@ -98,6 +98,11 @@ namespace :index do
 		window
 		UserImport.new.add_indexes
 	end
+end
+
+desc "Realtime"
+task :realtime do
+	Realtime::updateYAML(ARGV[1])
 end
 
 desc "Clean up all temp files"

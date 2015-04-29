@@ -6,7 +6,7 @@ require 'yaml'
 # There is only one point of access to the database
 class DatabaseConnection
 	attr_reader :host, :port, :database, :mongo_only, :mem_only
-	
+
 	def initialize(args={})
 
 		@host = args[:host] || 'localhost'
@@ -68,7 +68,7 @@ class DatabaseConnection
 	def connect_to_mongo
 		begin
 	    	conn = Mongo::MongoClient.new host, port
-			@@database = conn[database]	
+			@@database = conn[database]
 		rescue
 			raise ArgumentError.new("Unable to connect to database: #{database}")
 		end
@@ -123,11 +123,11 @@ class DatabaseConnection
 	end
 
 	def self.persistent_nodes(node_id)
-		
+
 		#If configured for memory, then check for memory first
 		unless mongo_only
 			return @@memory_nodes[node_id]
-		
+
 		#If not configured for memory, look in mongo
 		else
 			return database['nodes'].find(id: node_id).collect{ |node| node.from_mongo }
@@ -136,7 +136,7 @@ class DatabaseConnection
 
 
 	def self.persistent_ways(way_id)
-		
+
 		#If configured for memory, then check for memory first
 		unless mongo_only
 			return @@memory_ways[way_id]
