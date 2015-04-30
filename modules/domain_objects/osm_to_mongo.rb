@@ -269,7 +269,8 @@ module OSMongoable
     end
 
     def save!
-      DatabaseConnection.database['changeset_tags'].insert( self.to_mongo )
+			to_upsert = self.to_mongo
+      DatabaseConnection.database['changeset_tags'].update( {tag: to_upsert[:tag]}, to_upsert, {upsert: true})
     end
 
     def atomic_update

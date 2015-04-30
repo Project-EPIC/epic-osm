@@ -49,9 +49,9 @@ class OSMTMTagsImport
         end
 
       end
-
-      #lazily not implementing atomic_update as Class method
-      DomainObject::ChangesetTags.new( {} ).atomic_update
+			#
+      # #lazily not implementing atomic_update as Class method
+      # DomainObject::ChangesetTags.new( {} ).atomic_update
 
 	  end
 
