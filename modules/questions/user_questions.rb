@@ -87,7 +87,7 @@ module Questions # :nodoc: all
 		end
 
 		def user_list
-			aw.all_contributors_with_count
+			all_contributors_with_count
 		end
 
 	end
