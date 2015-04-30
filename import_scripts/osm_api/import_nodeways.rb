@@ -114,6 +114,7 @@ class NodeWaysImport
   def get_missing_nodes(nodes)
     if nodes.length() > 0
       missing_node_collection = []
+      node_string = []
       nodes.each_with_index do |n,i|
         if i<25
           node_string << n
