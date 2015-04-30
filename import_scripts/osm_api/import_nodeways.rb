@@ -113,27 +113,39 @@ class NodeWaysImport
 
   def get_missing_nodes(nodes)
     if nodes.length() > 0
-      missing_nodes = nodes_download_api.hit_api(nodes.join(','))
-      if missing_nodes and missing_nodes.has_key?(:osm) and missing_nodes[:osm].has_key?(:node)
-        if ! missing_nodes[:osm][:node].is_a? Array
-          features = [ missing_nodes[:osm][:node] ]
+      missing_node_collection = []
+      nodes.each_with_index do |n,i|
+        if i<25
+          node_string << n
         else
-          features = missing_nodes[:osm][:node]
+          missing_node_collection << nodes_download_api.hit_api(node_string.join(','))
+          i=0
+          node_string = []
         end
-
-        features.each do |node|
-          node[:created_at] = Time.parse node[:timestamp]
-          if node[:tag].is_a? Array
-            node[:tags] = node[:tag].collect{|h| {h[:k]=>h[:v]}}
-          elsif node[:tag].nil?
-            node[:tags] = []
+      end
+      missing_node_collection << nodes_download_api.hit_api(node_string.join(','))
+      missing_node_collection.each do |missing_nodes|
+        if missing_nodes and missing_nodes.has_key?(:osm) and missing_nodes[:osm].has_key?(:node)
+          if ! missing_nodes[:osm][:node].is_a? Array
+            features = [ missing_nodes[:osm][:node] ]
           else
-            node[:tags] = [ { node[:tag][:k] => node[:tag][:v] }]
+            features = missing_nodes[:osm][:node]
           end
-          node.delete :tag
 
-          node_obj = DomainObject::Node.new node
-          node_obj.save!
+          features.each do |node|
+            node[:created_at] = Time.parse node[:timestamp]
+            if node[:tag].is_a? Array
+              node[:tags] = node[:tag].collect{|h| {h[:k]=>h[:v]}}
+            elsif node[:tag].nil?
+              node[:tags] = []
+            else
+              node[:tags] = [ { node[:tag][:k] => node[:tag][:v] }]
+            end
+            node.delete :tag
+
+            node_obj = DomainObject::Node.new node
+            node_obj.save!
+          end
         end
       end
     end
