@@ -90,8 +90,5 @@ module Questions # :nodoc: all
 			aw.all_contributors_with_count
 		end
 
-		def user_list_with_geometry
-			aw.all_contributors_with_geometry
-		end
 	end
 end
