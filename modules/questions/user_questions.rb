@@ -33,8 +33,7 @@ module Questions # :nodoc: all
 					"user" => user.user,
 					"nodes" => nodes_x_all(constraints: {'uid' => user.uid}).first[:objects].select{ |node| !node.tags.empty?}.count,
 					"ways" => ways_x_all(constraints: {'uid' => user.uid}).first[:objects].count,
-					"relations" => relations_x_all(constraints: {'uid' => user.uid}).first[:objects].count,
-					"changesets" => changesets_x_all(constraints: {'uid' => user.uid}).first[:objects].count,
+					"changesets" => changesets_x_all(constraints: {'uid' => user.uid}).first[:objects].count
 				})
 			}
 			user_data
