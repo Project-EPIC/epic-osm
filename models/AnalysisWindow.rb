@@ -24,8 +24,8 @@ class AnalysisWindow
 	# The maximum area (in square meters) of changesets to be included in calculations
 	attr_reader :max_area
 
-	attr_reader :changeset_tags
 	# Can pass in an instance of a timeframe and bounding box, or use defaults
+	attr_reader :changeset_tags
 	def initialize(args={})
 		@bounding_box = args[:bounding_box] || BoundingBox.new
 		@time_frame   = args[:time_frame]   || TimeFrame.new
@@ -34,6 +34,9 @@ class AnalysisWindow
 		@min_area = args[:min_area] || 1
 
 		@changeset_tags = args[:changeset_tags]
+
+		puts changeset_tags
+
 		post_initialize
 	end
 

@@ -43,8 +43,17 @@ class EpicOSM
 						bounding_box: BoundingBox.new(bbox: aw_config['bbox']),
 						min_area: aw_config['min_area'],
 						max_area: aw_config['max_area'],
-						changeset_tags: aw_config['changeset_tags']
+						changeset_tags: changeset_tags_getter
 		)
+	end
+
+	def changeset_tags_getter
+		if aw_config['changeset_tags_collection']
+			tags = DatabaseConnection.database['changeset_tags'].distinct('tag').join(",")
+			return tags
+		else
+			return aw_config['changeset_tags']
+		end
 	end
 
 	def question_asker

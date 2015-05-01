@@ -18,7 +18,6 @@ class NodeWaysImport
     @changeset_ids ||= get_new_changeset_ids
   end
 
-
   def get_new_changeset_ids
     changesets = []
     selector = {:complete => { '$ne' => true }}

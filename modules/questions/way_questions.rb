@@ -57,7 +57,7 @@ module Questions # :nodoc: all
 
     def number_of_ways_per_tag
       ways_per_tag = []
-      tags = aw.changeset_tags.split(" ")
+      tags = aw.changeset_tags.split(",")
       tags.each do |tag|
           changesets = Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].map do |changeset|
             changeset.id.to_s
@@ -69,7 +69,7 @@ module Questions # :nodoc: all
 
     def number_of_highways_per_tag
       ways_per_tag = []
-      tags = aw.changeset_tags.split(" ")
+      tags = aw.changeset_tags.split(",")
       tags.each do |tag|
           changesets = Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].map do |changeset|
             changeset.id.to_s
@@ -81,7 +81,7 @@ module Questions # :nodoc: all
 
     def number_of_buildings_per_tag
       ways_per_tag = []
-      tags = aw.changeset_tags.split(" ")
+      tags = aw.changeset_tags.split(",")
       tags.each do |tag|
           changesets = Changeset_Query.new(analysis_window: aw, constraints: {'comment' => {'$regex' => ".*"+tag+".*"}}).run.first[:objects].map do |changeset|
             changeset.id.to_s
