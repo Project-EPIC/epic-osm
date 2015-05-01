@@ -101,10 +101,12 @@ class NodeWaysImport
           node_obj = DomainObject::Node.new feature
           node_obj.save!
         elsif feature_hash.has_key?(:way)
-          feature[:nodes] = feature[:nd].map{ |n| n[:ref] }
-          way_obj = DomainObject::Way.new feature
-          get_missing_nodes(way_obj.get_missing_nodes())
-          way_obj.save!
+          if feature[:nd].is_a? Array?
+            feature[:nodes] = feature[:nd].map{ |n| n[:ref] }
+            way_obj = DomainObject::Way.new feature
+            get_missing_nodes(way_obj.get_missing_nodes())
+            way_obj.save!
+          end
         end
       end
     end
