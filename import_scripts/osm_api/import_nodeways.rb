@@ -115,8 +115,10 @@ class NodeWaysImport
     if nodes.length() > 0
       missing_node_collection = []
       node_string = []
-      nodes.each_with_index do |n,i|
-        if i<25
+      i = 0
+      nodes.each do |n|
+        i += 1
+        if i<50
           node_string << n
         else
           missing_node_collection << nodes_download_api.hit_api(node_string.join(','))
