@@ -1,3 +1,5 @@
+# May 2015: Rewriting this to work with new Mongo API and Bulk upsert operations
+
 require 'mongo'
 require 'yaml'
 
@@ -5,17 +7,19 @@ require 'yaml'
 #
 # There is only one point of access to the database
 class DatabaseConnection
+	Mongo::Logger.logger.level = Logger::WARN #Suppress default debug messages
 	attr_reader :host, :port, :database, :mongo_only, :mem_only
 
 	def initialize(args={})
 
-		@host = args[:host] || 'localhost'
-		@port = args[:port] || '27017'
+		@host     = args[:host]     || 'localhost'
+		@port     = args[:port]     || '27017'
 		@database = args[:database] || 'osm-test'
 
 		@@mongo_only = args[:mongo_only] || false
-		@@mem_only = args[:mem_only] || false
+		@@mem_only   = args[:mem_only]   || false
 
+		#Create the connection to Mongo
 		connect_to_mongo
 
 		unless mongo_only
@@ -23,9 +27,11 @@ class DatabaseConnection
 			@@memory_ways  = {}
 		end
 
-		@@bulk_nodes = @@database['nodes'].initialize_unordered_bulk_op
-		@@bulk_ways = @@database['ways'].initialize_unordered_bulk_op
-		@@bulk_relations = @@database['relations'].initialize_unordered_bulk_op
+		#Define pieces for bulk operations
+		@@bulk_nodes     = OSMBulkOp.new(coll: 'nodes')
+		@@bulk_ways      = OSMBulkOp.new(coll: 'ways')
+		@@bulk_relations = OSMBulkOp.new(coll: 'relations')
+
 		@@counter = 0
 	end
 
@@ -53,23 +59,11 @@ class DatabaseConnection
 		@@mem_only
 	end
 
-	def self.nodes_for_bulk_insert
-		@@nodes_for_bulk_insert
-	end
-
-	def self.ways_for_bulk_insert
-		@@ways_for_bulk_insert
-	end
-
-	def self.relations_for_bulk_insert
-		@@relations_for_bulk_insert
-	end
-
 	def connect_to_mongo
 		begin
-	    	conn = Mongo::MongoClient.new host, port
-			@@database = conn[database]
-		rescue
+	    @@database = Mongo::Client.new("mongodb://127.0.0.1:#{port}", {database: database})
+		rescue => e
+			puts e
 			raise ArgumentError.new("Unable to connect to database: #{database}")
 		end
 	end
@@ -85,13 +79,8 @@ class DatabaseConnection
 			end
 
 			unless mem_only
-				@@bulk_nodes.insert ( osm_object.to_mongo )
+				@@bulk_nodes.insert( osm_object.to_mongo )
 				@@counter += 1
-
-				if @@counter == 5000
-					@@bulk_nodes.execute()
-					@@counter = 0
-				end
 			end
 
 		when "DomainObject::Way"
@@ -101,23 +90,14 @@ class DatabaseConnection
 			end
 
 			unless mem_only
-				@@bulk_ways.insert ( osm_object.to_mongo )
+				@@bulk_ways.insert( osm_object.to_mongo )
 				@@counter += 1
-
-				if @@counter == 5000
-					@@bulk_ways.execute()
-					@@counter = 0
-				end
 			end
+
 		when "DomainObject::Relation"
 			unless mem_only
-				@@bulk_relations.insert ( osm_object.to_mongo )
+				@@bulk_relations.insert( osm_object.to_mongo )
 				@@counter += 1
-
-				if @@counter == 5000
-					@@bulk_relations.execute()
-					@@counter = 0
-				end
 			end
 		end
 	end
@@ -143,6 +123,43 @@ class DatabaseConnection
 		#If not configured for memory, look in mongo
 		else
 			return database['ways'].find(id: way_id).collect{ |way| way.from_mongo }
+		end
+	end
+end
+
+# = Bulk Write Operations save the abilities
+#
+#
+class OSMBulkOp
+	attr_reader :collection, :insert_threshold, :objects
+
+	def initialize(args)
+		@collection = args[:coll]
+		@insert_threshold = args[:insert_treshold] || 500
+		@objects = []
+	end
+
+	def insert(object)
+		@objects << { :update_one =>
+                   {:find =>
+									    {:version => object[:version],
+                       :id => object[:id]},
+										:update => {'$set' => object},
+										:upsert => true}
+								}
+		if objects.length >= insert_threshold
+			execute
+		end
+	end
+
+	def execute
+		unless objects.empty?
+			DatabaseConnection.database[collection].bulk_write(objects, :ordered => false)
+			@objects = []
+			DatabaseConnection.database[collection].indexes.create_many([
+	  		{ name: 'object_version', key: { version: 1 }, background: true},
+	  		{ name: 'object_id',      key: { id:      1 }, background: true}
+			])
 		end
 	end
 end

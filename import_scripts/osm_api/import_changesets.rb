@@ -16,12 +16,12 @@ class ChangesetImport
 
   def get_distinct_changeset_ids
     changesets = []
-    changesets = DatabaseConnection.database["nodes"].distinct("changeset")
-    changesets += DatabaseConnection.database["ways"].distinct("changeset")
-    changesets += DatabaseConnection.database["relations"].distinct("changeset")
-    if limit.nil? 
+    changesets = DatabaseConnection.database["nodes"].find.distinct("changeset")
+    changesets += DatabaseConnection.database["ways"].find.distinct("changeset")
+    changesets += DatabaseConnection.database["relations"].find.distinct("changeset")
+    if limit.nil?
       return changesets.uniq!
-    else 
+    else
       return changesets.uniq!.first(limit)
     end
   end
@@ -56,12 +56,14 @@ class ChangesetImport
 
   def add_indexes
     print "Adding Appropriate Indexes: id, uid, user, created_at, closed_at, geometry"
-    DatabaseConnection.database['changesets'].ensure_index( id: 1 )
-    DatabaseConnection.database['changesets'].ensure_index( uid: 1 )
-    DatabaseConnection.database['changesets'].ensure_index( user: 1 )
-    DatabaseConnection.database['changesets'].ensure_index( created_at: 1)
-    DatabaseConnection.database['changesets'].ensure_index( closed_at: 1 )
-    DatabaseConnection.database['changesets'].ensure_index( geometry: "2dsphere")
+    DatabaseConnection.database['changesets'].indexes.create_many(
+      [
+				{ :key => { geometry:   '2dsphere'}},
+				{ :key => { created_at: 1         }},
+        { :key => { closed_at:  1         }},
+				{ :key => { uid:        1         }},
+				{ :key => { user:       1         }},
+			])
   end
 
   def convert_osm_api_to_domain_object_hash(osm_api_hash)
@@ -92,4 +94,3 @@ class ChangesetImport
   end
 
 end
-

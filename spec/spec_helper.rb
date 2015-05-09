@@ -5,6 +5,8 @@ require 'models/DomainObjects'
 require 'models/Persistence'
 require 'models/Query'
 
+require 'epic-osm'
+
 require 'debugger'
 
 #Open connection to a test database:

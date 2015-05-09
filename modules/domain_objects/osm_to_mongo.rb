@@ -199,7 +199,7 @@ module OSMongoable
 		end
 
 		def save!
-			DatabaseConnection.database['users'].insert( self.to_mongo )
+			DatabaseConnection.database['users'].insert_one( self.to_mongo )
 		end
 	end
 
@@ -217,7 +217,7 @@ module OSMongoable
 		end
 
 		def save!
-			DatabaseConnection.database['notes'].insert( self.to_mongo )
+			DatabaseConnection.database['notes'].insert_one( self.to_mongo )
 		end
 	end
 
@@ -255,7 +255,7 @@ module OSMongoable
 		end
 
 		def save!
-  		DatabaseConnection.database['changesets'].insert( self.to_mongo )
+  		DatabaseConnection.database['changesets'].insert_one( self.to_mongo )
   	end
 	end
 

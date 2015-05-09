@@ -3,9 +3,9 @@ source 'http://rubygems.org/'
 #These gems are 100% required:
 
 #Mongo
-gem 'mongo',		'1.11.1'
-gem 'bson',			'1.11.1'
-gem 'bson_ext',		'1.11.1'
+gem 'mongo',		'2.0.3'
+gem 'bson',			'3.0.2'
+# gem 'bson_ext',	'1.12.1'
 
 #Geo
 gem 'rgeo',			'0.3.20'

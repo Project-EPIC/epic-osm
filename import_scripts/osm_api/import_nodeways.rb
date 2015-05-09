@@ -15,13 +15,9 @@ class NodeWaysImport
   end
 
   def new_changeset_ids
-    @changeset_ids ||= get_new_changeset_ids
-  end
-
-  def get_new_changeset_ids
     changesets = []
     selector = {:complete => { '$ne' => true }}
-	  opts= {:fields => {'_id' => 0, 'id' => 1 }}
+	  opts     = {:fields => {'_id' => 0, 'id' => 1 }}
     changesets = DatabaseConnection.database["changesets"].find(selector, opts).map { |changeset| changeset['id'] }
     if limit.nil?
       return changesets.uniq
@@ -30,15 +26,16 @@ class NodeWaysImport
     end
   end
 
-  def import_nodeways_objects
+  def import_nodeways_objects(args={})
+    new_changesets = args[:changeset_ids] || new_changeset_ids
     # get changesets that haven't been downloaded
-    new_changeset_count = new_changeset_ids.length
-    new_changeset_ids.each_with_index do |changeset_id, index|
+    new_changeset_count = new_changesets.length
+    new_changesets.each_with_index do |changeset_id, index|
       begin
         this_changeset = changeset_download_api.hit_api(changeset_id + "/download")
         if this_changeset
           convert_osm_api_to_domain_object_hash this_changeset
-          DatabaseConnection.database["changesets"].update({:id => changeset_id}, {"$set" => {:complete => true}})
+          DatabaseConnection.database["changesets"].find({:id => changeset_id}).update_one({"$set" => {:complete => true}, upsert:true})
         end
 
         percent_done = ((index.to_f / new_changeset_count)*100).round
@@ -58,12 +55,6 @@ class NodeWaysImport
         print "!"
       end
     end
-  end
-
-  def add_indexes
-    DatabaseConnection.database['changesets'].ensure_index( id: 1 )
-    DatabaseConnection.database['changesets'].ensure_index( user: 1 )
-    DatabaseConnection.database['changesets'].ensure_index( geometry: "2dsphere")
   end
 
   def convert_osm_api_to_domain_object_hash(osm_api_hash)

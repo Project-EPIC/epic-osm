@@ -5,12 +5,11 @@ describe OSMPBF do
 
 	#Open the PBF file
 	before :all do
-
-		DatabaseConnection.new(database: 'managua-test')
-		@conn = OSMPBF.new(end_date: Time.new(2009,1,1))
+		#Initialize a database connection
+		DatabaseConnection.new(database: 'osm-test')
+		@conn = OSMPBF.new(end_date: )
 		@conn.open_parser("spec/import/test_files/managua.osm.pbf")
-
-		puts @conn.file_stats
+		@conn.file_stats
 	end
 
 	it "Can create node objects from the PBF" do

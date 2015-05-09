@@ -28,7 +28,7 @@ class OSMPBF
 		if use_start_date
 			puts "Only importing data after #{start_date}"
 		end
-		
+
 		puts "Parsing data up to #{end_date}"
 		puts "---------------------------------------"
 	end
@@ -49,6 +49,15 @@ class OSMPBF
 	#Get stats on the PBF file.
 	def file_stats
 		test_parser = PbfParser.new(file)
+		unless test_parser.nodes.empty?
+			@n_count+= test_parser.nodes.size
+		end
+		unless test_parser.ways.empty?
+			@w_count+= test_parser.ways.size
+		end
+		unless test_parser.relations.empty?
+			@r_count+= test_parser.relations.size
+		end
 		while test_parser.next
 			unless test_parser.nodes.empty?
 				@n_count+= test_parser.nodes.size
@@ -60,7 +69,9 @@ class OSMPBF
 				@r_count+= test_parser.relations.size
 			end
 		end
-		puts "Nodes: #{n_count}, Ways: #{w_count}, Relations: #{r_count}"
+		puts "============================================================="
+		puts "Nodes: #{n_count}, Ways: #{w_count}, Relations: #{r_count}\n"
+		puts "=============================================================\n"
 	end
 
 	#Convert the Timestmap to an instance of Time
@@ -79,7 +90,7 @@ class OSMPBF
 		way[:created_at] = timestamp_to_date(way[:timestamp])
 		way[:nodes] = way[:refs]
 		way.delete :refs
-		
+
 		this_way = Way.new(way)
 		this_way.save!
 	end
@@ -88,7 +99,7 @@ class OSMPBF
 		relation[:created_at] = timestamp_to_date(relation[:timestamp])
 		relation[:nodes] = relation[:members][:nodes].collect{|n| n[:id].to_s}
 		relation[:ways]  = relation[:members][:ways].collect{|w| w[:id].to_s}
-		
+
 		relation.delete :members
 
 		this_rel = Relation.new(relation)
@@ -117,7 +128,7 @@ class OSMPBF
 				end
 				to_parse.each do |obj|
 					this_date = timestamp_to_date(obj[:timestamp])
-					
+
 					#Check if we're using start date
 					next if (use_start_date) and (this_date < start_date)
 
@@ -143,7 +154,6 @@ class OSMPBF
 						current_rate = (5000/(time - time_then))
 						time_then = time
 						avg_rate = index/(time - start_time)
-						
 						print "Processed #{index} #{object_type} at Avg: #{'%d' % avg_rate} Current: #{'%d' % current_rate} #{object_type}/second. \r"
 						$stdout.flush
 					end
@@ -159,10 +169,13 @@ class OSMPBF
 		puts "\nAdding the appropriate indexes: id, changeset, created_at, geometry\n"
 		puts "=======================================================\n\n"
 		begin
-			DatabaseConnection.database[object_type.to_sym].ensure_index( id: 1 )
-			DatabaseConnection.database[object_type.to_sym].ensure_index( changeset: 1 )
-			DatabaseConnection.database[object_type.to_sym].ensure_index( created_at: 1)
-			DatabaseConnection.database[object_type.to_sym].ensure_index( geometry: "2dsphere")
+			DatabaseConnection.database[object_type].indexes.create_many(
+			[
+				{ :key => { geometry:   '2dsphere'}},
+				{ :key => { created_at: 1         }},
+				{ :key => { uid:        1         }},
+				{ :key => { user:       1         }},
+			])
 		rescue => e
 			puts "Error creating index"
 			p $!
@@ -189,6 +202,6 @@ class OSMPBF
 			puts "Empty way count: #{@empty_lines}"
 			puts "Empty Geometries: #{@empty_geometries}"
 		end
-
+		
 	end
 end
