@@ -254,8 +254,9 @@ module OSMongoable
 			end
 		end
 
-		def save!
-  		DatabaseConnection.database['changesets'].insert_one( self.to_mongo )
+		def save!(args={})
+			obj = self.to_mongo.merge(args)
+  		DatabaseConnection.database['changesets'].insert_one( obj )
   	end
 	end
 

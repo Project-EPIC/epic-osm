@@ -35,7 +35,7 @@ class ChangesetImport
         this_changeset = changeset_api.hit_api(changeset_id)
         if this_changeset
           changeset_obj = DomainObject::Changeset.new convert_osm_api_to_domain_object_hash this_changeset
-          changeset_obj.save!
+          changeset_obj.save!({pbf: true})
         end
 
         percent_done = ((index.to_f / distinct_changeset_count)*100).round

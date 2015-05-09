@@ -58,7 +58,11 @@ class AnalysisWindowImport
 		# * for POLY: path to the .poly file
 
 		File.open('import_scripts/temp.config', 'wb') do |file|
-			file.write("import_scripts/temp.osm.pbf  BBOX #{config['bbox']}")
+			if config['poly']
+				file.write("import_scripts/temp.osm.pbf  POLY #{config['poly']}")
+			else
+				file.write("import_scripts/temp.osm.pbf  BBOX #{config['bbox']}")
+			end
 		end
 	end
 

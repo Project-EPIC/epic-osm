@@ -8,17 +8,17 @@ class NodeWaysImport
     @changeset_download_api = OSMAPI.new("http://www.openstreetmap.org/api/0.6/changeset/")
     @nodes_download_api = OSMAPI.new("http://www.openstreetmap.org/api/0.6/nodes?nodes=")
 
-#http://www.openstreetmap.org/api/0.6/changeset/29682572/download
-#http://www.openstreetmap.org/api/0.6/nodes?nodes=3145564995,3145564994
+    #http://www.openstreetmap.org/api/0.6/changeset/29682572/download
+    #http://www.openstreetmap.org/api/0.6/nodes?nodes=3145564995,3145564994
 
     @limit = limit
   end
 
   def new_changeset_ids
     changesets = []
-    selector = {:complete => { '$ne' => true }}
-	  opts     = {:fields => {'_id' => 0, 'id' => 1 }}
-    changesets = DatabaseConnection.database["changesets"].find(selector, opts).map { |changeset| changeset['id'] }
+    selector = {:complete => { '$ne' => true }, :pbf=>{ '$ne' => true }}
+	  opts     = {'_id' => 0, 'id' => 1 }
+    changesets = DatabaseConnection.database["changesets"].find(selector).projection(opts).map { |changeset| changeset['id'] }
     if limit.nil?
       return changesets.uniq
     else
@@ -30,12 +30,13 @@ class NodeWaysImport
     new_changesets = args[:changeset_ids] || new_changeset_ids
     # get changesets that haven't been downloaded
     new_changeset_count = new_changesets.length
+    puts "Found #{new_changeset_count} incomplete changesets to update"
     new_changesets.each_with_index do |changeset_id, index|
       begin
         this_changeset = changeset_download_api.hit_api(changeset_id + "/download")
         if this_changeset
           convert_osm_api_to_domain_object_hash this_changeset
-          DatabaseConnection.database["changesets"].find({:id => changeset_id}).update_one({"$set" => {:complete => true}, upsert:true})
+          DatabaseConnection.database["changesets"].find({:id => changeset_id}).update_one({"$set" => {:complete => true}}, {:upsert => true})
         end
 
         percent_done = ((index.to_f / new_changeset_count)*100).round
