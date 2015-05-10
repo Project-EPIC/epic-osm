@@ -1,22 +1,22 @@
 require "spec_helper"
 
-require_relative '../models/Query'
-
-
 describe Query do
 
-  	it "Can Query the Nodes collection for a specific analyis window" do 
-  		time_frame = TimeFrame.new( start: Time.new(2011,1,1), end: Time.new(2011,10,1) )
+  before :all do
+    @epicosm = EpicOSM.new(analysis_window: 'spec/test_config_file.yml')
+    @aw = @epicosm.analysis_window
+  end
 
-		this_analysis_window = AnalysisWindow.new(time_frame: time_frame)
+  it "can get the earliest changeset date from the DB" do
+    expect Changeset_Query.earliest_changeset_date.class == Date
+  end
 
-		this_query = Node_Query.new(analysis_window: this_analysis_window)
+  it "can get the latest changeset from the DB" do
+    expect  Changeset_Query.latest_changeset_date.class == Date
+  end
 
-		node_bucket = this_query.run
-
-		puts node_bucket.count
-
-		puts node_bucket.first.inspect
-  	end
+  it "can make a node query" do
+    puts @aw.nodes_x_year
+  end
 
 end

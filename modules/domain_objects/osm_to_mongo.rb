@@ -1,22 +1,5 @@
 require 'mongo'
 
-#First, open BSON Ordered Hash and rewrite the keys to symbols to interface
-# better with our model
-module BSON  #:nodoc:
-	class OrderedHash
-		#=Turn Strings to Symbols
-		#
-		#
-		def from_mongo
-			self.keys.each do |key|
-				self[key.to_sym] = self[key]
-				self.delete key
-			end
-			return self
-		end
-	end
-end
-
 # = Creating the EPIC OSM <=> Mongo Link
 #
 #

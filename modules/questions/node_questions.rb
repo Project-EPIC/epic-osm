@@ -1,5 +1,5 @@
 module Questions # :nodoc: all
-  
+
   module Nodes
     #Total nodes edited in the analysis window
     def total_nodes_edited

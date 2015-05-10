@@ -110,7 +110,7 @@ class DatabaseConnection
 
 		#If not configured for memory, look in mongo
 		else
-			return database['nodes'].find(id: node_id).collect{ |node| node.from_mongo }
+			return database['nodes'].find(id: node_id).collect{ |node| node }
 		end
 	end
 
@@ -122,7 +122,7 @@ class DatabaseConnection
 			return @@memory_ways[way_id]
 		#If not configured for memory, look in mongo
 		else
-			return database['ways'].find(id: way_id).collect{ |way| way.from_mongo }
+			return database['ways'].find(id: way_id).collect{ |way| way }
 		end
 	end
 end

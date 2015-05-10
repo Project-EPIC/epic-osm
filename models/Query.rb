@@ -60,13 +60,13 @@ class Query
 			selector.update(args[:constraints])
 		end
 
-		buckets.each do |bucket|	
+		buckets.each do |bucket|
 
 			update_created_at( bucket[:start_date], bucket[:end_date] )
 
 			results = DatabaseConnection.database[args[:collection]].find( selector )
 			results.each do |obj|
-				bucket[:objects] << args[:type].new(obj.from_mongo)
+				bucket[:objects] << args[:type].new( obj )
 			end
 		end
 		buckets
@@ -107,22 +107,18 @@ class Changeset_Query < Query
 
 	#Get the date of the earliest changeset in the analysis window
 	def self.earliest_changeset_date
-		DatabaseConnection.database['changesets'].find(
-			selector={}, 
-			opts= {:sort => {'created_at' => :asc} } ).limit(1).first['created_at']
+		DatabaseConnection.database['changesets'].find().sort({created_at: 1}).limit(1).first['created_at']
 	end
 
 	#Get the date of the latest changeset in the analysis window
 	def self.latest_changeset_date
-		DatabaseConnection.database['changesets'].find(
-			selector={}, 
-			opts= {:sort => {'closed_at' => :desc} } ).limit(1).first['closed_at']
+		DatabaseConnection.database['changesets'].find().sort({created_at: -1}).limit(1).first['created_at']
 	end
 end
 
 # User Query
 #
-# Returns an array of users, either all of the users or if _args[:uids] is set, it 
+# Returns an array of users, either all of the users or if _args[:uids] is set, it
 # will only return users whose uid is in the :uids array argument.
 class User_Query < Query
 	attr_reader :selector
@@ -133,19 +129,14 @@ class User_Query < Query
 		end
 	end
 
-	# Overrides the parent _run_ function because it does not need to return buckets, 
+	# Overrides the parent _run_ function because it does not need to return buckets,
 	# merely an array of User objects.
 	def run
 		users = []
 		results = DatabaseConnection.database['users'].find( selector )
 		results.each do |user|
-			users << User.new(user.from_mongo)
+			users << User.new( user )
 		end
 		users
 	end
 end
-
-
-
-
-

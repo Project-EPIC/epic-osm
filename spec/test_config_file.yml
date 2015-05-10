@@ -1,14 +1,10 @@
-#
-# This is a sample configuration file for cutting and importing Boulder data
-#
-
 #User Information
-title: 'TESTING'
+title: 'TESTING ANALYSIS WINDOW'
 email: 'jennings.anderson@colorado.edu'
 
 #Database Information
-pbf_file: '/Users/jenningsanderson/Documents/OSM/north-america.osh.pbf'
-database: 'boulder-history'
+pbf_file: 'spec/import/test_files/managua.osm.pbf'
+database: 'osm-test'
 
 #Analysis Window Information
 start_date: '2013-9-01'
@@ -17,20 +13,11 @@ end_date:   '2013-12-31'
 #Bounding Box:
 bbox: '-105.3424072,39.946595,-105.1872253,40.0938316' #Expecting 4 parameters
 
-#Or:
-max_lon:
-min_lat:
-min_lon:
-max_lat:  #Not implemented
-
-# Lower left, upper right #
-
 tags: none
 
 write_directory: '/Users/jenningsanderson/Desktop/exports/boulder_flood'
 
 #Questions for Analysis
-
 Node Questions:
  - total_nodes_edited
  - number_of_new_nodes
