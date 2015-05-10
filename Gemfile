@@ -16,6 +16,7 @@ gem 'descriptive_statistics',	'2.5.1'
 #FileIO
 gem 'htmlentities',	'4.3.3'
 
+gem 'rake'
 
 #Gems required mostly for import abiltiies:
 group :import do
