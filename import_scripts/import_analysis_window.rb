@@ -82,7 +82,11 @@ class AnalysisWindowImport
 
 	def run_mongo_import
 		conn = OSMPBF.new(end_date: time_frame.end_date, start_date: time_frame.start_date, not_complete: config['not_complete'])
-		conn.open_parser("import_scripts/temp.osm.pbf")
+		if config['pbf_file_final']
+			conn.open_parser(config['pbf_file_final'])
+		else
+			conn.open_parser("import_scripts/temp.osm.pbf")
+		end
 		# puts conn.file_stats
 
 		#Import Nodes, Ways, Relations

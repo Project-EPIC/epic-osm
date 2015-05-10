@@ -6,44 +6,31 @@ class UserImport
 
   def initialize(limit=nil)
     @user_api = OSMAPI.new("http://api.openstreetmap.org/api/0.6/user/")
-
-    #Open Log files
-    # @success_log = LogFile.new("logs/users","successful")
-    # @fail_log    = LogFile.new("logs/users","failed")
-
     @limit = limit
   end
 
-  def distinct_uids
-    @uids ||= get_distinct_uids
-  end
-
-
   def get_distinct_uids
-    uids = []
-    uids = DatabaseConnection.database["nodes"].distinct("uid")
-    uids += DatabaseConnection.database["ways"].distinct("uid")
-    uids += DatabaseConnection.database["relations"].distinct("uid")
-    uids += DatabaseConnection.database["changesets"].distinct("uid")
-    if @limit.nil? 
-      return uids.uniq!
-    else 
-      return uids.uniq!.first(@limit)
+    uids = DatabaseConnection.database["changesets"].find.distinct("uid")
+    if @limit.nil?
+      return uids.uniq
+    else
+      return uids.uniq.first(@limit)
     end
   end
 
   def import_user_objects
-    total_user_count = distinct_uids.length
+    uids = get_distinct_uids
+    total_user_count = uids.length
     error_ids = []
     print "\n======================================\n"
     print "Importing #{total_user_count} Users: \n"
-    distinct_uids.each_with_index do |user_id, index|
+    uids.each_with_index do |user_id, index|
       #check if user exists first (Shouldn't happen...)
       user_count =  DatabaseConnection.database["users"].find({"uid" =>  user_id}).count()
       if user_count > 0
         next
       end
-        
+
       begin
         this_user = user_api.hit_api(user_id)
 
@@ -67,9 +54,12 @@ class UserImport
 
   def add_indexes
     print "Adding Appropriate Indexes: uid, user, account_created"
-    DatabaseConnection.database['users'].ensure_index( uid: 1 )
-    DatabaseConnection.database['users'].ensure_index( user: 1 )
-    DatabaseConnection.database['users'].ensure_index( account_created: 1)
+    DatabaseConnection.database['users'].indexes.create_many(
+      [
+				{ :key => { account_created: 1 }},
+        { :key => { uid:             1 }},
+				{ :key => { user:            1 }}
+      ])
   end
 
   def convert_osm_api_to_domain_object_hash(osm_api_hash)

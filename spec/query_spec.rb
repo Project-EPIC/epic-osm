@@ -16,7 +16,12 @@ describe Query do
   end
 
   it "can make a node query" do
-    puts @aw.nodes_x_year
+    expect @aw.nodes_x_all.first[:objects].count > 0
   end
+
+  it "can make a complex query" do
+    puts @aw.experienced_contributors.count
+  end
+
 
 end
