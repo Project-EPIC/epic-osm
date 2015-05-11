@@ -139,14 +139,6 @@ class OSMPBF
 						rescue => e
 							puts $!
 							puts e.backtrace
-							begin
-								type["tags"].each do |k,v|
-									k.gsub!('.','_')
-								end
-								add_func.call(obj)
-							rescue
-								next
-							end
 						end
 					end
 					if index%5000==0
@@ -202,6 +194,6 @@ class OSMPBF
 			puts "Empty way count: #{@empty_lines}"
 			puts "Empty Geometries: #{@empty_geometries}"
 		end
-		
+
 	end
 end

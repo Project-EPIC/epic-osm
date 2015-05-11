@@ -131,15 +131,17 @@ end
 #
 #
 class OSMBulkOp
-	attr_reader :collection, :insert_threshold, :objects
+	attr_reader :collection, :insert_threshold, :objects, :counter
 
 	def initialize(args)
 		@collection = args[:coll]
 		@insert_threshold = args[:insert_treshold] || 500
 		@objects = []
+		@counter = 0
 	end
 
 	def insert(object)
+		@counter += 1
 		@objects << { :update_one =>
                    {:find =>
 									    {:version => object[:version],
@@ -154,8 +156,36 @@ class OSMBulkOp
 
 	def execute
 		unless objects.empty?
-			DatabaseConnection.database[collection].bulk_write(objects, :ordered => false)
-			@objects = []
+			#Attempt a bulk write
+			begin
+				bulky = Mongo::BulkWrite::UnorderedBulkWrite.new(DatabaseConnection.database[collection], objects, {})
+				bulky.execute
+				@objects = []
+			#If bulk write fails, then go to per-item
+			rescue => e
+				objects.each do |orig_op|
+					begin
+						obj = orig_op[:update_one][:update]['$set'].dup
+						tags = obj[:tags].dup
+						obj[:tags] = {}
+						tags.each do |k,v|
+							obj[:tags][k.gsub(".","__")] = v
+						end
+						new_op = { :update_one =>
+				                   {:find =>
+													    {:version => obj[:version],
+				                       :id => obj[:id]},
+														:update => {'$set' => obj},
+														:upsert => true}
+												}
+						DatabaseConnection.database[collection].bulk_write([new_op], :ordered => false)
+					rescue => e
+						puts $!
+						puts e.backtrace
+					end
+				end
+				@objects = []
+			end
 			DatabaseConnection.database[collection].indexes.create_many([
 	  		{ name: 'object_version', key: { version: 1 }, background: true},
 	  		{ name: 'object_id',      key: { id:      1 }, background: true}
