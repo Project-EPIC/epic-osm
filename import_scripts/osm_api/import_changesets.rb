@@ -19,6 +19,8 @@ class ChangesetImport
     changesets = DatabaseConnection.database["nodes"].find.distinct("changeset")
     changesets += DatabaseConnection.database["ways"].find.distinct("changeset")
     changesets += DatabaseConnection.database["relations"].find.distinct("changeset")
+    #Subract the existing changesets
+    changesets -= DatabaseConnection.database["changesets"].find.distinct('id')
     if limit.nil?
       return changesets.uniq!
     else

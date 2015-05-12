@@ -87,7 +87,7 @@ class AnalysisWindowImport
 		else
 			conn.open_parser("import_scripts/temp.osm.pbf")
 		end
-		# puts conn.file_stats
+		puts conn.file_stats
 
 		#Import Nodes, Ways, Relations
 		conn.parse_to_collection(object_type="nodes", lim=nil)
