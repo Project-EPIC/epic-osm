@@ -12,6 +12,9 @@
 
 class AnalysisWindow
 
+	#The title
+	attr_reader :title
+
 	# The TimeFrame object instance for this analysis window
 	attr_reader :time_frame
 
@@ -32,6 +35,8 @@ class AnalysisWindow
 
 		@max_area = args[:max_area] || 1000000000000
 		@min_area = args[:min_area] || 1
+
+		@title    = args[:title]
 
 		@changeset_tags = args[:changeset_tags]
 
@@ -126,20 +131,22 @@ class AnalysisWindow
 		begin
 			#Break out the method by snake case
 			pieces = m.to_s.split(/\_/)
-
 			#Find the nodes_x_all, changesets_x_month, ways_x_year type of functions
 			if pieces[1] == 'x'
 
-				unless args.empty?
-					cons = args[0][:constraints] #Better pass a hash, otherwise it'll explode!
+				if args.empty?
+					cons = {}
+					step = 1
+				else
+					cons = args[0][:constraints] || {} #Better pass a hash, otherwise it'll explode!
 					step = args[0][:step] || 1
 				end
-
-				instance_eval "#{pieces[0]}.run(unit: :#{pieces[2]}, step: step, constraints: cons)"
+				instance_eval "#{pieces[0]}.run(unit: :#{pieces[2]}, step: #{step}, constraints: #{cons})"
 			end
 
 		rescue => e
 			puts $!
+			puts e.backtrace
 			super(args)
 		end
 	end

@@ -16,14 +16,38 @@ module FileIO
 			@file_name = File.basename(full_path)
 			@data      = args[:data]
 
+			#Sanitize the filepath
+			@file_name.gsub!('/','-')
+			@file_name.gsub!(/\s/,'_')
+			@file_name.gsub!(':','.')
+
 			FileUtils.mkdir_p(file_path) unless Dir.exists? file_path
+
 		end
 
 		# Writes the actual json files.
-		def write
+		def write(passed_data = nil)
+			this_data = passed_data || data
 			File.open(file_path+'/'+file_name, 'wb') do |file|
-				file.write( data.to_json )
+				file.write( this_data.to_json )
 			end
+		end
+
+		def getIndexByField(nodes, field, target)
+			nodes.each_with_index do |node, index|
+				if node[field] == target
+					return index
+				end
+			end
+		end
+
+		def write_network(graph_data)
+			graph_data[:edges].each do |edge|
+				edge[:source] = getIndexByField( graph_data[:nodes], :id, edge[:source] )
+				edge[:target] = getIndexByField( graph_data[:nodes], :id, edge[:target] )
+			end
+			graph_data[:links] = graph_data.delete :edges
+			write(graph_data)
 		end
 	end
 
@@ -51,9 +75,9 @@ module FileIO
 
 			@encoder = HTMLEntities.new
 
-			@filename = filename.gsub(/[^A-Za-z0-9\.\/]/,'_')
+			@filename = filename#.gsub(/[^A-Za-z0-9\.\/]/,'_')
 
-			@file = File.open(filename, 'wb')
+			@file = File.open(filename, 'w')
 		end
 
 		def write
@@ -64,7 +88,7 @@ module FileIO
 		end
 
 		def header
-			file.write %Q{graph [\n} 
+			file.write %Q{graph [\n}
 			file.write %Q{\tdirected #{directed}\n}
 			if id
 				file.write %Q{\tid #{id}\n}
@@ -97,7 +121,7 @@ module FileIO
 
 		def write_nodes
 			nodes.each do |node|
-				file.write %Q{\tnode [\n} 
+				file.write %Q{\tnode [\n}
 				file.write %Q{\t\tid "#{encoder.encode( (node.delete :id), :named)}"\n}
 				node.keys.each do |key|
 					file.write %Q{\t\t#{key} }

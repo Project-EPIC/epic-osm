@@ -176,4 +176,9 @@ namespace :questions do
 	task :notes do
 		epicosm.run_note_questions
 	end
+
+	desc "Run Network Questions"
+	task :networks do 
+		epicosm.run_network_questions
+	end
 end

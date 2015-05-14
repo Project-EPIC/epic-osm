@@ -39,6 +39,7 @@ class EpicOSM
 
 	def analysis_window
 		@analysis_window ||= AnalysisWindow.new(
+						title: aw_config['title'],
 						time_frame: TimeFrame.new(start_date: aw_config['start_date'], end_date: aw_config['end_date']),
 						bounding_box: BoundingBox.new(bbox: aw_config['bbox']),
 						min_area: aw_config['min_area'],
@@ -112,10 +113,12 @@ class EpicOSM
 		end
 	end
 
-	def run_network_functions
-		network_info = aw_config['temporal_network']
-			temp = Questions::Networks::TemporalAnalysis.new(aw: analysis_window, step: network_info['step'], unit: network_info['unit'], directory: aw_config['write_directory']+'/networks/'+network_info['files'])
-			temp.run_overlapping_changesets
+	def run_network_questions
+		unless aw_config['Network Questions'].nil?
+			aw_config['Network Questions'].each do |network_q|
+				question_asker.run_network_questions(network_q)
+			end
+		end
 	end
 
 	def run_note_questions
