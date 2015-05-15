@@ -7,6 +7,7 @@ The ```setup``` directory contains detailed information on installation for Linu
 
 Once dependencies are all installed, running ```bundle install``` from the root of this repository should handle the rest.  _Note,  if you bundle install, you most likely need to add ```bundle exec``` before all of the commands_.
 
+Additionally, there is a virtual machine by Tom Gertin (@d3nexter) which has the dependencies installed: [https://github.com/d3netxer/osmbox](https://github.com/d3netxer/osmbox).
 
 #Analysis Window
 An analysis window is a YAML document which defines file locations, database names, and the questions that you'd like to ask of the framework. A basic analysis window looks like this:

@@ -118,7 +118,7 @@ module Questions # :nodoc: all
 					end
 				end
 
-				this_file.write_network(nodes: nodes.values, edges: edges.values)
+				this_file.write_network(nodes: nodes.values, edges: edges.values, title: "Connected Roads Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 		end
 
