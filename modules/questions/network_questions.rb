@@ -55,7 +55,7 @@ module Questions # :nodoc: all
 				end
 				puts "Found #{users.values.length} users during #{bucket[:start_date]}"
 				users.values.each do |node|
-					unique_users << node
+					unique_users << node[:id]
 				end
 
 				users.values.each do |node|
@@ -66,7 +66,7 @@ module Questions # :nodoc: all
 					end
 				end
 
-				this_file.write_network(nodes: users.values, edges: edges.values, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
+				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: false}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 			puts "Found #{unique_users.uniq.count} users"
 		end
@@ -123,7 +123,7 @@ module Questions # :nodoc: all
 					end
 				end
 
-				this_file.write_network(nodes: nodes.values, edges: edges.values, title: "Connected Roads Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
+				this_file.write_network(nodes: nodes.values, edges: edges.values, options: {directed: true}, title: "Connected Roads Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 		end
 	end
