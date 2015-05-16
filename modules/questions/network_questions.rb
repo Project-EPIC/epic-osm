@@ -11,10 +11,12 @@ module Questions # :nodoc: all
 
 			buckets = instance_eval "aw.changesets_x_#{unit}(step: #{step}, constraints: #{constraints})"
 
+			experienced_users = aw.experienced_contributors
+			new_users         = aw.new_contributors
+
 			unique_users = []
 			buckets.each do |bucket|
-				this_file = make_file(filename="#{bucket[:start_date]}-#{bucket[:end_date]}", directory=directory)
-
+				this_file = FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
 				users = {}
 				edges = {}
 
@@ -31,8 +33,8 @@ module Questions # :nodoc: all
 						unique_users << user_1
 						unique_users << user_2
 
-						users[user_1] ||= {id: user_1}
-						users[user_2] ||= {id: user_2}
+						users[user_1] ||= {id: user_1, weight: 1}
+						users[user_2] ||= {id: user_2, weight: 1}
 
 
 						unless user_1 == user_2
@@ -46,7 +48,6 @@ module Questions # :nodoc: all
 										edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
 										edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
 									end
-									# puts "#{user_1} - #{user_2}"
 								end
 							end
 						end
@@ -55,13 +56,17 @@ module Questions # :nodoc: all
 				puts "Found #{users.values.length} users during #{bucket[:start_date]}"
 				users.values.each do |node|
 					unique_users << node
-					this_file.add_node(node)
 				end
 
-				edges.values.each do |edge|
-					this_file.add_edge(edge)
+				users.values.each do |node|
+					if experienced_users.include? node[:id]
+						node["status"] = "Experienced"
+					else
+						node["status"] = "New"
+					end
 				end
-				this_file.write
+
+				this_file.write_network(nodes: users.values, edges: edges.values, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 			puts "Found #{unique_users.uniq.count} users"
 		end
@@ -94,8 +99,8 @@ module Questions # :nodoc: all
 
 				#Go through each way and look at the ways after it.
 				bucket[:objects].each_with_index do |first_way, index|
-					nodes[first_way.user] ||= {id: first_way.user, ways: 1}
-					nodes[first_way.user][:ways] +=1
+					nodes[first_way.user] ||= {id: first_way.user, weight: 1}
+					nodes[first_way.user][:weight] +=1
 					#Iterate through all of the ways that come after
 					bucket[:objects][index..-1].each do |way_after|
 						#If the users are different, check if they share any nodes
@@ -121,9 +126,5 @@ module Questions # :nodoc: all
 				this_file.write_network(nodes: nodes.values, edges: edges.values, title: "Connected Roads Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 		end
-
-		# def make_file(filename, directory, comment="", label="")
-		# 	return FileIO::GMLAuthor.new(filename: "#{directory}/#{filename}.gml", directed: 0, id: 1, comment: comment, label: label)
-		# end
 	end
 end
