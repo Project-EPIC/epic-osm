@@ -67,5 +67,17 @@ module Questions # :nodoc: all
     def median_nodes_per_mapper
       {"Median Nodes Per Mapper" => DescriptiveStatistics.median(nodes_grouped_by_mapper.collect{|uid, nodes| nodes.length}) }
     end
+
+    #
+    # Get the counts for nodes that are not a part of relations or ways
+    #
+    def singleton_nodes
+      all_node_ids = Node_Query.new(analysis_window: aw).run.first[:objects].collect{|n| n.id}.uniq
+      all_nodes_in_ways = Way_Query.new(analysis_window: aw).run.first[:objects].collect{|w| w.nodes}.flatten.uniq
+      # all_nodes_in_rels = Relation_Query.new(analysis_window: aw).run.first[:objects].collect{|r| r.nodes}.flatten.uniq
+      nodes_not_in_ways_or_rels = (all_node_ids - all_nodes_in_ways).length
+      puts "Total Nodes: #{all_node_ids.length}, Nodes not in ways or relations: #{nodes_not_in_ways_or_rels}"
+      puts "Percentage: #{nodes_not_in_ways_or_rels.to_f / all_node_ids.length.to_f}"
+    end
   end
 end

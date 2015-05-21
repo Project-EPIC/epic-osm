@@ -53,7 +53,7 @@ class Query
 	# Accesses the database through the Singleton DatabaseConnection reference and
 	# queries with the _selector_ that was built.
 	def run(args = {})
-		puts "Got to class:Query super run function with args #{args}"
+		# puts "Got to class:Query super run function with args #{args}"
 		@buckets = analysis_window.build_buckets( unit = args[:unit], step = args[:step] )
 
 		unless args[:constraints].nil?
@@ -61,8 +61,9 @@ class Query
 		end
 
 		buckets.each do |bucket|
-
-			update_created_at( bucket[:start_date], bucket[:end_date] )
+			if selector[:created_at].nil?
+				update_created_at( bucket[:start_date], bucket[:end_date] )
+			end
 
 			results = DatabaseConnection.database[args[:collection]].find( selector )
 			# puts "Query complete for: #{selector}"
