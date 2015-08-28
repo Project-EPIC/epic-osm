@@ -102,6 +102,9 @@ module Questions # :nodoc: all
 				edges = {}
 
 				overlapping_ways = []
+				way_count = bucket[:objects].count
+
+				puts "Total Ways: #{way_count}"
 
 				#Go through each way and look at the ways after it.
 				bucket[:objects].each_with_index do |first_way, index|
@@ -121,6 +124,9 @@ module Questions # :nodoc: all
 								# puts "intersecting-road"
 							end
 						end
+					end
+					if (index%100).zero?
+						puts "Processed #{index} of #{way_count}"
 					end
 				end
 				nodes.values.each do |node|
