@@ -10,6 +10,15 @@ module Questions # :nodoc: all
 			changesets_by_uid = aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.uid}
 		end
 
+		def number_of_changesets_per_mapper
+			changesets_by_uid = aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.user}
+			changeset_counts = {}
+			changesets_by_uid.each do |user, changesets|
+				changeset_counts[user] = changesets.count
+			end
+			changeset_counts
+		end
+
 		def mean_changesets_per_mapper
 			num_changesets = changesets_per_mapper.collect{|uid, changesets| changesets.length}
 			{"Mean Changesets Per Mapper" => DescriptiveStatistics.mean(num_changesets) }
