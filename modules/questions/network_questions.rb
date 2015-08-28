@@ -81,12 +81,20 @@ module Questions # :nodoc: all
 			#make the directory
 			FileUtils.mkpath(directory) unless Dir.exists? directory
 
+			puts "aw.ways_x_#{unit}(step: #{step}, constraints: #{constraints})"
+
 			puts "Getting ways"
 			buckets = instance_eval "aw.ways_x_#{unit}(step: #{step}, constraints: #{constraints})"
+
+
 
 			puts "Done, getting user stats"
 			experienced_users = aw.experienced_contributors
 			new_users         = aw.new_contributors
+
+			buckets.each do |bucket|
+				puts "#{bucket[:start_date]}, #{bucket[:end_date]}, #{bucket[:objects].count}"
+			end
 
 			buckets.each do |bucket|
 				puts "Running bucket: #{bucket[:start_date]}"

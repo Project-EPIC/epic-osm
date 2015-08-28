@@ -61,9 +61,7 @@ class Query
 		end
 
 		buckets.each do |bucket|
-			if selector[:created_at].nil?
-				update_created_at( bucket[:start_date], bucket[:end_date] )
-			end
+			update_created_at( bucket[:start_date], bucket[:end_date] )
 
 			results = DatabaseConnection.database[args[:collection]].find( selector )
 			# puts "Query complete for: #{selector}"
