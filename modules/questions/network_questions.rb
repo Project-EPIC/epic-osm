@@ -101,7 +101,7 @@ module Questions # :nodoc: all
 				nodes = {}
 				edges = {}
 
-				overlapping_ways = []
+				# overlapping_ways = []
 				way_count = bucket[:objects].count
 
 				puts "Total Ways: #{way_count}"
@@ -115,7 +115,7 @@ module Questions # :nodoc: all
 						#If the users are different, check if they share any nodes
 						if way_after.user != first_way.user
 							if (first_way.nodes & way_after.nodes).count == 1
-								overlapping_ways << first_way << way_after
+								# overlapping_ways << first_way << way_after
 								unless edges["#{way_after.user}-#{first_way.user}"].nil?
 									edges["#{way_after.user}-#{first_way.user}"][:weight] += 1
 								else
@@ -136,17 +136,17 @@ module Questions # :nodoc: all
 						node["status"] = "New"
 					end
 				end
-				these_ways = FileIO::unpack_objects([ {:objects => overlapping_ways} ])
-				clean_ways = []
-				# puts these_ways
-				these_ways.first[:objects].each do |w|
-					clean_ways << {"type"=>"Feature","properties"=>{
-						"user" => w["user"],
-						"date" => w["created_at"],
-						"uid"  => w["uid"],
-						"changeset" => w["changeset"]
-						},"geometry"=>w["geometry"]}
-					end
+				# these_ways = FileIO::unpack_objects([ {:objects => overlapping_ways} ])
+				# clean_ways = []
+				# # puts these_ways
+				# these_ways.first[:objects].each do |w|
+				# 	clean_ways << {"type"=>"Feature","properties"=>{
+				# 		"user" => w["user"],
+				# 		"date" => w["created_at"],
+				# 		"uid"  => w["uid"],
+				# 		"changeset" => w["changeset"]
+				# 		},"geometry"=>w["geometry"]}
+				# 	end
 				# geojson_export.write(type: "FeatureCollection", features: clean_ways)
 				this_file.write_network(nodes: nodes.values, edges: edges.values, options: {directed: true}, title: "Connected Roads Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
