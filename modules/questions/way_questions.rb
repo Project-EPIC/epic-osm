@@ -10,6 +10,15 @@ module Questions # :nodoc: all
 			{"Number of Ways Edited" => aw.way_edit_count}
 		end
 
+		def number_of_roads_per_mapper
+			roads_per_user = aw.ways_x_all(constraints: {"tags.highway" => {"$ne" => nil}}).first[:objects].group_by{|way| way.user}
+			road_counts = {}
+			roads_per_user.each do |user, ways|
+				road_counts[user] = ways.count
+			end
+			road_counts
+		end
+
 		def new_ways_per_day
 			ways_added_per_day = []
 			new_ways_cumulative = 0
