@@ -93,7 +93,7 @@ module Questions # :nodoc: all
 				# this_file = make_file(filename="#{bucket[:start_date]}-#{bucket[:end_date]}", directory=directory)
 				this_file = FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
 
-				geojson_export = FileIO::JSONExporter.new(path: directory, name: "ActualWays-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
+				# geojson_export = FileIO::JSONExporter.new(path: directory, name: "ActualWays-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
 
 				#http://stackoverflow.com/questions/5470725/how-to-group-by-count-in-array-without-using-loop
 				# node_count_in_bucket = buckets.collect{|bucket| bucket[:objects].collect{|way| way.nodes}}.flatten.inject(Hash.new(0)){|h,e| h[e]+=1 ; h}
@@ -118,6 +118,7 @@ module Questions # :nodoc: all
 								else
 									edges["#{way_after.user}-#{first_way.user}"] = {source: way_after.user, target: first_way.user, weight: 1, name: "#{way_after.user}-#{first_way.user}"}
 								end
+								# puts "intersecting-road"
 							end
 						end
 					end
@@ -140,7 +141,7 @@ module Questions # :nodoc: all
 						"changeset" => w["changeset"]
 						},"geometry"=>w["geometry"]}
 					end
-				geojson_export.write(type: "FeatureCollection", features: clean_ways)
+				# geojson_export.write(type: "FeatureCollection", features: clean_ways)
 				this_file.write_network(nodes: nodes.values, edges: edges.values, options: {directed: true}, title: "Connected Roads Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 		end
