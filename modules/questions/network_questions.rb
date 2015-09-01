@@ -10,13 +10,20 @@ module Questions # :nodoc: all
 			FileUtils.mkpath(directory) unless Dir.exists? directory
 
 			buckets = instance_eval "aw.changesets_x_#{unit}(step: #{step}, constraints: #{constraints})"
+			ways    = instance_eval "aw.ways_x_#{unit}(step: #{step})"
 
 			experienced_users = aw.experienced_contributors
 			new_users         = aw.new_contributors
 
 			unique_users = []
-			buckets.each do |bucket|
+			buckets.each_with_index do |bucket, idx|
 				this_file = FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
+
+				geojson_export = FileIO::JSONExporter.new(path: directory, name: "Ways_for_Overlapping_Changesets-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
+
+				changesets = []
+				these_ways = []
+
 				users = {}
 				edges = {}
 
@@ -30,8 +37,7 @@ module Questions # :nodoc: all
 						user_1 = bucket[:objects][i].user
 						user_2 = bucket[:objects][j].user
 
-						unique_users << user_1
-						unique_users << user_2
+						unique_users << user_1 << user_2
 
 						users[user_1] ||= {id: user_1, weight: 1}
 						users[user_2] ||= {id: user_2, weight: 1}
@@ -43,10 +49,20 @@ module Questions # :nodoc: all
 
 									unless edges["#{user_1}-#{user_2}"].nil?
 										edges["#{user_1}-#{user_2}"][:weight] += 1
-										edges["#{user_2}-#{user_1}"][:weight] += 1
+										# edges["#{user_2}-#{user_1}"][:weight] += 1
 									else
 										edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
-										edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
+										# edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
+									end
+
+									if not changesets.include? changeset_1.id
+										these_ways << ways[idx][:objects].select{|b| b.changeset == changeset_1.id}
+										changesets << changeset_1.id
+									end
+
+									if not changesets.include? changeset_2.id
+										these_ways << ways[idx][:objects].select{|b| b.changeset == changeset_2.id}
+										changesets << changeset_2.id
 									end
 								end
 							end
@@ -66,6 +82,18 @@ module Questions # :nodoc: all
 					end
 				end
 
+				clean_ways = []
+				these_ways = FileIO::unpack_objects([ {:objects => these_ways.flatten} ])
+
+				these_ways.first[:objects].each do |w|
+					clean_ways << {"type"=>"Feature","properties"=>{
+						"user" => w["user"],
+						"date" => w["created_at"],
+						"uid"  => w["uid"],
+						"changeset" => w["changeset"]
+						},"geometry"=>w["geometry"]}
+					end
+				geojson_export.write({type: "FeatureCollection", features: clean_ways})
 				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: false}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 			puts "Found #{unique_users.uniq.count} users"
