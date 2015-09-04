@@ -129,7 +129,7 @@ module Questions # :nodoc: all
 				# this_file = make_file(filename="#{bucket[:start_date]}-#{bucket[:end_date]}", directory=directory)
 				this_file = FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
 
-				# geojson_export = FileIO::JSONExporter.new(path: directory, name: "ActualWays-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
+				geojson_export = FileIO::JSONExporter.new(path: directory, name: "ActualWays-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
 
 				#http://stackoverflow.com/questions/5470725/how-to-group-by-count-in-array-without-using-loop
 				# node_count_in_bucket = buckets.collect{|bucket| bucket[:objects].collect{|way| way.nodes}}.flatten.inject(Hash.new(0)){|h,e| h[e]+=1 ; h}
@@ -137,7 +137,7 @@ module Questions # :nodoc: all
 				nodes = {}
 				edges = {}
 
-				# overlapping_ways = []
+				overlapping_ways = []
 				way_count = bucket[:objects].count
 
 				puts "Total Ways: #{way_count}"
@@ -151,7 +151,7 @@ module Questions # :nodoc: all
 						#If the users are different, check if they share any nodes
 						if way_after.user != first_way.user
 							if (first_way.nodes & way_after.nodes).count == 1
-								# overlapping_ways << first_way << way_after
+								overlapping_ways << first_way << way_after
 								unless edges["#{way_after.user}-#{first_way.user}"].nil?
 									edges["#{way_after.user}-#{first_way.user}"][:weight] += 1
 								else
@@ -172,18 +172,18 @@ module Questions # :nodoc: all
 						node["status"] = "New"
 					end
 				end
-				# these_ways = FileIO::unpack_objects([ {:objects => overlapping_ways} ])
-				# clean_ways = []
-				# # puts these_ways
-				# these_ways.first[:objects].each do |w|
-				# 	clean_ways << {"type"=>"Feature","properties"=>{
-				# 		"user" => w["user"],
-				# 		"date" => w["created_at"],
-				# 		"uid"  => w["uid"],
-				# 		"changeset" => w["changeset"]
-				# 		},"geometry"=>w["geometry"]}
-				# 	end
-				# geojson_export.write(type: "FeatureCollection", features: clean_ways)
+				these_ways = FileIO::unpack_objects([ {:objects => overlapping_ways} ])
+				clean_ways = []
+				# puts these_ways
+				these_ways.first[:objects].each do |w|
+					clean_ways << {"type"=>"Feature","properties"=>{
+						"user" => w["user"],
+						"date" => w["created_at"],
+						"uid"  => w["uid"],
+						"changeset" => w["changeset"]
+						},"geometry"=>w["geometry"]}
+					end
+				geojson_export.write(type: "FeatureCollection", features: clean_ways)
 				this_file.write_network(nodes: nodes.values, edges: edges.values, options: {directed: true}, title: "Connected Roads Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 		end
