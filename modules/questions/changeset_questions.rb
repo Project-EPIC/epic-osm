@@ -10,6 +10,14 @@ module Questions # :nodoc: all
 			changesets_by_uid = aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.uid}
 		end
 
+		def changeset_ids_per_mapper
+			users = {}
+			aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.user}.each do |user, changesets|
+				users[user] = changesets.collect{|x| x.id}
+			end
+			return users
+		end
+
 		def number_of_changesets_per_mapper
 			changesets_by_uid = aw.changesets_x_all.first[:objects].group_by{|changeset| changeset.user}
 			changeset_counts = {}
