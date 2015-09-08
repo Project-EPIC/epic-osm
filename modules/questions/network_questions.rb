@@ -245,8 +245,8 @@ module Questions # :nodoc: all
 										# edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
 									end
 									# We have an overlapping changeset -- lets look at some of the objects???
-									c1_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_1.id}).run
-									c2_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_2.id}).run
+									c1_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_1.id, 'version' => 1}).run
+									c2_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_2.id, 'version' => 1}).run
 									if (c1_ways.first[:objects].collect{|w| w.nodes} & c2_ways.first[:objects].collect{|w| w.nodes}).length == 0
 										overlapping_edits << c1_ways.first[:objects] << c2_ways.first[:objects]
 
