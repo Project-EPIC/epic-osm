@@ -1,5 +1,4 @@
 #TODO
-# => Shrink the changesets
 # => Define our own bounding box for changesets (don't use the max/min)
 # => We can make RICHER networks by stricter definitions
 
@@ -270,7 +269,7 @@ module Questions # :nodoc: all
 				end
 				clean_ways = []
 				these_ways = FileIO::unpack_objects([ {:objects => overlapping_edits} ])
-				puts these_ways
+				# puts these_ways
 				these_ways.first[:objects].each do |w|
 					clean_ways << {"type"=>"Feature","properties"=>{
 						"user" => w["user"],
