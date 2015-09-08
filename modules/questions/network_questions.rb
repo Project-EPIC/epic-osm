@@ -1,3 +1,8 @@
+#TODO
+# => Shrink the changesets
+# => Define our own bounding box for changesets (don't use the max/min)
+# => We can make RICHER networks by stricter definitions
+
 module Questions # :nodoc: all
 
 	module Networks # :nodoc: all
@@ -52,6 +57,7 @@ module Questions # :nodoc: all
 										# edges["#{user_2}-#{user_1}"][:weight] += 1
 									else
 										edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
+										puts "Overlap: #{user_1}-#{user_2} with Changeset: #{changeset_1.id}-#{changeset_2.id}"
 										# edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
 									end
 
@@ -233,10 +239,10 @@ module Questions # :nodoc: all
 
 									unless edges["#{user_1}-#{user_2}"].nil?
 										edges["#{user_1}-#{user_2}"][:weight] += 1
-										edges["#{user_2}-#{user_1}"][:weight] += 1
+										# edges["#{user_2}-#{user_1}"][:weight] += 1
 									else
 										edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
-										edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
+										# edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
 									end
 									# We have an overlapping changeset -- lets look at some of the objects???
 									c1_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_1.id}).run
@@ -275,7 +281,7 @@ module Questions # :nodoc: all
 					end
 				this_geojson.write({type: "FeatureCollection", features: clean_ways})
 
-				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: false}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
+				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: true}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 			puts "Found #{unique_users.uniq.count} users"
 		end
