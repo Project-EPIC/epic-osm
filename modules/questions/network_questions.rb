@@ -42,9 +42,9 @@ module Questions # :nodoc: all
 						users[user_1] ||= {id: user_1, weight: 1}
 						users[user_2] ||= {id: user_2, weight: 1}
 
-
+						n=10000000 #100000000
 						unless user_1 == user_2
-							if (changeset_1.area < 100000000) and (changeset_2.area < 100000000)
+							if (changeset_1.area < n) and (changeset_2.area < n)
 								if changeset_1.bounding_box.intersects? changeset_2.bounding_box
 
 									unless edges["#{user_1}-#{user_2}"].nil?
@@ -226,9 +226,9 @@ module Questions # :nodoc: all
 						users[user_1] ||= {id: user_1, weight: 1}
 						users[user_2] ||= {id: user_2, weight: 1}
 
-
+						n=1000000
 						unless user_1 == user_2
-							if (changeset_1.area < 1000000) and (changeset_2.area < 1000000)
+							if (changeset_1.area < n) and (changeset_2.area < n)
 								if changeset_1.bounding_box.intersects? changeset_2.bounding_box
 
 									unless edges["#{user_1}-#{user_2}"].nil?
