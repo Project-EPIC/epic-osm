@@ -251,8 +251,8 @@ module Questions # :nodoc: all
 										overlapping_edits << c1_ways.first[:objects] << c2_ways.first[:objects]
 
 										#Save the changeset comments
-										changeset_comments[changeset_1.id] || = changeset_1.comment
-										changeset_comments[changeset_2.id] || = changeset_2.comment
+										changeset_comments[changeset_1.id] ||= changeset_1.comment
+										changeset_comments[changeset_2.id] ||= changeset_2.comment
 									end
 									overlapping_edits.flatten!
 								end
