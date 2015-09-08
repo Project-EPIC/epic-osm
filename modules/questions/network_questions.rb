@@ -214,6 +214,7 @@ module Questions # :nodoc: all
 				edges = {}
 
 				overlapping_edits = []
+				changeset_comments = {}
 				this_geojson = FileIO::JSONExporter.new(path: directory, name: "actual_ways-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
 
 				size = bucket[:objects].count
@@ -248,6 +249,10 @@ module Questions # :nodoc: all
 									c2_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_2.id}).run
 									if (c1_ways.first[:objects].collect{|w| w.nodes} & c2_ways.first[:objects].collect{|w| w.nodes}).length == 0
 										overlapping_edits << c1_ways.first[:objects] << c2_ways.first[:objects]
+
+										#Save the changeset comments
+										changeset_comments[changeset_1.id] || = changeset_1.comment
+										changeset_comments[changeset_2.id] || = changeset_2.comment
 									end
 									overlapping_edits.flatten!
 								end
@@ -275,7 +280,8 @@ module Questions # :nodoc: all
 						"user" => w["user"],
 						"date" => w["created_at"],
 						"uid"  => w["uid"],
-						"changeset" => w["changeset"]
+						"changeset" => w["changeset"],
+						"comment" => changeset_comments[w["changeset"]]
 						},"geometry"=>w["geometry"]}
 					end
 				this_geojson.write({type: "FeatureCollection", features: clean_ways})
