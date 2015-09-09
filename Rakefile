@@ -157,6 +157,11 @@ namespace :questions do
 		epicosm.run_changeset_questions
 	end
 
+	desc "Run Advanced Changeset Questions"
+	task :changeset_geometries do
+		epicosm.run_advanced_changeset_questions
+	end
+
 	desc "Run User Questions"
 	task :users do
 		epicosm.run_user_questions
@@ -178,7 +183,7 @@ namespace :questions do
 	end
 
 	desc "Run Network Questions"
-	task :networks do 
+	task :networks do
 		epicosm.run_network_questions
 	end
 end

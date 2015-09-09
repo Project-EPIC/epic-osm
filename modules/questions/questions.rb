@@ -78,4 +78,8 @@ class QuestionAsker # :nodoc: all
 	def run_network_questions(question)
 		instance_eval "#{question.keys.first}(#{question.values.first})"
 	end
+
+	def run_advanced_changeset_questions(question)
+		instance_eval "#{question.keys.first}(#{question.values.first})"
+	end
 end

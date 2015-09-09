@@ -2,6 +2,8 @@ module Questions # :nodoc: all
 
 	module Changesets
 
+		require 'rgeo-geojson'
+
 		def total_changesets_created
 			{"Number of Changesets" => aw.changeset_count}
 		end
@@ -81,7 +83,7 @@ module Questions # :nodoc: all
 		end
 
 		def median_changeset_node_density
-			{"Median Changeset Node Density" => DescriptiveStatistics.median(changeset_node_densities) }
+			{"Median Changeset Node Density"  => DescriptiveStatistics.median(changeset_node_densities) }
 		end
 
 		def filtered_changeset_area(changeset)
@@ -94,6 +96,69 @@ module Questions # :nodoc: all
 			else
 				return nil
 			end
+		end
+
+		def compare_changeset_objects_bbox_to_changeset_area(args)
+			directory = args['files'] || '/data/www/tmp'
+			FileUtils.mkpath(directory) unless Dir.exists? directory
+
+			$osm_areas = []
+			$my_areas = []
+
+			changeset_ids = aw.changesets_x_all.first[:objects].each do |changeset|
+				# geojson_export = FileIO::JSONExporter.new(path: directory, name: "ChangesetGeometry-#{changeset.id}.geojson")
+				# puts "Changeset: #{changeset.id}"
+				ways = Way_Query.new(analysis_window: aw, constraints: {changeset: changeset.id, version: 1}).run.first[:objects]
+				nodes = Node_Query.new(analysis_window: aw, constraints: {changeset: changeset.id, version: 1}).run.first[:objects]
+
+				nodes_in_ways = ways.collect{|way| way.nodes}.flatten
+
+				nodes.reject!{|n| nodes_in_ways.include? n.id}
+
+				geo_objs = (ways.collect{|way| way.line_string} + nodes.collect{|node| node.point}).compact
+
+				geo = $factory.collection(geo_objs)
+
+				if geo.dimension > 0
+
+					geojson_geometries = []
+					(ways + nodes).each do |obj|
+						geojson_geometries << {type: "Feature", geometry: obj.geometry, properties: {
+							id: obj.id,
+							uid: obj.uid,
+							user: obj.user,
+							c_set: obj.changeset
+							}}
+					end
+
+					bbox = geo.envelope
+
+					geojson_geometries <<
+						{type: "Feature",
+						 geometry: RGeo::GeoJSON.encode(bbox, factory: $factory),
+						 properties: {
+							 Calculation: "ConvexHull",
+							 changeset: changeset.id
+						 }
+					 }
+
+					geojson_geometries <<
+						{type: "Feature",
+						 geometry: RGeo::GeoJSON.encode(changeset.bounding_box, factory: $factory),
+						 properties: {
+							 Calculation: "OSM",
+							 changeset: changeset.id
+						 }
+					 }
+
+
+					$my_areas << bbox.area
+					$osm_areas << changeset.area
+
+					# geojson_export.write({type: "FeatureCollection", features: geojson_geometries})
+				end
+			end
+			# return {my_areas: my_areas, osm_areas: osm_areas}
 		end
 
 		def average_changeset_area

@@ -280,6 +280,7 @@ module Questions # :nodoc: all
 						"user" => w["user"],
 						"date" => w["created_at"],
 						"uid"  => w["uid"],
+						"version" => w["version"],
 						"changeset" => w["changeset"],
 						"comment" => changeset_comments[w["changeset"]]
 						},"geometry"=>w["geometry"]}
@@ -355,6 +356,110 @@ module Questions # :nodoc: all
 				usernames = users.values.collect{|x| { id: x[:user], size: Math.sqrt(x[:objects].length)} }
 				this_file.write_network(nodes: usernames, edges: edges.values, options: {directed: false}, title: "Co-Editing Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
+		end
+
+		def overlapping_changesets_of_new_objects(args)
+
+			unit, step, directory, constraints = args['unit'], args['step'], args['files'], args['constraints'] || {}
+			changeset_size = args['changeset_area'] || 100000000
+
+			#make the directory
+			FileUtils.mkpath(directory) unless Dir.exists? directory
+
+			buckets = instance_eval "aw.changesets_x_#{unit}(step: #{step}, constraints: #{constraints})"
+
+			experienced_users = aw.experienced_contributors
+			new_users         = aw.new_contributors
+
+			unique_users = []
+
+			buckets.each do |bucket|
+				this_file = FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
+				users = {}
+				edges = {}
+
+				overlapping_edits = []
+				changeset_comments = {}
+				this_geojson = FileIO::JSONExporter.new(path: directory, name: "actual_ways-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
+
+				size = bucket[:objects].count
+
+				size.times do |i|
+					((i+1)..(size-1)).each do |j|
+						changeset_1 = bucket[:objects][i]
+						changeset_2 = bucket[:objects][j]
+
+						user_1 = bucket[:objects][i].user
+						user_2 = bucket[:objects][j].user
+
+						unique_users << user_1
+						unique_users << user_2
+
+						users[user_1] ||= {id: user_1, weight: 1}
+						users[user_2] ||= {id: user_2, weight: 1}
+
+						unless user_1 == user_2
+							c1_geo = OSMGeo::extents_of_new_objects_in_changesets(changeset_1.id)
+							c2_geo = OSMGeo::extents_of_new_objects_in_changesets(changeset_2.id)
+							unless c1_geo.nil? or c2_geo.nil?
+								if (c1_geo.area < changeset_size) and (c2_geo.area < changeset_size)
+
+									if c1_geo.intersects? c2_geo
+
+										unless edges["#{user_1}-#{user_2}"].nil?
+											edges["#{user_1}-#{user_2}"][:weight] += 1
+											# edges["#{user_2}-#{user_1}"][:weight] += 1
+										else
+											edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
+											# edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
+										end
+										# We have an overlapping changeset -- lets look at some of the objects???
+										c1_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_1.id, 'version' => 1}).run
+										c2_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_2.id, 'version' => 1}).run
+										if (c1_ways.first[:objects].collect{|w| w.nodes} & c2_ways.first[:objects].collect{|w| w.nodes}).length == 0
+											overlapping_edits << c1_ways.first[:objects] << c2_ways.first[:objects]
+
+											#Save the changeset comments
+											changeset_comments[changeset_1.id] ||= changeset_1.comment
+											changeset_comments[changeset_2.id] ||= changeset_2.comment
+										end
+										overlapping_edits.flatten!
+									end
+								end
+							end
+						end
+					end
+				end
+				puts "Found #{users.values.length} users during #{bucket[:start_date]}"
+				users.values.each do |node|
+					unique_users << node[:id]
+				end
+
+				users.values.each do |node|
+					if experienced_users.include? node[:id]
+						node["status"] = "Experienced"
+					else
+						node["status"] = "New"
+					end
+				end
+				clean_ways = []
+				these_ways = FileIO::unpack_objects([ {:objects => overlapping_edits} ])
+				# puts these_ways
+				these_ways.first[:objects].each do |w|
+					clean_ways << {"type"=>"Feature","properties"=>{
+						"user" => w["user"],
+						"date" => w["created_at"],
+						"uid"  => w["uid"],
+						"version" => w["version"],
+						"changeset" => w["changeset"],
+						"comment" => changeset_comments[w["changeset"]]
+						},"geometry"=>w["geometry"]}
+					end
+				this_geojson.write({type: "FeatureCollection", features: clean_ways})
+
+				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: true}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
+			end
+			puts "Found #{unique_users.uniq.count} users"
 		end
 	end
 end

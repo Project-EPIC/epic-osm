@@ -121,6 +121,14 @@ class EpicOSM
 		end
 	end
 
+	def run_advanced_changeset_questions
+		unless aw_config['Advanced Changeset Questions'].nil?
+			aw_config['Advanced Changeset Questions'].each do |changeset_q|
+				question_asker.run_advanced_changeset_questions(changeset_q)
+			end
+		end
+	end
+
 	def run_note_questions
 		unless aw_config['Note Questions'].nil?
 			aw_config['Note Questions'].each do |note_q|

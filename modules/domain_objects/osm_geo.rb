@@ -1,7 +1,7 @@
 module OSMGeo #:nodoc: all
 
 	require 'rgeo'
-	Factory = RGeo::Geographic.simple_mercator_factory
+	$factory = RGeo::Geographic.simple_mercator_factory
 
 	module OSMObject
 
@@ -12,16 +12,15 @@ module OSMGeo #:nodoc: all
 	end
 
 	module Node
-
 		def point
-			@point ||= Factory.point(lat, lon)
+			@point ||= $factory.point(lon.to_f, lat.to_f)
 		end
 
 		def geojson_geometry
 			@geojson_geometry ||= {
-				type: "Point", 
+				type: "Point",
 				coordinates: [
-					lon.to_f, 
+					lon.to_f,
 					lat.to_f
 				]
 			}
@@ -31,16 +30,18 @@ module OSMGeo #:nodoc: all
 
 	module Way
 
-		#TODO
 		def line_string
-
-			points = geometry["coordinates"].collect{|p| Factory.point(p.first, p.last)}
-
-			return Factory.line_string(points)
-
-			#This needs to parse the GeoJSON in Mongo #but, should it?
-
-			#Needs to be aware of the case where it's a point, not a line.
+			unless geometry.nil?
+				if geometry["coordinates"].first.is_a? Array
+					@line_string ||= $factory.line_string(geometry["coordinates"].collect{|p| $factory.point(p.first, p.last)})
+					return @line_string
+				else
+					@point ||= $factory.point( geometry["coordinates"].first, geometry["coordinates"].last )
+					return @point
+				end
+			else
+				return nil
+			end
 		end
 
 		def length
@@ -54,13 +55,12 @@ module OSMGeo #:nodoc: all
 		#Returns a square polygon for the bounding box
 		def bounding_box
 			bounds = [
-				Factory.point(min_lon, min_lat),
-				Factory.point(min_lon, max_lat),
-				Factory.point(max_lon, max_lat),
-				Factory.point(max_lon, min_lat),
-				Factory.point(min_lon, min_lat) ]
-
-			@bounding_box ||= Factory.polygon( Factory.linear_ring( bounds ) )
+				$factory.point(min_lon, min_lat),
+				$factory.point(min_lon, max_lat),
+				$factory.point(max_lon, max_lat),
+				$factory.point(max_lon, min_lat),
+				$factory.point(min_lon, min_lat) ]
+			@bounding_box ||= $factory.polygon( $factory.linear_ring( bounds ) )
 		end
 
 		#Returns Changeset area in square meters
@@ -82,12 +82,30 @@ module OSMGeo #:nodoc: all
 	module Note
 		def geojson_geometry
 			{
-				type: "Point", 
+				type: "Point",
 				coordinates: [
-					lon.to_f, 
+					lon.to_f,
 					lat.to_f
 				]
 			}
+		end
+	end
+
+	#Helper function to return the envelope of the new objects in a specific changeset
+	def extents_of_new_objects_in_changesets(changeset_id)
+		ways  = Way_Query.new(  analysis_window: aw, constraints: {changeset: changeset_id, version: 1} ).run.first[:objects]
+		nodes = Node_Query.new( analysis_window: aw, constraints: {changeset: changeset_id, version: 1} ).run.first[:objects]
+
+		nodes_in_ways = ways.collect{|way| way.nodes}.flatten
+		nodes.reject!{|n| nodes_in_ways.include? n.id}
+
+		geo_objs = (ways.collect{|way| way.line_string} + nodes.collect{|node| node.point}).compact
+
+		geo = $factory.collection(geo_objs)
+		if geo.dimension > 0
+			return geo.envelope
+		else
+			return nil
 		end
 	end
 end
