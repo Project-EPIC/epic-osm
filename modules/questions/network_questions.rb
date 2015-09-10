@@ -9,6 +9,7 @@ module Questions # :nodoc: all
 		def overlapping_changesets(args)
 
 			unit, step, directory, constraints = args['unit'], args['step'], args['files'], args['constraints'] || {}
+			changeset_size = args['changeset_area'] || 100000000
 
 			#make the directory
 			FileUtils.mkpath(directory) unless Dir.exists? directory
@@ -46,9 +47,8 @@ module Questions # :nodoc: all
 						users[user_1] ||= {id: user_1, weight: 1}
 						users[user_2] ||= {id: user_2, weight: 1}
 
-						n=10000000 #100000000
 						unless user_1 == user_2
-							if (changeset_1.area < n) and (changeset_2.area < n)
+							if (changeset_1.area < changeset_size) and (changeset_2.area < changeset_size)
 								if changeset_1.bounding_box.intersects? changeset_2.bounding_box
 
 									unless edges["#{user_1}-#{user_2}"].nil?
@@ -247,6 +247,7 @@ module Questions # :nodoc: all
 									# We have an overlapping changeset -- lets look at some of the objects???
 									c1_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_1.id, 'version' => 1}).run
 									c2_ways = Way_Query.new(analysis_window: aw, constraints: {'changeset' => changeset_2.id, 'version' => 1}).run
+
 									if (c1_ways.first[:objects].collect{|w| w.nodes} & c2_ways.first[:objects].collect{|w| w.nodes}).length == 0
 										overlapping_edits << c1_ways.first[:objects] << c2_ways.first[:objects]
 
