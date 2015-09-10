@@ -22,8 +22,7 @@ module Questions # :nodoc: all
 
 			unique_users = []
 			buckets.each_with_index do |bucket, idx|
-				this_file = FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
-
+				this_file = 		 FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
 				geojson_export = FileIO::JSONExporter.new(path: directory, name: "Ways_for_Overlapping_Changesets-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
 
 				changesets = []
@@ -34,56 +33,62 @@ module Questions # :nodoc: all
 				users = {}
 				edges = {}
 
-				size = bucket[:objects].count
+				puts "Found         #{bucket[:objects].size} changesets"
+
+				changeset_objects = bucket[:objects].select{ |x| x.area <= changeset_size }
+
+				puts "After filter: #{changeset_objects.size}"
+			  changeset_objects.sort_by!{ |x| x.created_at }
+
+				size = changeset_objects.count
 
 				size.times do |i|
+					#Grab this changeset info
+					changeset_1 = changeset_objects[i]
+					user_1 = changeset_1.user
+					users[user_1] ||= {id: user_1, weight: 1}
+
+					c1_ways = ways[idx][:objects].select{|b| b.changeset == changeset_1.id}
+
+					#Now iterate over all the later changesets
 					((i+1)..(size-1)).each do |j|
-						changeset_1 = bucket[:objects][i]
-						changeset_2 = bucket[:objects][j]
 
-						user_1 = bucket[:objects][i].user
-						user_2 = bucket[:objects][j].user
-
-						unique_users << user_1 << user_2
-
-						users[user_1] ||= {id: user_1, weight: 1}
+						changeset_2 = changeset_objects[j]
+						user_2 = changeset_2.user
 						users[user_2] ||= {id: user_2, weight: 1}
 
+						#If they're not the same user
 						unless user_1 == user_2
-							if (changeset_1.area < changeset_size) and (changeset_2.area < changeset_size)
-								if changeset_1.bounding_box.intersects? changeset_2.bounding_box
+							#If the two changesets overlap
+							if changeset_1.bounding_box.intersects? changeset_2.bounding_box
+								# This means that changeset 2 OVERLAPPED changeset 1
 
-									unless edges["#{user_1}-#{user_2}"].nil?
-										edges["#{user_1}-#{user_2}"][:weight] += 1
-										# edges["#{user_2}-#{user_1}"][:weight] += 1
-									else
-										edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
-										puts "Overlap: #{user_1}-#{user_2} with Changeset: #{changeset_1.id}-#{changeset_2.id}"
-										# edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
-									end
-
-									if not changesets.include? changeset_1.id
-										these_ways << ways[idx][:objects].select{|b| b.changeset == changeset_1.id}
-										changesets << changeset_1.id
-									end
-
-									if not changesets.include? changeset_2.id
-										these_ways << ways[idx][:objects].select{|b| b.changeset == changeset_2.id}
-										changesets << changeset_2.id
-									end
-
-									#Save the changeset comments
-									changeset_comments[changeset_1.id] ||= changeset_1.comment
-									changeset_comments[changeset_2.id] ||= changeset_2.comment
+								unless edges["#{user_2}-#{user_1}"].nil?
+									edges["#{user_2}-#{user_1}"][:weight] += 1
+								else
+									# edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
+									# puts "Overlap: #{user_1}-#{user_2} with Changeset: #{changeset_1.id}-#{changeset_2.id}"
+									edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
 								end
+
+								unless changesets.include? changeset_1.id
+									these_ways << c1_ways
+									changesets << changeset_1.id
+								end
+
+								unless changesets.include? changeset_2.id
+									these_ways << ways[idx][:objects].select{|b| b.changeset == changeset_2.id}
+									changesets << changeset_2.id
+								end
+
+								#Save the changeset comments
+								changeset_comments[changeset_1.id] ||= changeset_1.comment
+								changeset_comments[changeset_2.id] ||= changeset_2.comment
 							end
 						end
 					end
 				end
-				puts "Found #{users.values.length} users during #{bucket[:start_date]}"
-				users.values.each do |node|
-					unique_users << node[:id]
-				end
+				puts "Found #{users.count} users during #{bucket[:start_date]}"
 
 				users.values.each do |node|
 					if experienced_users.include? node[:id]
@@ -103,13 +108,13 @@ module Questions # :nodoc: all
 						"uid"  => w["uid"],
 						"changeset" => w["changeset"],
 						"version" => w["version"],
+						"object_id" => w["id"],
 						"comment" => changeset_comments[w["changeset"]]
 						},"geometry"=>w["geometry"]}
 					end
 				geojson_export.write({type: "FeatureCollection", features: clean_ways})
 				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: false}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
-			puts "Found #{unique_users.uniq.count} users"
 		end
 
 		#
@@ -201,6 +206,7 @@ module Questions # :nodoc: all
 			end
 		end
 
+		#Deprecated # => Don't USE
 		def overlapping_changesets_distinct_objects(args)
 
 			unit, step, directory, constraints = args['unit'], args['step'], args['files'], args['constraints'] || {}
