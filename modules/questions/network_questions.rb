@@ -29,6 +29,8 @@ module Questions # :nodoc: all
 				changesets = []
 				these_ways = []
 
+				changeset_comments = {}
+
 				users = {}
 				edges = {}
 
@@ -69,6 +71,10 @@ module Questions # :nodoc: all
 										these_ways << ways[idx][:objects].select{|b| b.changeset == changeset_2.id}
 										changesets << changeset_2.id
 									end
+
+									#Save the changeset comments
+									changeset_comments[changeset_1.id] ||= changeset_1.comment
+									changeset_comments[changeset_2.id] ||= changeset_2.comment
 								end
 							end
 						end
@@ -95,7 +101,9 @@ module Questions # :nodoc: all
 						"user" => w["user"],
 						"date" => w["created_at"],
 						"uid"  => w["uid"],
-						"changeset" => w["changeset"]
+						"changeset" => w["changeset"],
+						"version" => w["version"],
+						"comment" => changeset_comments[w["changeset"]]
 						},"geometry"=>w["geometry"]}
 					end
 				geojson_export.write({type: "FeatureCollection", features: clean_ways})
@@ -283,7 +291,7 @@ module Questions # :nodoc: all
 						"uid"  => w["uid"],
 						"version" => w["version"],
 						"changeset" => w["changeset"],
-						"comment" => changeset_comments[w["changeset"]]
+						"comment" => changeset_comments[w["changeset"]],
 						},"geometry"=>w["geometry"]}
 					end
 				this_geojson.write({type: "FeatureCollection", features: clean_ways})
