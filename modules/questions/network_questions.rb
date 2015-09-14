@@ -24,11 +24,13 @@ module Questions # :nodoc: all
 			buckets.each_with_index do |bucket, idx|
 				this_file = 		 FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
 				geojson_export = FileIO::JSONExporter.new(path: directory, name: "Ways_for_Overlapping_Changesets-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
+				puts "Running Bucket: #{bucket[:start_date]} - #{bucket[:end_date]}"
 
 				changesets = []
-				these_ways = []
 
+				ways_in_changesets = {}
 				changeset_comments = {}
+				changeset_users = {}
 
 				users = {}
 				edges = {}
@@ -47,6 +49,7 @@ module Questions # :nodoc: all
 					changeset_1 = changeset_objects[i]
 					user_1 = changeset_1.user
 					users[user_1] ||= {id: user_1, weight: 1}
+					#Always putting user_1 in the network.
 
 					c1_ways = ways[idx][:objects].select{|b| b.changeset == changeset_1.id}
 
@@ -55,31 +58,30 @@ module Questions # :nodoc: all
 
 						changeset_2 = changeset_objects[j]
 						user_2 = changeset_2.user
-						users[user_2] ||= {id: user_2, weight: 1}
 
 						#If they're not the same user
 						unless user_1 == user_2
-							#If the two changesets overlap
-							if changeset_1.bounding_box.intersects? changeset_2.bounding_box
-								# This means that changeset 2 OVERLAPPED changeset 1
+							#Always put user_2 in the network
+							users[user_2] ||= {id: user_2, weight: 1}
 
+							#If the two changesets overlap, then add an edge from user_2 to user_1
+							if changeset_1.bounding_box.intersects? changeset_2.bounding_box
+
+								# This means that changeset 2 OVERLAPPED changeset 1
 								unless edges["#{user_2}-#{user_1}"].nil?
 									edges["#{user_2}-#{user_1}"][:weight] += 1
 								else
-									# edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
-									# puts "Overlap: #{user_1}-#{user_2} with Changeset: #{changeset_1.id}-#{changeset_2.id}"
 									edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
 								end
 
-								unless changesets.include? changeset_1.id
-									these_ways << c1_ways
-									changesets << changeset_1.id
-								end
 
-								unless changesets.include? changeset_2.id
-									these_ways << ways[idx][:objects].select{|b| b.changeset == changeset_2.id}
-									changesets << changeset_2.id
-								end
+								c2_ways = ways[idx][:objects].select{|b| b.changeset == changeset_2.id}
+
+								ways_in_changesets[changeset_1.id] ||= c1_ways
+								ways_in_changesets[changeset_2.id] ||= c2_ways
+
+								changeset_users[changeset_1.id] ||= user_1
+								changeset_users[changeset_2.id] ||= user_2
 
 								#Save the changeset comments
 								changeset_comments[changeset_1.id] ||= changeset_1.comment
@@ -88,7 +90,7 @@ module Questions # :nodoc: all
 						end
 					end
 				end
-				puts "Found #{users.count} users during #{bucket[:start_date]}"
+				puts "Found #{users.count} users"
 
 				users.values.each do |node|
 					if experienced_users.include? node[:id]
@@ -99,11 +101,12 @@ module Questions # :nodoc: all
 				end
 
 				clean_ways = []
-				these_ways = FileIO::unpack_objects([ {:objects => these_ways.flatten} ])
+				these_ways = FileIO::unpack_objects([ {:objects => ways_in_changesets.values.flatten} ])
 
 				these_ways.first[:objects].each do |w|
 					clean_ways << {"type"=>"Feature","properties"=>{
 						"user" => w["user"],
+						"c_set_user" => changeset_users[w["changeset"]],
 						"date" => w["created_at"],
 						"uid"  => w["uid"],
 						"changeset" => w["changeset"],
@@ -111,9 +114,10 @@ module Questions # :nodoc: all
 						"object_id" => w["id"],
 						"comment" => changeset_comments[w["changeset"]]
 						},"geometry"=>w["geometry"]}
-					end
+				end
 				geojson_export.write({type: "FeatureCollection", features: clean_ways})
 				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: false}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
+				puts "================================================================"
 			end
 		end
 
