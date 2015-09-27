@@ -48,7 +48,7 @@ module Questions # :nodoc: all
 					#Grab this changeset info
 					changeset_1 = changeset_objects[i]
 					user_1 = changeset_1.user
-					users[user_1] ||= {id: user_1, weight: 1}
+					users[user_1] ||= {id: changeset_1.uid, user: user_1, weight: 1}
 					#Always putting user_1 in the network.
 
 					c1_ways = ways[idx][:objects].select{|b| b.changeset == changeset_1.id}
@@ -62,7 +62,7 @@ module Questions # :nodoc: all
 						#If they're not the same user
 						unless user_1 == user_2
 							#Always put user_2 in the network
-							users[user_2] ||= {id: user_2, weight: 1}
+							users[user_2] ||= {id: changeset_2.uid, user: user_2, weight: 1}
 
 							#If the two changesets overlap, then add an edge from user_2 to user_1
 							if changeset_1.bounding_box.intersects? changeset_2.bounding_box
@@ -71,7 +71,7 @@ module Questions # :nodoc: all
 								unless edges["#{user_2}-#{user_1}"].nil?
 									edges["#{user_2}-#{user_1}"][:weight] += 1
 								else
-									edges["#{user_2}-#{user_1}"] = {source: user_2, target: user_1, weight: 1}
+									edges["#{user_2}-#{user_1}"] = {source: changeset_2.uid, target: changeset_1.uid, weight: 1}
 								end
 
 
@@ -116,7 +116,7 @@ module Questions # :nodoc: all
 						},"geometry"=>w["geometry"]}
 				end
 				geojson_export.write({type: "FeatureCollection", features: clean_ways})
-				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: false}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
+				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: true}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 				puts "================================================================"
 			end
 		end
@@ -317,62 +317,68 @@ module Questions # :nodoc: all
 			#make the directory
 			FileUtils.mkpath(directory) unless Dir.exists? directory
 
+			puts "Running: aw.changesets_x_#{unit}(step: #{step}, constraints: #{constraints})"
+
 			buckets = instance_eval "aw.changesets_x_#{unit}(step: #{step}, constraints: #{constraints})"
 
-			experienced_users = aw.experienced_contributors
-			new_users         = aw.new_contributors
+			# experienced_users = aw.experienced_contributors
+			# new_users         = aw.new_contributors
 
 			unique_users = []
 			buckets.each do |bucket|
 				this_file = FileIO::JSONExporter.new(path: directory, name: "#{bucket[:start_date]}-#{bucket[:end_date]}.json")
-				users = {}
+
+				users = []
 				edges = {}
 
 				#The users in this bucket
-				these_users = bucket[:objects].collect{|cSet| [cSet.uid, cSet.user]}.uniq
+				these_users = bucket[:objects].collect{|cSet| cSet.uid}.uniq # these_users are the unique user ids
 				puts bucket[:start_date], bucket[:end_date]
 				puts "User Count: #{these_users.count}"
 				puts "================================"
 				these_users.each do |user|
-					uid = user[0]
-					puts "user: #{user[1]}"
+					uid = user
+					puts "user id: #{uid}"
 					n = Node_Query.new(analysis_window: aw, constraints: {'uid'=>uid,
-						:created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| x.id}
+						:created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| 'n'+x.id}
 					w = Way_Query.new(analysis_window: aw, constraints: {'uid'=>uid,
-					  :created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| x.id}
+					  :created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| 'w'+x.id}
 					r = Relation_Query.new(analysis_window: aw, constraints: {'uid'=>uid,
-						:created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| x.id}
+						:created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| 'r'+x.id}
 					# puts "Nodes: #{n.length}, Ways: #{w.length}, Rels: #{r.length}"
 					objs = n+w+r
 					puts "Total objs: #{objs.length}"
 					if objs.length > 0
-						users[user[0].to_s] = {uid: user[0], user: user[1], objects: objs}
-						if experienced_users.include? user[1]
-							users[user[0].to_s]["status"] = "Experienced"
-						else
-							users[user[0].to_s]["status"] = "New"
-						end
+						users <<  {id: uid.to_s, objects: objs}
+					else
+						puts "No objects here?" #Never happens (good!)
 					end
 				end
-				# #In the bucket, have all the user objects:
-				vals = users.values
-				size = vals.length
-				puts size
+				#In the bucket, have all the user objects:
+				size = users.length
+				puts "Going through #{size} users"
+
+				intersect_objects = []
 				size.times do |idx|
-					((idx+1)..(size-1)).each do |jdx|
-						intersect = (vals[idx][:objects] & vals[jdx][:objects]).length #Set intersection
+					user_1 = users[idx][:id]
+					((idx+1)..(size-1)).each do |jdx| #n^2
+						intersect_objs = (users[idx][:objects] & users[jdx][:objects]) #Set intersection
+						intersect_objects << intersect_objs
+						intersect = intersect_objs.length
 						if intersect > 0
-							user_1 = vals[idx][:user]
-							user_2 = vals[jdx][:user]
-							unless edges["#{user_1}-#{user_2}"].nil?
-								edges["#{user_1}-#{user_2}"][:weight] += 1
-							else
-								edges["#{user_1}-#{user_2}"] = {source: user_1, target: user_2, weight: 1}
-							end
+							user_2 = users[jdx][:id]
+
+							edges["#{user_1}-#{user_2}"] ||=  {source: user_1, target: user_2, weight: 0}
+							edges["#{user_1}-#{user_2}"][:weight] += intersect
+							# if intersect == 1
+							# 	puts intersect_objs
+							# end
 						end
 					end
 				end
-				usernames = users.values.collect{|x| { id: x[:user], size: Math.sqrt(x[:objects].length)} }
+				# puts intersect_objects.flatten.uniq
+				# puts edges.values
+				usernames = users.collect{|x| { id: x[:id] } }
 				this_file.write_network(nodes: usernames, edges: edges.values, options: {directed: false}, title: "Co-Editing Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 		end
@@ -479,6 +485,115 @@ module Questions # :nodoc: all
 				this_file.write_network(nodes: users.values, edges: edges.values, options: {directed: true}, title: "Overlapping Changeset Network: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
 			end
 			puts "Found #{unique_users.uniq.count} users"
+		end
+
+		def tag_interactions(args)
+
+			unit, step, directory, constraints = args['unit'], args['step'], args['files'], args['constraints'] || {}
+
+			no_self_loops = true
+			measure = :tags
+
+			#make the directory
+			FileUtils.mkpath(directory) unless Dir.exists? directory
+
+			buckets    = instance_eval "aw.ways_x_#{unit}(step: #{step})"
+
+			buckets.each_with_index do |bucket, idx|
+				puts "Running Bucket: #{bucket[:start_date]} to #{bucket[:end_date]}"
+				puts "Objects: #{bucket[:objects].count}"
+
+				this_file = 		 FileIO::JSONExporter.new(path: directory, name: "way_edit_network_#{bucket[:start_date]}-#{bucket[:end_date]}.json")
+				geojson_export = FileIO::JSONExporter.new(path: directory, name: "Ways_for_tag_interaction-#{bucket[:start_date]}-#{bucket[:end_date]}.geojson")
+
+				nodes = {}
+				edges = {}
+				these_ways = {}
+
+				bucket[:objects].each do |way|
+
+					#Create the user and increment their size
+					nodes[way.uid] ||= {id: way.uid, user: way.user, status: "blank", size: 0}
+					nodes[way.uid][:size] += 1
+
+					#Has it been documented before, if so, do the network-y stuff, otherwise, move on.
+					if these_ways.has_key? way.id
+						marked = false
+
+						#If self-loops are allowed, then always ensure the edge is created...
+						unless no_self_loops
+							edges["#{way.uid}-#{these_ways[way.id][:uids].last}"] ||= {source: way.uid, target: these_ways[way.id][:uids].last, weight: 0}
+
+						#If self-loops are not allowed, then check if the user is the same as the last time before checking to make the edge
+						else
+							if way.uid != these_ways[way.id][:uids].last
+								edges["#{way.uid}-#{these_ways[way.id][:uids].last}"] ||= {source: way.uid, target: these_ways[way.id][:uids].last, weight: 0}
+							end
+						end
+
+						#We've got a few different methods to determine what we want to count
+						case measure
+						when :tags
+							if these_ways[way.id][:tags].last != way.tags
+								edges["#{way.uid}-#{these_ways[way.id][:uids].last}"][:weight]+=1 unless (no_self_loops and these_ways[way.id][:uids].last == way.uid)
+								marked = true unless (no_self_loops and these_ways[way.id][:uids].last == way.uid)
+							end
+						when :nodes
+							if these_ways[way.id][:nodes].last.sort != way.nodes.sort
+								edges["#{way.uid}-#{these_ways[way.id][:uids].last}"][:weight]+=1 unless (no_self_loops and these_ways[way.id][:uids].last == way.uid)
+								marked = true unless (no_self_loops and these_ways[way.id][:uids].last == way.uid)
+							end
+						end
+
+						these_ways[way.id][:geojsons] ||= []
+
+						if marked
+							#We need to make sure we pick up the previous geometry!
+
+							these_ways[way.id][:geojsons] << {
+								type: "Feature",
+								properties: {
+									object: way.id,
+									user: way.user,
+									uid: way.uid,
+									time: way.created_at,
+									tags: way.tags,
+									version: way.version
+								},
+								geometry: way.geometry
+							}
+							these_ways[way.id][:geojsons] << these_ways[way.id][:geoms].last
+						end
+
+						#Now add this way's info to the count
+						these_ways[way.id][:edit_count] += 1
+						these_ways[way.id][:uids] << way.uid
+						these_ways[way.id][:tags] << way.tags
+						these_ways[way.id][:nodes] << way.nodes
+
+					else #The way has not been documented before, so add it (edit_count is 0)
+						these_ways[way.id] ||= {id: way.id, edit_count: 0, uids: [way.uid], tags: [way.tags], nodes: [way.nodes], geoms: [
+							{
+								type: "Feature",
+								properties: {
+									object: way.id,
+									user: way.user,
+									uid: way.uid,
+									time: way.created_at,
+									tags: way.tags,
+									version: way.version
+								},
+								geometry: way.geometry
+							}] }
+					end
+				end
+
+				feats = these_ways.values.select{ |w| !w[:geojsons].nil? }.collect{|w| w[:geojsons]}.flatten.uniq
+
+				geojson_export.write({type: "FeatureCollection", features: feats})
+				this_file.write_network(nodes: nodes.values, edges: edges.values.select{|w| w[:weight] >= 1}, options: {directed: true}, title: "Co-Occuring Way Edits: \n#{bucket[:start_date]} - #{bucket[:end_date]}")
+				puts "================================================================="
+			end
 		end
 	end
 end

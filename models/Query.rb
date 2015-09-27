@@ -45,7 +45,7 @@ class Query
 
 	def update_created_at(start_time, end_time) # :nodoc:
 		selector[:created_at] = { '$gte' => start_time,
-								  '$lt'  => end_time    }
+								  						'$lt'  => end_time    }
 	end
 
 	# The main run function which is called as super from children.
@@ -53,7 +53,6 @@ class Query
 	# Accesses the database through the Singleton DatabaseConnection reference and
 	# queries with the _selector_ that was built.
 	def run(args = {})
-		# puts "Got to class:Query super run function with args #{args}"
 		@buckets = analysis_window.build_buckets( unit = args[:unit], step = args[:step] )
 
 		unless args[:constraints].nil?
@@ -61,10 +60,13 @@ class Query
 		end
 
 		buckets.each do |bucket|
-			update_created_at( bucket[:start_date], bucket[:end_date] )
+
+			unless selector[:created_at].has_key? '$gte' and selector[:created_at].has_key? '$lt'
+				update_created_at( bucket[:start_date], bucket[:end_date] )
+			end
 
 			results = DatabaseConnection.database[args[:collection]].find( selector )
-			# puts "Query complete for: #{selector}"
+			puts "Query complete for: #{selector}"
 			results.each do |obj|
 				bucket[:objects] << args[:type].new( obj )
 			end
