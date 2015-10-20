@@ -5,11 +5,6 @@ case class SimpleTweet(handle: String, time: String, text: String, context: Bool
 
 object SimpleTweet
 
-object YetiTweets {
-
-  def main(args: Array[String]) {
-
-    println("Hello World")
-  }
-
+object EpicSparkTwitter {
+	
 }
