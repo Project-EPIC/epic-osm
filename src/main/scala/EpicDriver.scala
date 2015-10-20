@@ -3,9 +3,9 @@
 import EpicOSM._
 import EpicTwitter._
 
+//Basic FileIO
 import java.nio.file.{Files,Path,Paths}
 import java.io.{File,PrintWriter}
-
 
 object EpicDriver {
 
@@ -17,14 +17,13 @@ object EpicDriver {
     val tweet_file = Paths.get("test/sandy_tweets.json").toAbsolutePath.normalize
     val tweets = get_tweets(tweet_file)
 
+    //Convert the tweets into basic objects
    	val tweet_objs = tweets.map{t => EpicTwitter.parseJsonToTweet(t)}
 
-   	tweet_objs.take(10).foreach(println)
-
+   	tweet_objs.take(10).foreach(t => println(t.handle))
   }
 
   //Based on github.com/kenbod/scala_parse_json
-
   private def get_tweets(input: Path) = {
     val handle = io.Source.fromFile(input.toFile)
     val data   = handle.mkString
