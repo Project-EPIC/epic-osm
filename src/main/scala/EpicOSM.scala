@@ -10,6 +10,5 @@
 
 object EpicOSM {
 	
-	def
 
 }
