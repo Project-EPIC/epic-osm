@@ -16,3 +16,5 @@ These will be built to uberJars with Gradle & ShadowJar and then the uber jar ma
 ##Running Tests
 
 	TODO
+
+##Dependencies

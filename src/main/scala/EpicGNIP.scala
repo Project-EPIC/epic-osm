@@ -1,6 +1,9 @@
 import spray.json._
 import DefaultJsonProtocol._
 
+import com.github.nscala_time.time.Imports._
+
+
 case class Actor(
 	id: String,
 	link: String,
@@ -18,20 +21,20 @@ case class Actor(
 /* Automatically generated from http://json2caseclass.cleverapps.io/ */
 
 case class User_mentions(
-  indices: List[Double],
-  screen_name: String,
-  id_str: String,
-  name: String
+  indices: Option[ List[Double] ],
+  screen_name: Option[ String] ,
+  id_str: Option[ String ],
+  name: Option[ String]
 )
 
 case class Urls(
-  url: String,
-  expanded_url: String
+  url: Option[String],
+  expanded_url: Option[String]
 )
 
 case class Hashtags(
-  text: String,
-  indices: List[Double]
+  text: Option[String],
+  indices: Option[List[Double]]
 )
 
 case class Twitter_entities(
@@ -50,18 +53,24 @@ case class Gnip_Meta(
 )
 
 case class GnipTweet(
-	actor: Actor,
-	id: String,
+	actor: 	Actor,
+	id: 	String,
 	postedTime: String,
-	body: String,
+	body: 	String,
  	twitter_entities: Option[Twitter_entities],
-  	gnip: Gnip_Meta
+  	gnip: 	Gnip_Meta
 ){
 
 	/* Helper Functions */
-	def handle = actor.preferredUsername
+	def handle    = actor.preferredUsername
 
-	def gnip_tag = gnip.matching_rules.get(0).tag
+	def gnip_tags = gnip.matching_rules.toList(0).map(t => (t.tag))
+
+	def date      = DateTime.parse(postedTime)
+
+	def has_gnip_tag(tag: String) : Boolean={
+		gnip_tags.indexOf(tag) >= 0
+	}
 }
 
 object MyGNIPJsonProtocol extends DefaultJsonProtocol{
