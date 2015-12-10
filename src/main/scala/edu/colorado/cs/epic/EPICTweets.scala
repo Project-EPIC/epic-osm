@@ -1,29 +1,26 @@
 package edu.colorado.cs.epic
 
+import CustomTweetJsonProtocol._
 import spray.json._
-import DefaultJsonProtocol._
 
-//The simplest case class: A Tweet
-case class SimpleTweet(
-	handle: 	String, 
-	time: 		String, 
-	text: 		String, 
-	context:    Boolean,
-	geo: 		Array[Float]
-)
+//Import the Json Protocols from Spray (Defined in TweetModelHelpers)
 
-object SimpleTweet
+import GnipTweet._
+import FullTweet._
 
-object MyJsonProtocol extends DefaultJsonProtocol {
-  implicit val tweetFormat = jsonFormat5(SimpleTweet.apply)
-}
+object EpicTweets{
 
-import MyJsonProtocol._
-
-object EpicTwitter {
-
-	def parseJsonToTweet(jsonString: String)={
+	def getJsObject(jsonString: String)={
     	val jsonAst = jsonString.parseJson
-    	jsonAst.convertTo[SimpleTweet] 
-	}
+    	jsonAst.asJsObject
+  	}
+
+	def asGnipTweet(jsonAst: JsValue)={
+    	jsonAst.convertTo[GnipTweet]
+  	}
+
+  	def asFullTweet(jsonAst: JsValue)={
+    	jsonAst.convertTo[FullTweet]
+  	}
+	
 }
