@@ -22,6 +22,12 @@ This will launch a scala REPL with the UberJar in the classpath, where you can i
 	scala> import edu.colorado.cs.epic.SparkTweets;
 	scala> SparkTweets.main(Array(""))
 
+Or
+
+	scala> import edu.colorado.cs.epic.{SparkTweets,EpicTweets,Geo}
+	scala> SparkTweets.get_tweets( <Path to JSON> )
+
+	
 ##Running Tests
 
 	TODO
