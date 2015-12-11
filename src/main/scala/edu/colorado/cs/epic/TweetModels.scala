@@ -9,6 +9,7 @@ import com.github.nscala_time.time.Imports._
 
 //Import All the SubPieces
 import TweetSubModels._
+import Geo._
 
 //Basic Tweet Functions
 abstract class Tweet {
@@ -48,7 +49,7 @@ case class GnipTweet(
 
 case class FullTweet(
 	id: 		String,
-	//created_at: String,
+	created_at: String,
 	text: 		String,
 	retweet_count: Option[Int],
 	source: 	String,
@@ -56,6 +57,11 @@ case class FullTweet(
  	override val coordinates: Option[GeoTweet]
 	
 	)extends Tweet{
+		def date ={
+			//What format is this, is this what we always have – No!?
+			val formatter = DateTimeFormat.forPattern("EEE MMM d HH:mm:ss Z YYYY")
+			formatter.parseDateTime(created_at)
+		}
 }
 
 //The Nitty Gritty JSONProtocol Pieces to put it all together...
@@ -76,6 +82,6 @@ object CustomTweetJsonProtocol extends DefaultJsonProtocol{
   	implicit val twitterEntitiesFormat = jsonFormat(Twitter_entities, "urls", "hashtags", "user_mentions")
   
   implicit val gnipTweetFormat   = jsonFormat(GnipTweet, "actor", "id", "postedTime", "body", "link", "retweet_count", "inReplyTo", "verb", "generator", "twitter_entities", "geo", "gnip")
-  implicit val fullTweetFormat   = jsonFormat(FullTweet, "id_str", "text", "retweet_count", "source", "entities", "coordinates")
+  implicit val fullTweetFormat   = jsonFormat(FullTweet, "id_str", "created_at", "text", "retweet_count", "source", "entities", "coordinates")
 }
 

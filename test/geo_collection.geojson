@@ -1,0 +1,10 @@
+{
+    "type": "GeometryCollection",
+    "geometries": [{
+        "type": "Point",
+        "coordinates": [0, 0]
+    }, {
+        "type": "Polygon",
+        "coordinates": [[[45, 45], [45, -45], [-45, -45], [-45, 45], [45,45]]]
+    }]
+}
