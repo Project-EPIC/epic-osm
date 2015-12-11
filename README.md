@@ -12,6 +12,16 @@ These will be built to uberJars with Gradle & ShadowJar and then the uber jar ma
 	
 	./gradlew shadowJar
 
+##Running Locally
+You can run this repository locally with the following script. 
+
+	./run-local.sh
+
+This will launch a scala REPL with the UberJar in the classpath, where you can import the library and use it, like so:
+
+	scala> import edu.colorado.cs.epic.SparkTweets;
+	scala> SparkTweets.main(Array(""))
+
 ##Running Tests
 
 	TODO
