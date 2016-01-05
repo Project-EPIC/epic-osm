@@ -1,0 +1,38 @@
+#Analysis Window Information
+start_date: '2010-04-25'
+end_date:   '2015-05-31'
+
+# not_complete: true #If we enable this, it will only import data SINCE the earthquake
+mongo_only: true #Well have to enable this because it's going to be potentially too big, but we'll see.
+
+#BBox information
+# poly: '/home/osm/nepal-research/nepal.poly'
+# poly: '/Users/jenningsanderson/Desktop/nepal-research/nepal.poly'
+
+#We'll be importing directly from the file that was written by the splitter, no need to cut first
+#pbf_file: '/Users/jenningsanderson/Documents/OSM/colorado.osm.pbf'
+pbf_file_final: '/Users/jenningsanderson/Documents/OSM/colorado.osm.pbf'
+
+#User Information
+title: 'Sandbox'
+email: 'jennings.anderson@colorado.edu'
+
+#Database & IO Configuration
+database: 'epic-osm-sandbox'
+write_directory: '/data/www/epic-osm-sandbox'
+
+
+
+
+# User Questions:
+# - new_user_count
+# - experienced_user_count
+# - total_user_count			 #These are cumulative, but the database needs to be be updated
+
+# Changeset Questions:
+# - changesets_x_hour 		     #This is cumulative -- but the database is incomplete
+
+# Way Questions:
+# - number_of_ways_per_tag
+# - number_of_buildings_per_tag
+# - number_of_highways_per_tag

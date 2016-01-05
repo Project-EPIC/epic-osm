@@ -1,0 +1,48 @@
+#User Information
+title: 'TESTING ANALYSIS WINDOW'
+email: 'jennings.anderson@colorado.edu'
+
+#Database Information
+pbf_file: 'spec/import/test_files/managua.osm.pbf'
+database: 'osm-test'
+
+#Analysis Window Information
+start_date: '2013-9-01'
+end_date:   '2013-12-31'
+
+#Bounding Box:
+bbox: '-105.3424072,39.946595,-105.1872253,40.0938316' #Expecting 4 parameters
+
+tags: none
+
+write_directory: '/Users/jenningsanderson/Desktop/exports/boulder_flood'
+
+#Questions for Analysis
+Node Questions:
+ - total_nodes_edited
+ - number_of_new_nodes
+ - number_of_nodes_edited_by_new_mappers
+ - number_of_nodes_edited_by_experienced_mappers
+ - mean_nodes_per_mapper
+ - median_nodes_per_mapper
+ - nodes_x_day
+
+Changeset Questions:
+ - total_changesets_created
+ - mean_changesets_per_mapper
+ - median_changesets_per_mapper
+ - number_of_changesets_by_new_mappers
+ - number_of_changesets_by_experienced_mappers
+
+ - average_changeset_area
+ - average_changeset_node_density
+ # - median_changeset_node_density 		# This will need a threshold of 'interested sizes'
+ # - average_geographic_overlaps_per_changeset
+
+User Questions:
+ - new_user_count
+ - experienced_user_count
+ - total_user_count
+
+Bbox Questions:
+ - bbox_geojson_geometry

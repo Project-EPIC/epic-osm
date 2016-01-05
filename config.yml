@@ -1,0 +1,11 @@
+#Global Configuration Settings for OSM-History 2
+#
+#
+#Point to your installation location & executable for osm-history-splitter
+osm-history-splitter: '~/Applications/osm-history-splitter/osm-history-splitter'
+
+#Default write directory for data export
+data_directory: _data
+
+#OSM Meta util
+osm-meta-util: 'node ~/Applications/osm-meta-util/examples/live.js'
