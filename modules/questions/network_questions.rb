@@ -339,11 +339,11 @@ module Questions # :nodoc: all
 				these_users.each do |user|
 					uid = user
 					puts "user id: #{uid}"
-					n = Node_Query.new(analysis_window: aw, constraints: {'uid'=>uid,
+					n = Node_Query.new(analysis_window: aw, constraints: {'uid'=>uid, :no_time_update =>true,
 						:created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| 'n'+x.id}
-					w = Way_Query.new(analysis_window: aw, constraints: {'uid'=>uid,
+					w = Way_Query.new(analysis_window: aw, constraints: {'uid'=>uid, :no_time_update =>true,
 					  :created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| 'w'+x.id}
-					r = Relation_Query.new(analysis_window: aw, constraints: {'uid'=>uid,
+					r = Relation_Query.new(analysis_window: aw, constraints: {'uid'=>uid, :no_time_update =>true,
 						:created_at=>{'$gte'=>bucket[:start_date], '$lt'=>bucket[:end_date]}}).run.first[:objects].collect{|x| 'r'+x.id}
 					# puts "Nodes: #{n.length}, Ways: #{w.length}, Rels: #{r.length}"
 					objs = n+w+r

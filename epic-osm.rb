@@ -72,8 +72,8 @@ class EpicOSM
 
 	def run_way_questions
 		unless aw_config['Way Questions'].nil?
-			aw_config['Way Questions'].each do |node_q|
-				write_json( data: question_asker.run(node_q), name: "#{node_q}.json")
+			aw_config['Way Questions'].each do |way_q|
+				write_json( data: question_asker.run(way_q), name: "#{way_q}.json")
 			end
 		end
 	end

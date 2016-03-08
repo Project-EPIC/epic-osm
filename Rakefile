@@ -111,8 +111,8 @@ task :cleanup do
 	if File.exists? "import_scripts/temp.config"
 		File.delete "import_scripts/temp.config"
 	end
-	if File.exists? "import_scripts/temp.osm.pbf"
-		File.delete "import_scripts/temp.osm.pbf"
+	if File.exists? "import_scripts/temp.osh.pbf"
+		File.delete "import_scripts/temp.osh.pbf"
 	end
 end
 

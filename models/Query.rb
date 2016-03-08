@@ -53,6 +53,7 @@ class Query
 	# Accesses the database through the Singleton DatabaseConnection reference and
 	# queries with the _selector_ that was built.
 	def run(args = {})
+		puts args
 		@buckets = analysis_window.build_buckets( unit = args[:unit], step = args[:step] )
 
 		unless args[:constraints].nil?
@@ -61,7 +62,7 @@ class Query
 
 		buckets.each do |bucket|
 
-			unless selector[:created_at].has_key? '$gte' and selector[:created_at].has_key? '$lt'
+			unless selector.has_key? :no_time_update
 				update_created_at( bucket[:start_date], bucket[:end_date] )
 			end
 

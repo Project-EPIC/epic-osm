@@ -50,6 +50,7 @@ module DomainObject
 			@nodes 		||= args[:nodes].collect{|node| node.to_s}
 			@version    ||= args[:version]
 			@changeset  ||= args[:changeset]
+			@missing_nodes = []
 			super(args)
 		end
 

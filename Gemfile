@@ -2,6 +2,8 @@ source 'http://rubygems.org/'
 
 #These gems are 100% required:
 
+gem 'bundler'
+
 #Mongo
 gem 'mongo',		'2.0.3'
 gem 'bson',			'3.0.2'
@@ -9,6 +11,7 @@ gem 'bson',			'3.0.2'
 
 #Geo
 gem 'rgeo',			'0.3.20'
+gem 'rgeo-geojson'
 
 #Statistics
 gem 'descriptive_statistics',	'2.5.1'

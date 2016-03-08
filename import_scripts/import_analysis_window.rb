@@ -59,9 +59,9 @@ class AnalysisWindowImport
 
 		File.open('import_scripts/temp.config', 'wb') do |file|
 			if config['poly']
-				file.write("import_scripts/temp.osm.pbf  POLY #{config['poly']}")
+				file.write("import_scripts/temp.osh.pbf  POLY #{config['poly']}")
 			else
-				file.write("import_scripts/temp.osm.pbf  BBOX #{config['bbox']}")
+				file.write("import_scripts/temp.osh.pbf  BBOX #{config['bbox']}")
 			end
 		end
 	end
