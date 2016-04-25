@@ -23,11 +23,6 @@ activities.
 5.  [http://www.agile-online.org/conference_paper/cds/agile_2012/proceedings/papers/paper_mooney_how_social_is_openstreetmap_2012.pdf](http://www.agile-online.org/conference_paper/cds/agile_2012/proceedings/papers/paper_mooney_how_social_is_openstreetmap_2012.pdf)
 6.  [http://www.mdpi.com/2220-9964/1/2/146](http://www.mdpi.com/2220-9964/1/2/146)
 
-
-<h2>Resources</h2>
-<a href="http://github.com/rsoden">Github Repo</a><br />
-<a href="{{site.baseurl}}/doc/" target="_blank">RDoc Documentation</a>
-
 ##Licensing
 Copyright © 2015 The Regents of the University of Colorado.
 This project is licensed under the terms of the MIT license:
