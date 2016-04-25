@@ -41,6 +41,7 @@ PLATFORMS
 
 DEPENDENCIES
   bson (= 3.0.2)
+  bundler
   debugger (= 1.6.8)
   descriptive_statistics (= 2.5.1)
   htmlentities (= 4.3.3)

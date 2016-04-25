@@ -10,6 +10,10 @@ scratch.rb.ipynb
 *.ipynb
 _site/*
 
+*.lock
+
+vendor/
+.bundle/*
 temp.config
 temp.osm.pbf
 
