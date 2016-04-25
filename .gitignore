@@ -1,5 +1,8 @@
 _site
 .sass-cache
 .config.yml
+.bundle/
+.ipy*
 analysis_windows/
 import_scripts/
+vendor/
