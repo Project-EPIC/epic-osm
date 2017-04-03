@@ -123,4 +123,3 @@ The final command created the JSON file: ```number_of_experienced_users.json``` 
 
 Distributed Under the MIT License<br>
 &copy; 2015 The Regents of the University of Colorado
->>>>>>> 3a88cd47a6d3257f469db72fd14282affab31c43
